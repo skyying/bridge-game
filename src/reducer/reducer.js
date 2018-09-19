@@ -66,7 +66,7 @@ export const store = createStore(
   {
     currentUser: null,
     isLoad: false,
-    tables: [{tableId: 100}, {tableId: 101}]
+    tables: [{tableId: 100}]
   },
   applyMiddleware(thunk),
 );

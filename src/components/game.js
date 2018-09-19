@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch} from "../reducer/reducer.js";
+import {Card} from "./card.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Game extends React.Component {
       .map((card, i) => i);
 
     for (let i = cards.length - 1; i > 0; i--) {
-      let randomIndex = getRandomInt(0, 51);
+      let randomIndex = getRandomInt(0, CARD_NUM - 1);
       [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
     }
     cards = cards.map((card, index) => ({
@@ -84,13 +85,21 @@ export default class Game extends React.Component {
       // create dom element by cards in user's hand
       hands = cardByUser.map((hand, index) => {
         let player = playerByUser[index];
+        console.log("-----hand", hand);
+        hand = hand.sort((a, b) => a.value - b.value);
+
         let cardsInHand = hand.map(userHand => (
-          <div>{userHand.value}</div>
+          <Card
+            isOpen={true}
+            key={getRandomKey()}
+            value={userHand.value}
+          />
         ));
         return (
-          <div className={direction[index]}>
+          <div className={direction[index]} key={getRandomKey()}>
+            <br />
             <div>{player}</div>
-            <div>{cardsInHand}</div>;
+            <div>{cardsInHand}</div>
           </div>
         );
       });
@@ -98,6 +107,9 @@ export default class Game extends React.Component {
     return (
       <div>
         <div>{domPlayers}</div>
+        <div>
+          <br />
+        </div>
         <div>{hands}</div>
       </div>
     );

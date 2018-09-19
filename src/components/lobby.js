@@ -9,7 +9,7 @@ import {
   Switch,
   Link
 } from "react-router-dom";
-import TableList from "./table_list.js";
+import TableList from "./tableList.js";
 
 export default class Lobby extends React.Component {
   constructor(props) {
@@ -19,7 +19,6 @@ export default class Lobby extends React.Component {
     return (
       <div>
                 this is lobby table list
-        <TableList tables={this.props.tables} />
         <TableList tables={this.props.tables} />
       </div>
     );
