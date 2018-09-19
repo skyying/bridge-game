@@ -13,7 +13,7 @@ export default class Table extends React.Component {
     return (
       <div>
         <div>
-          <Game tableId={id} table={this.props.tables[id]} />
+          <Game user={this.props.currentUser} tableId={id} table={this.props.tables[id]} />
         </div>
       </div>
     );
