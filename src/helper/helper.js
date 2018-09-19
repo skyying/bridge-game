@@ -28,3 +28,7 @@ export const getObj = (key, value) => {
   newObj[key] = value;
   return newObj;
 };
+
+export const getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
