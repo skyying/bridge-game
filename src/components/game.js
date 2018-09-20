@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch} from "../reducer/reducer.js";
 import {Card} from "./card.js";
+import Trick from "./trick.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -12,8 +13,8 @@ export default class Game extends React.Component {
     // when player is ready, shuffle cards
     let table = this.props.table;
     if (table) {
-      let game = table.slice(0).pop();
-      if (!game.cards && game.players.length === 4) {
+      table.game = table.slice(0).pop();
+      if (!table.game.cards && table.game.players.length === 4) {
         this.shuffle();
       }
     }
@@ -34,7 +35,7 @@ export default class Game extends React.Component {
     }
 
     // get new cards
-    cards = cards.map((card, index) => ({
+    cards = cards.map(card => ({
       value: card,
       trick: 0
     }));
@@ -54,8 +55,8 @@ export default class Game extends React.Component {
 
     let direction = ["south", "west", "north", "east"];
     let domPlayers = [],
-      cardByUser,
-      playerByUser,
+      cardsByPlayer,
+      playerIDByCurrentUser,
       hands;
 
     if (players) {
@@ -65,8 +66,9 @@ export default class Game extends React.Component {
         );
       }
     }
+
     if (cards) {
-      cardByUser = players.map((userIndex, index) => {
+      cardsByPlayer = players.map((userIndex, index) => {
         return cards.filter((card, i) => i % players.length === index);
       });
 
@@ -79,29 +81,34 @@ export default class Game extends React.Component {
 
       // if current user is a player, shift card
       if (!(currentUserIndex < 0)) {
-        cardByUser = [
-          ...cardByUser.slice(currentUserIndex),
-          ...cardByUser.slice(0, currentUserIndex)
+        cardsByPlayer = [
+          ...cardsByPlayer.slice(currentUserIndex),
+          ...cardsByPlayer.slice(0, currentUserIndex)
         ];
-        playerByUser = [
+        playerIDByCurrentUser = [
           ...players.slice(currentUserIndex),
           ...players.slice(0, currentUserIndex)
         ];
       }
 
       // create dom element by cards in user's hand
-      hands = cardByUser.map((hand, index) => {
-        let player = playerByUser[index];
-        console.log("-----hand", hand);
+      hands = cardsByPlayer.map((hand, index) => {
+        let player = playerIDByCurrentUser[index];
         hand = hand.sort((a, b) => a.value - b.value);
 
-        let cardsInHand = hand.map(userHand => (
-          <Card
-            isOpen={true}
-            key={getRandomKey()}
-            value={userHand.value}
-          />
-        ));
+        let cardsInHand = hand.map(userHand => {
+          // if card already in trick, don't show them in players hand
+          if (userHand.trick === 0) {
+            return (
+              <Card
+                isOpen={true}
+                key={getRandomKey()}
+                value={userHand.value}
+              />
+            );
+          }
+        });
+
         return (
           <div className={direction[index]} key={getRandomKey()}>
             <br />
@@ -111,6 +118,7 @@ export default class Game extends React.Component {
         );
       });
     }
+    console.log("cards", cards);
     return (
       <div>
         <div>{domPlayers}</div>
@@ -118,7 +126,10 @@ export default class Game extends React.Component {
           <br />
         </div>
         <div>{hands}</div>
+        <br />
+        <Trick cards={cards} cardsByPlayer={cardsByPlayer} />
       </div>
     );
   }
 }
+
