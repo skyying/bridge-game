@@ -14,47 +14,65 @@ export const appReducer = (state, action) => {
     case "STOP_LOADING": {
       return Object.assign({}, state, {isLoad: action.isLoad});
     }
-    case "FETCH_TABLLE_DATA": {
+    case "FETCH_TABLE_DATA": {
+      // tables is an array, query table by index
       return Object.assign({}, state, {tables: action.tables});
     }
-    case "ADD_USER_TO_TABLE": {
+    case "ADD_PLAYER_TO_TABLE": {
       // todo, detect, remove user from table
-      let table = state.tables[action.id];
+
+      console.log("times", "aaaa");
+      let currentTable = state.tables[action.id].slice(0);
+
       let PLAYER_NUM = 4;
-      let tablePlayerList = table.players ? table.players.slice() : [];
-      if (tablePlayerList.length < PLAYER_NUM) {
-        tablePlayerList.push(state.currentUser);
+      // copy data for current game
+      let currentGame = currentTable.pop();
+      console.log("currentGame", currentGame);
+
+      if (!currentGame.players) {
+        currentGame.players = [];
+      }
+      // if current table still have seats and its a new player, let them in;
+      let isUserNotInPlayerList = currentGame.players.findIndex(
+        player => state.currentUser === -1,
+      );
+      if (
+        currentGame.players.length < PLAYER_NUM &&
+                isUserNotInPlayerList
+      ) {
+        currentGame.players.push(state.currentUser);
       }
 
-      let tableWithUsers = getObj(
-        action.id,
-        Object.assign({}, table, {
-          players: tablePlayerList
-        }),
-      );
+      currentTable.push(currentGame);
+      let tablesCopy = state.tables.slice(0);
+      tablesCopy[action.id] = currentTable;
 
-      let tables = Object.assign({}, state.tables, tableWithUsers);
-      app.updateTableDataByID(tableWithUsers);
-
-      return Object.assign({}, state, {tables: tables});
+      let currentTableObj = getObj(action.id, currentTable);
+      app.updateTableDataByID(currentTableObj);
+      return Object.assign({}, state, {tables: tablesCopy});
     }
-    case "REMOVE_USER_FROM_TABLE": {
-      console.log("remove user");
-    }
+    // case "REMOVE_USER_FROM_TABLE": {
+    // }
+    // case "OPEN_GAME_ON_TABLE": {
+    // }
     case "ADD_NEW_DECK_TO_TABLE": {
-      let table = state.tables[action.id];
-      let tableWithNewCards = getObj(
-        action.id,
-        Object.assign({}, table, {
-          cards: action.cards,
-          isStart: action.isStart
-        }),
-      );
+      // create a game
+      let currentTable = state.tables[action.id].slice(0);
+      let currentGame = currentTable.pop();
+      let newGame = {
+        cards: action.cards,
+        result: [0, 0]
+      };
 
-      console.log("tableWithNewCards", tableWithNewCards);
-      let tables = Object.assign({}, state.tables, tableWithNewCards);
-      app.updateTableDataByID(tableWithNewCards);
-      return Object.assign({}, state, {table: tables});
+      let game = Object.assign({}, currentGame, newGame);
+      currentTable.push(game);
+
+      let table = getObj(action.id, currentTable);
+      // data object for changed table
+
+      let tablesData = Object.assign({}, state.tables, table);
+      app.updateTableDataByID(table);
+      return Object.assign({}, state, {tables: tablesData});
     }
     default:
       return state;
@@ -66,11 +84,24 @@ export const store = createStore(
   {
     currentUser: null,
     isLoad: false,
-    tables: [{tableId: 100}]
+    tables: [
+      [
+        {
+          cards: [{trick: 0}, {trick: 1}],
+          players: ["player1"],
+          result: [0, 0]
+        },
+        {
+          cards: [{trick: 0}, {trick: 1}],
+          players: ["player2"],
+          result: [0, 0]
+        }
+      ]
+    ]
   },
   applyMiddleware(thunk),
 );
 
 app.getNodeByPath("tables", value => {
-  return dispatch("FETCH_TABLLE_DATA", {tables: value.val()});
+  return dispatch("FETCH_TABLE_DATA", {tables: value.val()});
 });

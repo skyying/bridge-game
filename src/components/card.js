@@ -13,7 +13,6 @@ const suits = {
 
 export const Card = ({value, isOpen}) => {
   let kind = Math.floor(value / 13);
-  console.log(value);
   if (value === 13) return null;
   return (
     <div>

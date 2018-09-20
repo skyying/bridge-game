@@ -11,18 +11,14 @@ export default class TableList extends React.Component {
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
   }
   addPlayerToTable(id) {
-    console.log("addPlayerToTable");
-    console.log(id);
-    dispatch("ADD_USER_TO_TABLE", {id: id});
+    dispatch("ADD_PLAYER_TO_TABLE", {id: id});
   }
   render() {
     console.log("COMP, TABLE_LIST");
     if (!this.props.tables) {
-      return <div>no available</div>;
+      return <div>no available table</div>;
     }
     let tablesLink = this.props.tables.map((table, index) => {
-      console.log("xxxxxxxxxx");
-      console.log(this.props.tables.length);
       return (
         <Link
           key={getRandomKey()}

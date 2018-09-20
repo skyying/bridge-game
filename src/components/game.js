@@ -8,42 +8,49 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.shuffle = this.shuffle.bind(this);
-    let p = this.props;
 
-    // timeing for shuffle card
-    if (
-      !p.table ||
-            !p.table.isStart ||
-            (p.table.player && p.player.length === 4)
-    ) {
-      this.shuffle();
+    // when player is ready, shuffle cards
+    let table = this.props.table;
+    if (table) {
+      let game = table.slice(0).pop();
+      if (!game.cards && game.players.length === 4) {
+        this.shuffle();
+      }
     }
+    // if game don't have cards data, shuffle cards;
   }
   shuffle() {
     let CARD_NUM = 52;
+
+    // create array from 0 - 51
     let cards = Array.from({length: CARD_NUM})
       .fill(0)
       .map((card, i) => i);
 
+    // shuffle array algorithm
     for (let i = cards.length - 1; i > 0; i--) {
       let randomIndex = getRandomInt(0, CARD_NUM - 1);
       [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
     }
+
+    // get new cards
     cards = cards.map((card, index) => ({
       value: card,
       trick: 0
     }));
+
     dispatch("ADD_NEW_DECK_TO_TABLE", {
       id: this.props.tableId,
-      cards: cards,
-      isStart: true
+      cards: cards
     });
   }
+
   render() {
     console.log("COMP: Game");
     let table = this.props.table;
-    let cards = table.cards;
-    let players = table.players;
+    let game = table.slice(0).pop();
+    let cards = game.cards;
+    let players = game.players;
 
     let direction = ["south", "west", "north", "east"];
     let domPlayers = [],
@@ -58,7 +65,7 @@ export default class Game extends React.Component {
         );
       }
     }
-    if (cards && table.isStart) {
+    if (cards) {
       cardByUser = players.map((userIndex, index) => {
         return cards.filter((card, i) => i % players.length === index);
       });
