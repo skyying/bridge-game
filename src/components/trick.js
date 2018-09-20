@@ -9,36 +9,38 @@ export default class Trick extends React.Component {
   }
   render() {
     console.log("COMP: TRICK");
-    if (this.props.cardsByPlayer) {
-      let cards = this.props.cards;
-      this.maxTrick = Math.max(...cards.map(card => card.trick));
-    }
+
     // error handling
-    if (!this.maxTrick) {
+    let maxTrick = this.props.maxTrick;
+    if (!maxTrick || maxTrick === 0 || !this.props.cardsByPlayer) {
       return null;
     }
 
-    // sorting tricks by player index, filter tricks by max tricks
-    let currentTrick = this.props.cardsByPlayer.map((hand, index) => {
-      hand = hand.sort((cardA, cardB) => cardA.value - cardB.value);
-      let trickCards = hand.map(userHand => {
-        if (userHand.trick === this.maxTrick) {
-          return (
-            <Card
-              isOpen={true}
-              key={getRandomKey()}
-              value={userHand.value}
-            />
-          );
-        }
-      });
+    let currentTrick = null;
 
-      return (
-        <div key={getRandomKey()}>
-          <div>{trickCards}</div>
-        </div>
-      );
-    });
+    if (this.props.cardsByPlayer) {
+      // sorting tricks by player index, filter tricks by max tricks
+      currentTrick = this.props.cardsByPlayer.map((hand, index) => {
+        hand = hand.sort((cardA, cardB) => cardA.value - cardB.value);
+        let trickCards = hand.map(userHand => {
+          if (userHand.trick === maxTrick) {
+            return (
+              <Card
+                isOpen={true}
+                key={getRandomKey()}
+                value={userHand.value}
+              />
+            );
+          }
+        });
+
+        return (
+          <div key={getRandomKey()}>
+            <div>{trickCards}</div>
+          </div>
+        );
+      });
+    }
 
     return (
       <div>

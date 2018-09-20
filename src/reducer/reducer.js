@@ -19,28 +19,29 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: action.tables});
     }
     case "ADD_PLAYER_TO_TABLE": {
-      // todo, detect, remove user from table
+      // todo,remove user from table
+      // todo, disconnected issue, should invoke a timer 
+      // if someone is disconntected
 
-      console.log("times", "aaaa");
       let currentTable = state.tables[action.id].slice(0);
 
       let PLAYER_NUM = 4;
       // copy data for current game
       let currentGame = currentTable.pop();
-      console.log("currentGame", currentGame);
 
+      console.log("currentGame", currentGame);
+      console.log("shuld have value");
       if (!currentGame.players) {
-        currentGame.players = [];
+        currentGame.players = [-1, -1, -1, -1];
       }
       // if current table still have seats and its a new player, let them in;
-      let isUserNotInPlayerList = currentGame.players.findIndex(
-        player => state.currentUser === -1,
-      );
-      if (
-        currentGame.players.length < PLAYER_NUM &&
-                isUserNotInPlayerList
-      ) {
-        currentGame.players.push(state.currentUser);
+      let isUserNotInPlayerList =
+                currentGame.players.indexOf(state.currentUser) === -1;
+      console.log("isUserNotInPlayerList", isUserNotInPlayerList);
+      let emptyIndex = currentGame.players.indexOf(-1);
+      if (emptyIndex >= 0 && isUserNotInPlayerList) {
+        // if there are empty seats, fill them first, else fill them by squence
+        currentGame.players[emptyIndex] = state.currentUser.slice();
       }
 
       currentTable.push(currentGame);
@@ -51,17 +52,15 @@ export const appReducer = (state, action) => {
       app.updateTableDataByID(currentTableObj);
       return Object.assign({}, state, {tables: tablesCopy});
     }
-    // case "REMOVE_USER_FROM_TABLE": {
-    // }
-    // case "OPEN_GAME_ON_TABLE": {
-    // }
     case "ADD_NEW_DECK_TO_TABLE": {
       // create a game
       let currentTable = state.tables[action.id].slice(0);
       let currentGame = currentTable.pop();
       let newGame = {
         cards: action.cards,
-        result: [0, 0]
+        result: [0, 0],
+        deal: 0,
+        bid: action.bid
       };
 
       let game = Object.assign({}, currentGame, newGame);
@@ -73,6 +72,14 @@ export const appReducer = (state, action) => {
       let tablesData = Object.assign({}, state.tables, table);
       app.updateTableDataByID(table);
       return Object.assign({}, state, {tables: tablesData});
+    }
+    case "UPDATE_CURRENT_TRICK": {
+      let currentTable = state.tables[action.id].slice(0);
+      let currentGame = currentTable.pop();
+      let cards = currentGame.cards;
+      console.log("here");
+      console.log(cards);
+      return Object.assign({}, state, state);
     }
     default:
       return state;
