@@ -12,9 +12,10 @@ const suits = {
 
 export const Card = ({value, isOpen}) => {
   let kind = Math.floor(value / CARD_NUM.HAND);
-  if (value === CARD_NUM.HAND) return null;
+  // if (value === CARD_NUM.HAND) return null;
   return (
     <div>
+      <h2> value: {value}</h2>
       {CARD_RANK[value % CARD_NUM.HAND]}
       {suits[kind](0.2)}
     </div>

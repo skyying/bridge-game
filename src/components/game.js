@@ -31,21 +31,25 @@ export default class Game extends React.Component {
     }
   }
   getMaxTrick(cards) {
-    return Math.max(...cards.map(card => card.trick));
+    let maxTrick = Math.max(...cards.map(card => card.trick));
+    let maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
+    if (maxTrick === 0 || maxTrickNum >= 4) {
+      return maxTrick + 1;
+    }
+    return maxTrick;
   }
   deal(value) {
-    console.log("-----------");
-    console.log(value);
-    if (!this.props.table) {
+    let table = this.props.table;
+    if (!table) {
       return;
     }
 
-    let game = this.props.table.slice(0).pop();
-    let maxTrick = this.getMaxTrick(game.cards);
+    let game = table[table.length - 1];
 
-    dispatch("UPDATE_CURRENT_TRICK", {
+    dispatchToDatabase("UPDATE_CURRENT_TRICK", {
+      table: this.props.table,
       value: value,
-      maxTrick: maxTrick,
+      maxTrick: this.getMaxTrick(game.cards),
       id: this.props.tableId
     });
   }
@@ -143,6 +147,7 @@ export default class Game extends React.Component {
             );
           }
         });
+
 
         return (
           <div className={direction[index]} key={getRandomKey()}>

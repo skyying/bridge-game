@@ -19,12 +19,6 @@ export const appReducer = (state, action) => {
       // tables is an array, query table by index
       return Object.assign({}, state, {tables: action.tables});
     }
-    case "UPDATE_CURRENT_TRICK": {
-      let currentTable = state.tables[action.id].slice(0);
-      let currentGame = currentTable.pop();
-      let cards = currentGame.cards;
-      return Object.assign({}, state, state);
-    }
     default:
       return state;
   }
@@ -38,13 +32,7 @@ export const store = createStore(
     tables: [
       [
         {
-          cards: [{trick: 0}, {trick: 1}],
-          players: ["player1"],
-          result: [0, 0]
-        },
-        {
-          cards: [{trick: 0}, {trick: 1}],
-          players: ["player2"],
+          players: [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT],
           result: [0, 0]
         }
       ]
@@ -70,6 +58,32 @@ export const dispatchToDatabase = (type, action) => {
 
       let table = getObj(action.id, currentTable);
       app.updateTableDataByID(table);
+      break;
+    }
+    case "UPDATE_CURRENT_TRICK": {
+      let currentTable = action.table.map(game =>
+        Object.assign({}, game),
+      );
+
+      let gameIndex = currentTable.length - 1;
+      let currentGame = currentTable.pop();
+      let cards = currentGame.cards;
+
+      let targetCardInex = cards.findIndex(
+        card => card.value === action.value,
+      );
+
+      let currentCard = cards[targetCardInex];
+
+      // set current trick number to this card
+      if (currentCard.trick === 0) {
+        // save card data to database
+        app.updateTableGameDataByPath(
+          `${action.id}/${gameIndex}/cards/${targetCardInex}/trick`,
+          action.maxTrick,
+        );
+      }
+
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {

@@ -23,5 +23,11 @@ export const app = {
       .database()
       .ref("tables/")
       .set(data);
+  },
+  updateTableGameDataByPath: (path, game) => {
+    firebaseApp
+      .database()
+      .ref("tables/"+path)
+      .set(game);
   }
 };
