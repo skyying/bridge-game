@@ -4,7 +4,7 @@ import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card, CardWithClickEvt} from "./card.js";
 import Trick from "./trick.js";
-import {CARD_NUM, EMPTY_SEAT} from "./constant.js";
+import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
 import {TrickScore} from "./trickScore.js";
 
 export default class Game extends React.Component {
@@ -53,23 +53,88 @@ export default class Game extends React.Component {
     let cards = table[table.length - 1].cards;
     return Math.max(...cards.map(card => card.trick));
   }
-  handleWinner() {
-    // dispatch winner
+  handleWinner(value) {
+    let table = this.props.table,
+      game = table[table.length - 1],
+      cards = table[table.length - 1].cards,
+      maxTrick = this.currentMaxTrick();
+
+    let [_, trump] = game.bid;
+    let cardsMatchCurrentTrick = cards
+      .map((card, index) => Object.assign({}, card, {index: index}))
+      .filter(
+        card =>
+          (card.trick === maxTrick && card.trick > 0) ||
+                    card.value === value,
+      );
+    let winnerCard,
+      noTrumpCards = false;
+
+    if (cardsMatchCurrentTrick.length === 4) {
+      // which card is first been played
+      let first = Math.min(
+        ...cardsMatchCurrentTrick.map(card => card.order),
+      );
+      let [firstHand] = cardsMatchCurrentTrick.filter(
+        card => card.order === first,
+      );
+      const findMaxValueByTrump = (arr, trump) => {
+        let list = arr
+          .filter(
+            item =>
+              Math.floor(item.value / CARD_NUM.HAND) === trump,
+          )
+          .sort((cardA, cardB) => cardB.value - cardA.value);
+        return list.length ? list[0] : null;
+      };
+      // trump matters most, else, decide by what first hand
+      if (trump !== NO_TRUMP) {
+        // filter trump cards, and compare their face value
+        let tmp = findMaxValueByTrump(cardsMatchCurrentTrick, trump);
+        if (tmp) {
+          winnerCard = tmp;
+        } else {
+          noTrumpCards = true;
+        }
+      } else if (trump === NO_TRUMP || noTrumpCards) {
+        // if their quotient are the same, compare their value, else, let first win
+        let trumpRef = Math.floor(firstHand.value / CARD_NUM.HAND);
+        winnerCard = findMaxValueByTrump(
+          cardsMatchCurrentTrick,
+          trumpRef,
+        );
+      } // end of no trump
+    }
+
+    return winnerCard || null;
   }
   deal(value) {
     let table = this.props.table;
     if (!table) {
       return;
     }
-
-    this.handleWinner();
-
     dispatchToDatabase("UPDATE_CURRENT_TRICK", {
       table: table,
       value: value,
       maxTrick: this.getNextMaxTrick(),
-      id: this.props.tableId
+      id: this.props.tableId,
+      order: table[table.length - 1].order + 1
     });
+
+    let winnerCard = this.handleWinner(value);
+
+    // make sure winnerCard exists, and write winner to database
+    if (winnerCard) {
+      // remove index data while dispatch to database
+      let card = Object.assign({}, winnerCard);
+      delete card.index;
+
+      dispatchToDatabase("UPDATE_WINNER_CARD", {
+        winnerCard: card,
+        table: table,
+        id: this.props.tableId
+      });
+    }
   }
   reset() {
     let tableId = this.props.tableId;
@@ -79,16 +144,15 @@ export default class Game extends React.Component {
     });
   }
   shuffle() {
-    let bid = [1, 2];
-    let CARD_NUM = 52;
+    let bid = [1, -1];
     // create array from 0 - 51
-    let cards = Array.from({length: CARD_NUM})
+    let cards = Array.from({length: CARD_NUM.TOTAL})
       .fill(0)
       .map((card, i) => i);
 
     // shuffle array algorithm
     for (let i = cards.length - 1; i > 0; i--) {
-      let randomIndex = getRandomInt(0, CARD_NUM - 1);
+      let randomIndex = getRandomInt(0, CARD_NUM.TOTAL - 1);
       [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
     }
 
@@ -176,7 +240,7 @@ export default class Game extends React.Component {
         return (
           <div className={direction[index]} key={getRandomKey()}>
             <br />
-            <div>{player}</div>
+            <h2>{player}</h2>
             <div>{cardsInHand}</div>
           </div>
         );

@@ -8,10 +8,12 @@ export default class Trick extends React.Component {
     super(props);
   }
   render() {
+
     let {cards, cardsByPlayer, currentMaxTrick} = this.props;
     if (!cards) {
       return null;
     }
+
     let currentTrick = null,
       maxTrick = currentMaxTrick();
 

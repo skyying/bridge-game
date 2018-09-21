@@ -15,7 +15,7 @@ export const Card = ({value, isOpen}) => {
   // if (value === CARD_NUM.HAND) return null;
   return (
     <div>
-      <h2> value: {value}</h2>
+      <h4>{value}</h4>
       {CARD_RANK[value % CARD_NUM.HAND]}
       {suits[kind](0.2)}
     </div>

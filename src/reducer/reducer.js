@@ -32,7 +32,12 @@ export const store = createStore(
     tables: [
       [
         {
-          players: ["p1", "p2", "p3", EMPTY_SEAT],
+          players: [
+            "1111111111",
+            "2222222222",
+            "33333333333",
+            EMPTY_SEAT
+          ],
           result: [0, 0]
         }
       ]
@@ -49,20 +54,45 @@ export const dispatchToDatabase = (type, action) => {
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
+      // todo, use high order function to wrap this
       // create a game
-      let currentTable = action.table.slice(0);
+      let currentTable = action.table.map(game =>
+        Object.assign({}, game),
+      );
       let currentGame = currentTable.pop();
       let newGame = {
         cards: action.cards,
         result: [0, 0],
         deal: 0,
-        bid: action.bid
+        bid: action.bid,
+        order: -1
       };
       let game = Object.assign({}, currentGame, newGame);
       currentTable.push(game);
 
       let table = getObj(action.id, currentTable);
       app.updateTableDataByID(table);
+      break;
+    }
+    case "UPDATE_WINNER_CARD": {
+      // todo, use high order function to wrap this
+      let currentTable = action.table.map(game =>
+        Object.assign({}, game),
+      );
+      let currentGame = currentTable.pop();
+      let cards = currentGame.cards;
+      let targetCardIndex = cards.findIndex(
+        card => card.value === action.winnerCard.value,
+      );
+      let winner = action.winnerCard;
+
+      winner.isWin = true;
+      cards[targetCardIndex] = winner;
+
+      currentTable.push(currentGame);
+      let table = getObj(action.id, currentTable);
+      app.updateTableDataByID(table);
+
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
@@ -79,13 +109,22 @@ export const dispatchToDatabase = (type, action) => {
       );
 
       let currentCard = cards[targetCardInex];
+      currentCard.order = action.order;
 
       // set current trick number to this card
       if (currentCard.trick === 0) {
         // save card data to database
         app.updateTableGameDataByPath(
-          `${action.id}/${gameIndex}/cards/${targetCardInex}/trick`,
-          action.maxTrick,
+          `${action.id}/${gameIndex}/order`,
+          action.order,
+        );
+
+        // update trick
+        currentCard.trick = action.maxTrick;
+
+        app.updateTableGameDataByPath(
+          `${action.id}/${gameIndex}/cards/${targetCardInex}/`,
+          currentCard,
         );
       }
 
