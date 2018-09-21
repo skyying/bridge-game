@@ -19,28 +19,6 @@ export const appReducer = (state, action) => {
       // tables is an array, query table by index
       return Object.assign({}, state, {tables: action.tables});
     }
-    case "ADD_NEW_DECK_TO_TABLE": {
-      // create a game
-      let currentTable = state.tables[action.id].slice(0);
-      let currentGame = currentTable.pop();
-      let newGame = {
-        cards: action.cards,
-        result: [0, 0],
-        deal: 0,
-        bid: action.bid
-      };
-
-      let game = Object.assign({}, currentGame, newGame);
-      currentTable.push(game);
-
-      let table = getObj(action.id, currentTable);
-      // data object for changed table
-
-      let tablesData = Object.assign({}, state.tables, table);
-      app.updateTableDataByID(table);
-
-      return Object.assign({}, state, {tables: tablesData});
-    }
     case "UPDATE_CURRENT_TRICK": {
       let currentTable = state.tables[action.id].slice(0);
       let currentGame = currentTable.pop();
@@ -74,6 +52,57 @@ export const store = createStore(
   },
   applyMiddleware(thunk),
 );
+
+export const dispatchToDatabase = (type, action) => {
+  switch (type) {
+    case "ADD_NEW_DECK_TO_TABLE": {
+      // create a game
+      let currentTable = action.table.slice(0);
+      let currentGame = currentTable.pop();
+      let newGame = {
+        cards: action.cards,
+        result: [0, 0],
+        deal: 0,
+        bid: action.bid
+      };
+      let game = Object.assign({}, currentGame, newGame);
+      currentTable.push(game);
+
+      let table = getObj(action.id, currentTable);
+      app.updateTableDataByID(table);
+      break;
+    }
+    case "ADD_PLAYER_TO_TABLE": {
+      let currentTable = action.table.map(game =>
+        Object.assign({}, game),
+      );
+      let currentGame = currentTable.pop();
+      if (!currentGame.players) {
+        currentGame.players = [
+          EMPTY_SEAT,
+          EMPTY_SEAT,
+          EMPTY_SEAT,
+          EMPTY_SEAT
+        ];
+      }
+      let emptyIndex = currentGame.players.indexOf(EMPTY_SEAT);
+      if (emptyIndex >= 0) {
+        // if there are any empty seats, fill them first, else
+        // fill them by squence
+
+        currentGame.players[emptyIndex] = action.currentUser;
+      }
+      currentTable.push(currentGame);
+      let currentTableObj = getObj(action.id, currentTable);
+
+      // udpate player data to database
+      app.updateTableDataByID(currentTableObj);
+      break;
+    }
+    default:
+      return null;
+  }
+};
 
 app.getNodeByPath("tables", value => {
   return dispatch("FETCH_TABLE_DATA", {tables: value.val()});

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
-import {dispatch} from "../reducer/reducer.js";
+import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card, CardWithClickEvt} from "./card.js";
 import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT} from "./constant.js";
@@ -51,9 +51,7 @@ export default class Game extends React.Component {
   }
   shuffle() {
     let bid = [1, 2];
-
     let CARD_NUM = 52;
-
     // create array from 0 - 51
     let cards = Array.from({length: CARD_NUM})
       .fill(0)
@@ -72,7 +70,8 @@ export default class Game extends React.Component {
     }));
 
     // todo bid
-    dispatch("ADD_NEW_DECK_TO_TABLE", {
+    dispatchToDatabase("ADD_NEW_DECK_TO_TABLE", {
+      table: this.props.table,
       id: this.props.tableId,
       cards: cards,
       bid: bid
