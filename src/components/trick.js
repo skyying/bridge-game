@@ -9,15 +9,12 @@ export default class Trick extends React.Component {
   }
   render() {
     console.log("COMP: TRICK");
-
     // error handling
     let maxTrick = this.props.maxTrick;
     if (!maxTrick || maxTrick === 0 || !this.props.cardsByPlayer) {
       return null;
     }
-
     let currentTrick = null;
-
     if (this.props.cardsByPlayer) {
       // sorting tricks by player index, filter tricks by max tricks
       currentTrick = this.props.cardsByPlayer.map((hand, index) => {
@@ -33,7 +30,6 @@ export default class Trick extends React.Component {
             );
           }
         });
-
         return (
           <div key={getRandomKey()}>
             <div>{trickCards}</div>
@@ -41,7 +37,6 @@ export default class Trick extends React.Component {
         );
       });
     }
-
     return (
       <div>
         <h2>Current Trick</h2>

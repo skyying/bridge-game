@@ -77,7 +77,7 @@ class App extends React.Component {
                   exact
                   path="/lobby"
                   render={() => (
-                    <Lobby tables={this.state.tables} />
+                    <Lobby currentUser={this.state.currentUser} tables={this.state.tables} />
                   )}
                 />
                 <Route

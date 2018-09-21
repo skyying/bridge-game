@@ -34,6 +34,8 @@ export default class Game extends React.Component {
     return Math.max(...cards.map(card => card.trick));
   }
   deal(value) {
+    console.log("-----------");
+    console.log(value);
     if (!this.props.table) {
       return;
     }
