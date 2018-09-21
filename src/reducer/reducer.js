@@ -32,7 +32,7 @@ export const store = createStore(
     tables: [
       [
         {
-          players: [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT],
+          players: ["p1", "p2", "p3", EMPTY_SEAT],
           result: [0, 0]
         }
       ]
@@ -43,6 +43,11 @@ export const store = createStore(
 
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
+    case "RESET_GAME": {
+      // create a game
+      app.updateTableDataByID(action.id, action.data);
+      break;
+    }
     case "ADD_NEW_DECK_TO_TABLE": {
       // create a game
       let currentTable = action.table.slice(0);

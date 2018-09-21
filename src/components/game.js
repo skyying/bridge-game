@@ -14,6 +14,7 @@ export default class Game extends React.Component {
     this.deal = this.deal.bind(this);
     this.getMaxTrick = this.getMaxTrick.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
+    this.reset = this.reset.bind(this);
     // when player is ready, shuffle cards
     this.suffleCardsWhenReady();
   }
@@ -30,9 +31,15 @@ export default class Game extends React.Component {
       }
     }
   }
-  getMaxTrick(cards) {
-    let maxTrick = Math.max(...cards.map(card => card.trick));
-    let maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
+  getMaxTrick() {
+    let table = this.props.table;
+    if (!table) {
+      return;
+    }
+    let cards = table[table.length - 1].cards,
+      maxTrick = Math.max(...cards.map(card => card.trick)),
+      maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
+
     if (maxTrick === 0 || maxTrickNum >= 4) {
       return maxTrick + 1;
     }
@@ -44,13 +51,18 @@ export default class Game extends React.Component {
       return;
     }
 
-    let game = table[table.length - 1];
-
     dispatchToDatabase("UPDATE_CURRENT_TRICK", {
-      table: this.props.table,
+      table: table,
       value: value,
-      maxTrick: this.getMaxTrick(game.cards),
+      maxTrick: this.getMaxTrick(),
       id: this.props.tableId
+    });
+  }
+  reset() {
+    let tableId = this.props.tableId;
+    dispatchToDatabase("RESET_GAME", {
+      data: {cards: null, players: ["a", "b", "c", "d"]},
+      id: tableId
     });
   }
   shuffle() {
@@ -148,7 +160,6 @@ export default class Game extends React.Component {
           }
         });
 
-
         return (
           <div className={direction[index]} key={getRandomKey()}>
             <br />
@@ -164,14 +175,16 @@ export default class Game extends React.Component {
         <div>
           <br />
         </div>
+        <div onClick={this.reset}>reset game</div>
         <div>{hands}</div>
         <br />
         <TrickScore
           game={this.props.table[this.props.table.length - 1]}
         />
         <div />
+
         <Trick
-          maxTrick={() => this.getMaxtrick()}
+          getMaxTrick={this.getMaxTrick}
           cards={cards}
           cardsByPlayer={cardsByPlayer}
         />

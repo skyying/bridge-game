@@ -8,15 +8,23 @@ export default class Trick extends React.Component {
     super(props);
   }
   render() {
-    console.log("COMP: TRICK");
-    // error handling
-    let maxTrick = this.props.maxTrick;
-    if (!maxTrick || maxTrick === 0 || !this.props.cardsByPlayer) {
+    let {getMaxTrick, cards, cardsByPlayer} = this.props;
+    if (!cards) {
       return null;
     }
-    let currentTrick = null;
+    let currentTrick = null,
+      maxTrick = getMaxTrick();
+    let cardsMatchMaxTrick = cards.filter(card => card.trick === maxTrick)
+      .length;
+
+    // cause maxTrick will increase if there are already four cards
+    if (cardsMatchMaxTrick === 0) {
+      maxTrick -= 1;
+    }
+
+    // show cards sequence by player order
     if (this.props.cardsByPlayer) {
-      // sorting tricks by player index, filter tricks by max tricks
+      // sorting tricks by player index, and filter cards by max trick
       currentTrick = this.props.cardsByPlayer.map((hand, index) => {
         hand = hand.sort((cardA, cardB) => cardA.value - cardB.value);
         let trickCards = hand.map(userHand => {
