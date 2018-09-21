@@ -5,12 +5,13 @@ import {dispatch} from "../reducer/reducer.js";
 import {Card, CardWithClickEvt} from "./card.js";
 import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT} from "./constant.js";
+import {TrickScore} from "./trickScore.js";
 
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.shuffle = this.shuffle.bind(this);
-    this.play = this.play.bind(this);
+    this.deal = this.deal.bind(this);
     this.getMaxTrick = this.getMaxTrick.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
     // when player is ready, shuffle cards
@@ -20,11 +21,11 @@ export default class Game extends React.Component {
     // when seats is full and has no cards on databse
     let table = this.props.table;
     if (table) {
-      table.game = table.slice(0).pop();
-      let isFourSeatsFull = table.game.players.every(
+      let curentGame = table.slice(0).pop();
+      let isFourSeatsFull = curentGame.players.every(
         seat => seat !== EMPTY_SEAT,
       );
-      if (!table.game.cards && isFourSeatsFull) {
+      if (!curentGame.cards && isFourSeatsFull) {
         this.shuffle();
       }
     }
@@ -32,7 +33,7 @@ export default class Game extends React.Component {
   getMaxTrick(cards) {
     return Math.max(...cards.map(card => card.trick));
   }
-  play(value) {
+  deal(value) {
     if (!this.props.table) {
       return;
     }
@@ -110,7 +111,6 @@ export default class Game extends React.Component {
         user => user === this.props.user,
       );
 
-      console.log("currentUserIndex", currentUserIndex);
       // if current user is a player, shift card
       if (!(currentUserIndex < 0)) {
         cardsByPlayer = [
@@ -123,23 +123,18 @@ export default class Game extends React.Component {
         ];
       }
 
-      console.log("------should have value---");
-      console.log("cardsByPlayer", cardsByPlayer);
       // create dom element by cards in user's hand
       hands = cardsByPlayer.map((hand, index) => {
-        console.log("index", index);
         let player = playerIDByCurrentUser[index];
 
-        console.log("hand", hand);
         hand = hand.sort((a, b) => a.value - b.value);
 
         let cardsInHand = hand.map(userHand => {
           // if card already in trick, don't show them in players hand
-          console.log("userHand", userHand);
           if (userHand.trick === 0) {
             return (
               <CardWithClickEvt
-                evt={this.play}
+                evt={this.deal}
                 isOpen={true}
                 key={getRandomKey()}
                 value={userHand.value}
@@ -165,6 +160,10 @@ export default class Game extends React.Component {
         </div>
         <div>{hands}</div>
         <br />
+        <TrickScore
+          game={this.props.table[this.props.table.length - 1]}
+        />
+        <div />
         <Trick
           maxTrick={() => this.getMaxtrick()}
           cards={cards}

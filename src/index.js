@@ -48,8 +48,6 @@ class App extends React.Component {
     if (!this.state.isLoad) {
       return <Loading />;
     }
-    console.log("--------------");
-    console.log(this.state.currentUser);
     return (
       <div>
         <BrowserRouter>
