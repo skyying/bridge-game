@@ -10,11 +10,14 @@ import {TrickScore} from "./trickScore.js";
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
-    this.shuffle = this.shuffle.bind(this);
+    this.currentMaxTrick = this.currentMaxTrick.bind(this);
     this.deal = this.deal.bind(this);
-    this.getMaxTrick = this.getMaxTrick.bind(this);
-    this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
+    this.getNextMaxTrick = this.getNextMaxTrick.bind(this);
+    this.handleWinner = this.handleWinner.bind(this);
     this.reset = this.reset.bind(this);
+    this.shuffle = this.shuffle.bind(this);
+    this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
+
     // when player is ready, shuffle cards
     this.suffleCardsWhenReady();
   }
@@ -31,7 +34,7 @@ export default class Game extends React.Component {
       }
     }
   }
-  getMaxTrick() {
+  getNextMaxTrick() {
     let table = this.props.table;
     if (!table) {
       return;
@@ -39,11 +42,19 @@ export default class Game extends React.Component {
     let cards = table[table.length - 1].cards,
       maxTrick = Math.max(...cards.map(card => card.trick)),
       maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
-
     if (maxTrick === 0 || maxTrickNum >= 4) {
       return maxTrick + 1;
     }
     return maxTrick;
+  }
+  currentMaxTrick() {
+    let table = this.props.table;
+    if (!table) return;
+    let cards = table[table.length - 1].cards;
+    return Math.max(...cards.map(card => card.trick));
+  }
+  handleWinner() {
+    // dispatch winner
   }
   deal(value) {
     let table = this.props.table;
@@ -51,10 +62,12 @@ export default class Game extends React.Component {
       return;
     }
 
+    this.handleWinner();
+
     dispatchToDatabase("UPDATE_CURRENT_TRICK", {
       table: table,
       value: value,
-      maxTrick: this.getMaxTrick(),
+      maxTrick: this.getNextMaxTrick(),
       id: this.props.tableId
     });
   }
@@ -184,9 +197,9 @@ export default class Game extends React.Component {
         <div />
 
         <Trick
-          getMaxTrick={this.getMaxTrick}
           cards={cards}
           cardsByPlayer={cardsByPlayer}
+          currentMaxTrick={this.currentMaxTrick}
         />
       </div>
     );
