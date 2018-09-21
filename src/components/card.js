@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Heart, Spade, Diamond, Club} from "./shape/shape.js";
-
-const faceValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
+import {CARD_NUM, CARD_RANK} from "./constant.js";
 
 const suits = {
   0: scale => <Club scale={scale} />,
@@ -11,14 +10,12 @@ const suits = {
   3: scale => <Spade scale={scale} />
 };
 
-let CARDS_PER_SUIT = 13;
-
 export const Card = ({value, isOpen}) => {
-  let kind = Math.floor(value / CARDS_PER_SUIT);
-  if (value === CARDS_PER_SUIT) return null;
+  let kind = Math.floor(value / CARD_NUM.HAND);
+  if (value === CARD_NUM.HAND) return null;
   return (
     <div>
-      {faceValue[value % CARDS_PER_SUIT]}
+      {CARD_RANK[value % CARD_NUM.HAND]}
       {suits[kind](0.2)}
     </div>
   );

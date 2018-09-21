@@ -2,6 +2,7 @@ import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {app} from "../firebase/firebase.js";
 import {getObj} from "../helper/helper.js";
+import {EMPTY_SEAT} from "../components/constant.js";
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
@@ -19,26 +20,26 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: action.tables});
     }
     case "ADD_PLAYER_TO_TABLE": {
-      // todo,remove user from table
-      // todo, disconnected issue, should invoke a timer 
-      // if someone is disconntected
+      // todo, disconnected issue, should invoke a timer
 
       let currentTable = state.tables[action.id].slice(0);
 
-      let PLAYER_NUM = 4;
       // copy data for current game
       let currentGame = currentTable.pop();
 
-      console.log("currentGame", currentGame);
-      console.log("shuld have value");
       if (!currentGame.players) {
-        currentGame.players = [-1, -1, -1, -1];
+        currentGame.players = [
+          EMPTY_SEAT,
+          EMPTY_SEAT,
+          EMPTY_SEAT,
+          EMPTY_SEAT
+        ];
       }
       // if current table still have seats and its a new player, let them in;
       let isUserNotInPlayerList =
                 currentGame.players.indexOf(state.currentUser) === -1;
-      console.log("isUserNotInPlayerList", isUserNotInPlayerList);
-      let emptyIndex = currentGame.players.indexOf(-1);
+
+      let emptyIndex = currentGame.players.indexOf(EMPTY_SEAT);
       if (emptyIndex >= 0 && isUserNotInPlayerList) {
         // if there are empty seats, fill them first, else fill them by squence
         currentGame.players[emptyIndex] = state.currentUser.slice();
@@ -77,8 +78,6 @@ export const appReducer = (state, action) => {
       let currentTable = state.tables[action.id].slice(0);
       let currentGame = currentTable.pop();
       let cards = currentGame.cards;
-      console.log("here");
-      console.log(cards);
       return Object.assign({}, state, state);
     }
     default:

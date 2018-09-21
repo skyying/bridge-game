@@ -4,6 +4,7 @@ import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch} from "../reducer/reducer.js";
 import {Card, CardWithClickEvt} from "./card.js";
 import Trick from "./trick.js";
+import {CARD_NUM, EMPTY_SEAT} from "./constant.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -18,19 +19,16 @@ export default class Game extends React.Component {
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let table = this.props.table;
-    let emptySeat = -1;
     if (table) {
       table.game = table.slice(0).pop();
       let isFourSeatsFull = table.game.players.every(
-        player => player !== -1,
+        seat => seat !== EMPTY_SEAT,
       );
-      console.log("isFourSeatsFull", isFourSeatsFull);
       if (!table.game.cards && isFourSeatsFull) {
         this.shuffle();
       }
     }
   }
-
   getMaxTrick(cards) {
     return Math.max(...cards.map(card => card.trick));
   }
@@ -38,10 +36,10 @@ export default class Game extends React.Component {
     if (!this.props.table) {
       return;
     }
+
     let game = this.props.table.slice(0).pop();
     let maxTrick = this.getMaxTrick(game.cards);
-    // if all cards that has maxtricks didn't exceed 4, set maxtrick,
-    console.log("this.props.tableId", this.props.tableId);
+
     dispatch("UPDATE_CURRENT_TRICK", {
       value: value,
       maxTrick: maxTrick,
@@ -100,8 +98,7 @@ export default class Game extends React.Component {
     }
 
     // turn cards to 4 hands
-    console.log("cards", cards);
-    if (cards && cards.length === 52) {
+    if (cards && cards.length === CARD_NUM.TOTAL) {
       cardsByPlayer = players.map((userIndex, index) => {
         return cards.filter((card, i) => i % players.length === index);
       });
@@ -160,7 +157,6 @@ export default class Game extends React.Component {
         );
       });
     } // end of cards
-    console.log("cards", cards);
     return (
       <div>
         <div>{domPlayers}</div>
