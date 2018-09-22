@@ -38,7 +38,6 @@ export const store = createStore(
             "33333333333",
             EMPTY_SEAT
           ],
-          result: [0, 0]
         }
       ]
     ]

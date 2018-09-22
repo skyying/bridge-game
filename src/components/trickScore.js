@@ -7,13 +7,28 @@ export class TrickScore extends React.Component {
     super(props);
   }
   render() {
-    let teamA, teamB;
-    if (this.props.game) {
-      [teamA, teamB] = this.props.game.result;
+    console.log("COMP: TRICK_SCORE");
+    let game = this.props.game;
+    if (!game || !game.cards) {
+      return null;
     }
+    let scoreTeamOne = 0,
+      scoreTeamTwo = 0;
+
+    // which team players belong: [ one, two, one ,two]
+    game.cards.map((card, index) => {
+      let winningScore = card.isWin ? 1 : 0;
+      if ((index % 4) % 2 === 0) {
+        scoreTeamOne += winningScore;
+      } else {
+        scoreTeamTwo += winningScore;
+      }
+    });
+    let [player1, player2, player3, player4] = game.players;
     return (
       <div>
-                teamA: {teamA} v.s teamB {teamB}
+        {player1} {player3} : {scoreTeamOne} v.s
+        {player2} {player4}:{scoreTeamTwo}
       </div>
     );
   }

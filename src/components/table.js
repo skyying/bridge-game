@@ -6,6 +6,8 @@ export default class Table extends React.Component {
   }
   render() {
     let tableId = this.props.match.params.id;
+    // console.log(this.props.currentUser);
+    // console.log("this.props.currentUser");
     return (
       <div>
         <Game

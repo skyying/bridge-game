@@ -215,8 +215,12 @@ export default class Game extends React.Component {
           ...players.slice(currentUserIndex),
           ...players.slice(0, currentUserIndex)
         ];
+        // } else {
+        // should handle case which current user is not player
+        // todo:
+        // cardsByPlayer = cardsByPlayer.slice(0);
+        // playerIDByCurrentUser = players.slice(currentUserIndex);
       }
-
       // create dom element by cards in user's hand
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
@@ -246,6 +250,7 @@ export default class Game extends React.Component {
         );
       });
     } // end of cards
+
     return (
       <div>
         <div>{domPlayers}</div>
@@ -255,11 +260,11 @@ export default class Game extends React.Component {
         <div onClick={this.reset}>reset game</div>
         <div>{hands}</div>
         <br />
+
         <TrickScore
           game={this.props.table[this.props.table.length - 1]}
         />
         <div />
-
         <Trick
           cards={cards}
           cardsByPlayer={cardsByPlayer}
