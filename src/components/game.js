@@ -146,8 +146,9 @@ export default class Game extends React.Component {
     });
   }
   shuffle() {
-    // todo
-    let bid = [1, 4];
+    // refactor this to other function
+    // default bid trick / trump option
+    let bid = [0, -1];
     // create array from 0 - 51
     let cards = Array.from({length: CARD_NUM.TOTAL})
       .fill(0)
@@ -177,7 +178,7 @@ export default class Game extends React.Component {
   render() {
     console.log("COMP: Game");
     let table = this.props.table;
-    let game = table.slice(0).pop();
+    let game = table.map(game => Object.assign({}, game)).pop();
     let cards = game.cards;
     let players = game.players;
 
@@ -258,7 +259,13 @@ export default class Game extends React.Component {
       <div>
         <div>{domPlayers}</div>
         <div onClick={this.reset}>reset game</div>
-        <Auction game={game} />
+        {game.bid && (
+          <Auction
+            gameIndex={table.length - 1}
+            game={game}
+            tableId={this.props.tableId}
+          />
+        )}
         <div>{hands}</div>
         <br />
         <TrickScore game={game} />

@@ -16,7 +16,7 @@ import {
   Switch,
   Link
 } from "react-router-dom";
-import { dispatch, store } from "./reducer/reducer.js";
+import {dispatch, store} from "./reducer/reducer.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -34,13 +34,14 @@ class App extends React.Component {
   }
   componentDidMount() {
     this.unSubscribe = store.subscribe(this.update.bind(this));
-    setTimeout(this.stopLoading, 10);
+    this.stopLoading();
+    // setTimeout(this.stopLoading, 10);
   }
   handleLogin(name) {
-    dispatch("HANDLE_LOGIN", { name: name });
+    dispatch("HANDLE_LOGIN", {name: name});
   }
   stopLoading() {
-    dispatch("STOP_LOADING", { isLoad: true });
+    dispatch("STOP_LOADING", {isLoad: true});
   }
   render() {
     console.log("COMP: APP");
@@ -77,7 +78,10 @@ class App extends React.Component {
                   exact
                   path="/lobby"
                   render={() => (
-                    <Lobby currentUser={this.state.currentUser} tables={this.state.tables} />
+                    <Lobby
+                      currentUser={this.state.currentUser}
+                      tables={this.state.tables}
+                    />
                   )}
                 />
                 <Route

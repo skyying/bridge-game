@@ -37,7 +37,7 @@ export const store = createStore(
             "2222222222",
             "33333333333",
             EMPTY_SEAT
-          ],
+          ]
         }
       ]
     ]
@@ -61,7 +61,6 @@ export const dispatchToDatabase = (type, action) => {
       let currentGame = currentTable.pop();
       let newGame = {
         cards: action.cards,
-        result: [0, 0],
         deal: 0,
         bid: action.bid,
         order: -1
@@ -155,6 +154,12 @@ export const dispatchToDatabase = (type, action) => {
       // udpate player data to database
       app.updateTableDataByID(currentTableObj);
       break;
+    }
+    case "UPDATE_AUCTION": {
+      app.updateTableGameDataByPath(
+        `${action.id}/${action.gameIndex}/bid/`,
+        action.bid,
+      );
     }
     default:
       return null;
