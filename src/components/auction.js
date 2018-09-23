@@ -13,17 +13,24 @@ export default class Auction extends React.Component {
   validateBid(bid) {
     let PASS = 5;
     let AllTRUMP = -1;
-    let [currentTrick, currentTrump] = this.props.game.bid;
+    let {trick, trump} = this.props.game.bid;
     if (bid.trick >= 0) {
-      if (bid.trick > currentTrick) {
+      if (bid.trick > trick) {
         // 0 means bid trick, 1 means trump options
-        this.setBid({0: bid.trick, 1: AllTRUMP});
+        let newBid = Object.assign({}, this.props.game.bid, {
+          trick: bid.trick,
+          trump: AllTRUMP
+        });
+        this.setBid(newBid);
       }
     } else {
       if (bid.trump === PASS) {
         return;
       }
-      this.setBid({0: currentTrick, 1: bid.trump});
+      let newBid = Object.assign({}, this.props.game.bid, {
+        trump: bid.trump
+      });
+      this.setBid(newBid);
     }
   }
   setBid(bid) {
@@ -35,12 +42,12 @@ export default class Auction extends React.Component {
   }
   render() {
     let game = this.props.game;
-    let [targetTrick, trump] = game.bid;
+    let {trick, trump} = this.props.game.bid;
     let trickOption = BID_NUM.map((num, index) => {
       // if in that bid trick, all trump options are all selected,
       // don't show that trick option
 
-      if (index > targetTrick || (index === targetTrick && trump < 4)) {
+      if (index > trick || (index === trick && trump < 4)) {
         return (
           <button
             onClick={() => this.validateBid({trick: index})}
@@ -72,7 +79,7 @@ export default class Auction extends React.Component {
       <div>
         <h2>auction</h2>
         <span>
-                    current Bid trick: {game.bid[0]} trump:{game.bid[1]}
+                    current Bid trick: {game.bid.trick} trump:{game.bid.trump}
         </span>
         <div> {trickOption}</div>
         <div>{trumpOption}</div>

@@ -60,7 +60,7 @@ export default class Game extends React.Component {
       cards = table[table.length - 1].cards,
       maxTrick = this.currentMaxTrick();
 
-    let [_, trump] = game.bid;
+    let {trump} = game.bid;
     let cardsMatchCurrentTrick = cards
       .map((card, index) => Object.assign({}, card, {index: index}))
       .filter(
@@ -148,7 +148,7 @@ export default class Game extends React.Component {
   shuffle() {
     // refactor this to other function
     // default bid trick / trump option
-    let bid = [0, -1];
+    let bid = {isDb: false, isRdb: false, trick: 0, trump: -1};
     // create array from 0 - 51
     let cards = Array.from({length: CARD_NUM.TOTAL})
       .fill(0)
