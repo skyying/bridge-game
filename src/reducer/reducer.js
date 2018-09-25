@@ -61,7 +61,7 @@ export const dispatchToDatabase = (type, action) => {
       let currentGame = currentTable.pop();
       let newGame = {
         cards: action.cards,
-        deal: 0,
+        deal: -1,
         bid: action.bid,
         order: -1
       };
@@ -157,8 +157,8 @@ export const dispatchToDatabase = (type, action) => {
     }
     case "UPDATE_AUCTION": {
       app.updateTableGameDataByPath(
-        `${action.id}/${action.gameIndex}/bid/`,
-        action.bid,
+        `${action.id}/${action.gameIndex}/`,
+        action.game,
       );
     }
     default:

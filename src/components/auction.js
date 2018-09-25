@@ -20,7 +20,7 @@ export default class Auction extends React.Component {
   }
   updateBid(trump, opt = null) {
     let newBid;
-    if (trump >= 0) {
+    if (trump >= 0 && trump !== null) {
       let bid = {
         trick: this.state.currentTrick,
         trump: trump
@@ -35,6 +35,15 @@ export default class Auction extends React.Component {
     } else {
       let result = this.props.game.bid.result || [];
       result.push({opt: opt});
+
+      // is game start
+      let isGameStart;
+      if (result.length > 4) {
+        isGameStart = result
+          .slice(result.length - 4)
+          .every(res => res.opt === "Pass");
+      }
+
       // update bid
       newBid = Object.assign({}, this.props.game.bid, {
         result: result
