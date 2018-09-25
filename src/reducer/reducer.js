@@ -78,7 +78,10 @@ export const dispatchToDatabase = (type, action) => {
         Object.assign({}, game),
       );
       let currentGame = currentTable.pop();
+
       let cards = currentGame.cards;
+
+      // update which player will draw first
       let targetCardIndex = cards.findIndex(
         card => card.value === action.winnerCard.value,
       );
@@ -90,10 +93,11 @@ export const dispatchToDatabase = (type, action) => {
       currentTable.push(currentGame);
       let table = getObj(action.id, currentTable);
       app.updateTableDataByID(table);
-
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
+      // update this is how many trick players have been draw
+
       let currentTable = action.table.map(game =>
         Object.assign({}, game),
       );
@@ -109,6 +113,13 @@ export const dispatchToDatabase = (type, action) => {
       let currentCard = cards[targetCardInex];
       currentCard.order = action.order;
 
+      // update deal order, who can draw card next
+      app.updateTableGameDataByPath(
+        `${action.id}/${gameIndex}/deal`,
+        action.deal,
+      );
+
+      // this card has been draw in nth trick
       // set current trick number to this card
       if (currentCard.trick === 0) {
         // save card data to database
@@ -117,7 +128,8 @@ export const dispatchToDatabase = (type, action) => {
           action.order,
         );
 
-        // update trick
+        // update trick to current nth trick, e.g. players have play 4 tricks
+        // so far, the maxTrick will be 5
         currentCard.trick = action.maxTrick;
 
         app.updateTableGameDataByPath(

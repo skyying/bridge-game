@@ -1,3 +1,5 @@
+import "../style/reset.scss";
+import "../style/game.scss";
 import React from "react";
 import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
@@ -7,6 +9,7 @@ import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
 import {TrickScore} from "./trickScore.js";
 import Auction from "./auction.js";
+import {Player} from "./player.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -35,6 +38,7 @@ export default class Game extends React.Component {
       }
     }
   }
+  // so far, how many tricks have been played ?
   getNextMaxTrick() {
     let table = this.props.table;
     if (!table) {
@@ -57,10 +61,11 @@ export default class Game extends React.Component {
   handleWinner(value) {
     let table = this.props.table,
       game = table[table.length - 1],
-      cards = table[table.length - 1].cards,
+      cards = game.cards,
       maxTrick = this.currentMaxTrick();
 
     let {trump} = game.bid;
+    console.log("in handle winner card - game.bid.trump 3", trump);
     let cardsMatchCurrentTrick = cards
       .map((card, index) => Object.assign({}, card, {index: index}))
       .filter(
@@ -68,6 +73,7 @@ export default class Game extends React.Component {
           (card.trick === maxTrick && card.trick > 0) ||
                     card.value === value,
       );
+    console.log("cardsMatchCurrentTrick", cardsMatchCurrentTrick);
     let winnerCard,
       noTrumpCards = false;
 
@@ -89,16 +95,18 @@ export default class Game extends React.Component {
           .sort((cardA, cardB) => cardB.value - cardA.value);
         return list.length ? list[0] : null;
       };
-      // trump matters most, else, decide by what first hand
+      // trump matters most, else, decide by what first hand has draw
       if (trump !== NO_TRUMP) {
         // filter trump cards, and compare their face value
         let tmp = findMaxValueByTrump(cardsMatchCurrentTrick, trump);
-        if (tmp) {
+        if (tmp !== null) {
           winnerCard = tmp;
         } else {
           noTrumpCards = true;
         }
-      } else if (trump === NO_TRUMP || noTrumpCards) {
+      }
+
+      if (trump === NO_TRUMP || noTrumpCards) {
         // if their quotient are the same, compare their value, else, let first win
         let trumpRef = Math.floor(firstHand.value / CARD_NUM.HAND);
         winnerCard = findMaxValueByTrump(
@@ -115,15 +123,21 @@ export default class Game extends React.Component {
     if (!table) {
       return;
     }
+    let game = table[table.length - 1];
+    let currentPlayer = game.deal;
+
     dispatchToDatabase("UPDATE_CURRENT_TRICK", {
       table: table,
       value: value,
       maxTrick: this.getNextMaxTrick(),
       id: this.props.tableId,
-      order: table[table.length - 1].order + 1
+      order: game.order + 1,
+      deal: (currentPlayer + 1) % 4
     });
 
     let winnerCard = this.handleWinner(value);
+    console.log("-----------");
+    console.log("winnerCard", winnerCard);
 
     // make sure winnerCard exists, and write winner to database
     if (winnerCard) {
@@ -219,36 +233,57 @@ export default class Game extends React.Component {
           ...players.slice(currentUserIndex),
           ...players.slice(0, currentUserIndex)
         ];
-        // } else {
-        // should handle case which current user is not player
-        // todo:
-        // cardsByPlayer = cardsByPlayer.slice(0);
-        // playerIDByCurrentUser = players.slice(currentUserIndex);
       }
       // create dom element by cards in user's hand
+
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
 
-        hand = hand.sort((a, b) => a.value - b.value);
+        hand = hand
+          .sort((a, b) => a.value - b.value)
+          .filter(card => card.trick === 0);
 
-        let cardsInHand = hand.map(userHand => {
-          // if card already in trick, don't show them in players hand
-          if (userHand.trick === 0) {
-            return (
-              <CardWithClickEvt
-                evt={this.deal}
-                isOpen={true}
-                key={getRandomKey()}
-                value={userHand.value}
-              />
-            );
-          }
-        });
+        let handCopy = hand.map(userHand =>
+          Object.assign({}, userHand),
+        );
+        let display = [[], [], [], []];
+        let newHand = handCopy.map(card =>
+          display[Math.floor(card.value / 13)].push(card),
+        );
+
+        display = display.filter(item => item.length !== 0);
+        let cardsInHand = display.map((each, index) =>
+          each.map((card, i) => (
+            <CardWithClickEvt
+              name={`l${index} item-${i}`}
+              isFront={true}
+              evt={this.deal}
+              isOpen={true}
+              key={getRandomKey()}
+              value={card.value}
+            />
+          )),
+        );
+        // let cardsInHand = hand.map(userHand => {
+        //   // if card already in trick, don't show them in players hand
+        //   return (
+        //     <CardWithClickEvt
+        //       name={`l${Math.floor(userHand.value / 13)}`}
+        //       isFront={true}
+        //       evt={this.deal}
+        //       isOpen={true}
+        //       key={getRandomKey()}
+        //       value={userHand.value}
+        //     />
+        //   );
+        // });
 
         return (
           <div className={direction[index]} key={getRandomKey()}>
             <br />
+
             <h2>{player}</h2>
+
             <div>{cardsInHand}</div>
           </div>
         );
@@ -256,26 +291,31 @@ export default class Game extends React.Component {
     } // end of cards
 
     return (
-      <div>
-        <div>{domPlayers}</div>
-        <div onClick={this.reset}>reset game</div>
-        {game.bid && (
-          <Auction
-            gameIndex={table.length - 1}
-            game={game}
-            tableId={this.props.tableId}
+      <div className="game">
+        <div className="arena">
+          <Player name="abc" />
+          <div className="hands">{hands}</div>
+          <Trick
+            cards={cards}
+            cardsByPlayer={cardsByPlayer}
+            currentMaxTrick={this.currentMaxTrick}
           />
-        )}
-        <div>{hands}</div>
-        <br />
-        <TrickScore game={game} />
-        <div />
-        <Trick
-          cards={cards}
-          cardsByPlayer={cardsByPlayer}
-          currentMaxTrick={this.currentMaxTrick}
-        />
+          <TrickScore game={game} />
+        </div>
+        <div className="sidebar" />
       </div>
     );
   }
 }
+
+// <div onClick={this.reset}>reset game</div>
+// {game.bid && (
+//   <Auction
+//     gameIndex={table.length - 1}
+//     game={game}
+//     tableId={this.props.tableId}
+//   />
+// )}
+
+// <div>this is game comp</div>
+// <div>{domPlayers}</div>

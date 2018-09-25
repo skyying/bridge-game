@@ -1,0 +1,152 @@
+$gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
+*{
+  // border: 1px solid red; /* remove it */
+}
+.game {
+  background-image:$gameBg;
+  width: 100%;
+  height: calc(100vh - 100px);
+  position: relative;
+  .trick-area{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 260px;
+    .trick-area-inner{
+      position: relative;
+      width: 100%;
+      height: 100%;
+      .trick-card-wrapper {
+        &:nth-child(1) {
+          z-index: 1;
+        }
+        &:nth-child(2) {
+          z-index:2; 
+        }
+        &:nth-child(3) {
+          z-index:3; 
+        }
+        &:nth-child(4) {
+          z-index:4; 
+        }
+        width: 100px;
+        height: auto;
+        position: absolute;
+      }
+
+      .south-card{
+        bottom: 5%;
+        left:calc(50% - 50px);
+      }
+      .north-card{
+        top: 5%;
+        left:calc(50% - 50px);
+      }
+      .east-card{
+        right: 5%;
+        top: calc(50% - 68px);
+      }
+      .west-card{
+        left: 5%;
+        top: calc(50% - 68px);
+      }
+    }
+  }
+  .hands {
+    width: 100%;
+    height: 100%;
+  }
+  .hands > div {
+    position: absolute;
+  }
+  .south{
+    bottom: 20%;
+    left: 20%;
+    .card-wrapper{
+      position: absolute;
+      top: 0px;
+      $elements: 13;
+      @for $i from 0 to $elements {
+        &:nth-child(#{$i + 1}) {
+          left: calc(#{$i} * 50px);
+        }
+      }
+    }
+  }
+  .north{
+    top: 10%;
+    left: 20%;
+    .card-wrapper{
+      position: absolute;
+      top: 0px;
+      $elements: 13;
+      @for $i from 0 to $elements {
+        &:nth-child(#{$i + 1}) {
+          left: calc(#{$i} * 50px);
+        }
+      }
+    }
+
+  }
+  .west {
+    left: 10%;
+    top: 25%;
+
+    .card-wrapper{
+      position: absolute;
+    }
+    $elements: 4;
+    @for $i from 0 to $elements {
+      .l#{$i}{
+        top: calc(#{$i} * 80px);
+      }
+    }
+    $item: 13;
+    @for $j from 0 to $item{
+      .item-#{$j}{
+        left: calc(#{$j} * 50px);
+      }
+    }
+
+    // .l0{
+    //   @for $j from 1 through 13
+    //   .#{$class-slug}-#{$i}
+    //     width: 60px + $i
+    // }
+
+    // $cards: 13;
+    // .l0 {
+    //   @for $j from 0 to $cards {
+    //     &:nth-of-type(#{$j + 1}){
+    //       left: calc(#{$j} * 50px );
+    //     }
+    //   }
+    // }
+
+    // .l1 {
+    //   $cards: 13;
+    //   @for $k from 0 to $cards {
+    //     &:nth-of-type(#{$k + 1}){
+    //       left: calc(#{$k} * 50px);
+    //     }
+    //   }
+    // }
+
+    // .l2 {
+    //   $cards: 13;
+    //   @for $f from 0 to $cards {
+    //     &:nth-of-type(#{$f + 1}){
+    //       left: calc(#{$f} * 50px);
+    //     }
+    //   }
+    // }
+  }
+  .east {
+    right: 10%;
+    top: 20%;
+  }
+}
+
+
+

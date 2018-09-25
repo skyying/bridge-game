@@ -54,7 +54,7 @@ class App extends React.Component {
         <BrowserRouter>
           <div>
             <Header user={this.state.currentUser} />
-            {!this.state.currentUser && (
+             {!this.state.currentUser && (
               <Route
                 path="/"
                 render={props => (

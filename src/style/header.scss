@@ -1,0 +1,32 @@
+$headerBg: #1ABEB9;
+$textColor: #fff;
+
+header {
+  background-color: $headerBg;
+  padding: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: $textColor;
+  
+  h1{
+    font-size: 20px;
+    font-weight: 100;
+    margin-left: 20px;
+  }
+  > div, > div > a {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  > div:nth-child(2){
+    > img {
+      margin-right: 16px;
+      margin-top: 4px;
+    }
+  }
+  a {
+    color: $textColor;
+  }
+}

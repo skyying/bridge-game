@@ -1,0 +1,32 @@
+$card-w: 100px;
+$card-bg: #FCFBF8;
+$card-red:#FF525D;
+$card-black:#222222;
+
+.card {
+  // border: 10px solid rgba(37,37,37,0.20);
+  background-color: rgba(0, 0, 0, 0.18);
+  width: $card-w;
+  padding: 5px;
+  height: 123px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  .card-inner{
+    background-color: rgba(255, 251, 248, 1);
+    border-radius: 5px;
+    height: 100%;
+    padding: 5px;
+  }
+  .value{
+    margin-left: 4px;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .red{
+    color:$card-red;
+  } 
+  .black{
+    color: $card-black;
+  }
+}
+
