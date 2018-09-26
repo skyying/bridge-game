@@ -61,7 +61,7 @@ export const dispatchToDatabase = (type, action) => {
       let currentGame = currentTable.pop();
       let newGame = {
         cards: action.cards,
-        deal: -1,
+        deal: 0,
         bid: action.bid,
         order: -1
       };

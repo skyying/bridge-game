@@ -5,7 +5,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
 .game {
   background-image:$gameBg;
   width: 100%;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 60px);
   position: relative;
   .trick-area{
     position: absolute;
@@ -79,7 +79,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     left: 20%;
     .hand-inner{
       .player{
-        transform: translate(0%, 300%);
+        transform: translate(-120%, 120%);
       }
     }
     .card-wrapper{
@@ -111,6 +111,12 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     left: 23%;
     top: 25%;
 
+    .hand-inner{
+      .player{
+        transform: translate(0%, -120%);
+      }
+    }
+
     .card-wrapper{
       position: absolute;
     }
@@ -123,7 +129,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     $item: 13;
     @for $j from 0 to $item{
       $w: calc(#{$j}*50px);
-      $z: calc( 100 - #{$j}*2);
+      $z: calc( 50 - #{$j}*2);
       .item-#{$j}{
         right: $w;
         z-index:  $z;
@@ -134,6 +140,12 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
   .east {
     right: 20%;
     top: 30%;
+
+    .hand-inner{
+      .player{
+        transform: translate(0%, -120%);
+      }
+    }
 
     .card-wrapper{
       position: absolute;

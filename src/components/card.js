@@ -5,13 +5,14 @@ import {CARD_NUM, CARD_RANK, SUIT_SHAPE} from "./constant.js";
 import "../style/reset.scss";
 import "../style/card.scss";
 
+
+          // <div>{value}</div>
 export const Card = ({value, isOpen, isFront = true}) => {
   let kind = Math.floor(value / CARD_NUM.HAND);
   if (isFront) {
     return (
       <div className="card flip-up">
         <div className="card-inner">
-          <div>{value}</div>
           <div
             className={
               kind === 1 || kind === 2

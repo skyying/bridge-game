@@ -1,0 +1,53 @@
+.trick-score{
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  overflow:hidden;
+  .trick-score-inner{
+    border-radius: 3px;
+    background-color: #F4F4EB;
+    display:flex;
+    padding-top: 10px;
+    width: 260px;
+  }
+  .thumbnail-group{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .thumbnail {
+    &:nth-child(1){
+      margin-right: 0px;
+    }
+    &:nth-child(2){
+      margin-left: -10px;
+    }
+    background-color: #D2ADB0;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    overflow: hidden;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #fff;
+    span{
+      color: #fff;
+      font-size: 16px;
+    }
+  }
+  .group {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 50%;
+  }
+  .score{
+    padding: 10px 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #515151;
+  }
+}

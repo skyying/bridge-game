@@ -65,7 +65,6 @@ export default class Game extends React.Component {
       maxTrick = this.currentMaxTrick();
 
     let {trump} = game.bid;
-    console.log("in handle winner card - game.bid.trump 3", trump);
     let cardsMatchCurrentTrick = cards
       .map((card, index) => Object.assign({}, card, {index: index}))
       .filter(
@@ -73,7 +72,6 @@ export default class Game extends React.Component {
           (card.trick === maxTrick && card.trick > 0) ||
                     card.value === value,
       );
-    console.log("cardsMatchCurrentTrick", cardsMatchCurrentTrick);
     let winnerCard,
       noTrumpCards = false;
 
@@ -136,8 +134,6 @@ export default class Game extends React.Component {
     });
 
     let winnerCard = this.handleWinner(value);
-    console.log("-----------");
-    console.log("winnerCard", winnerCard);
 
     // make sure winnerCard exists, and write winner to database
     if (winnerCard) {
@@ -238,20 +234,32 @@ export default class Game extends React.Component {
 
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
+        let playerIndex = index;
 
         hand = hand
           .sort((a, b) => a.value - b.value)
           .filter(card => card.trick === 0);
 
+        if (index === 1) {
+          hand = hand.sort((a, b) => b.value - a.value);
+        }
+
+        // handle display issue for both weat/east players
         let handCopy = hand.map(userHand =>
           Object.assign({}, userHand),
         );
+
         let display = [[], [], [], []];
+
         let newHand = handCopy.map(card =>
           display[Math.floor(card.value / 13)].push(card),
         );
 
         display = display.filter(item => item.length !== 0);
+
+        // handle sort isssue of west player, should sort
+        // from big to small
+
         let cardsInHand = display.map((each, index) =>
           each.map((card, i) => (
             <CardWithClickEvt
@@ -287,7 +295,7 @@ export default class Game extends React.Component {
           let cardh = 125,
             shift = 80;
           return (
-            suitNum * cardh - (cardh - shift) * (suitNum - 1) + 60
+            suitNum * cardh - (cardh - shift) * (suitNum - 1) + 10
           );
         };
 
@@ -316,6 +324,15 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
+        <div className="auction">
+          {game.bid && (
+            <Auction
+              gameIndex={table.length - 1}
+              game={game}
+              tableId={this.props.tableId}
+            />
+          )}
+        </div>
         <div className="arena">
           <div className="hands">{hands}</div>
           <Trick
