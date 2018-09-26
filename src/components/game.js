@@ -264,27 +264,51 @@ export default class Game extends React.Component {
             />
           )),
         );
-        // let cardsInHand = hand.map(userHand => {
-        //   // if card already in trick, don't show them in players hand
-        //   return (
-        //     <CardWithClickEvt
-        //       name={`l${Math.floor(userHand.value / 13)}`}
-        //       isFront={true}
-        //       evt={this.deal}
-        //       isOpen={true}
-        //       key={getRandomKey()}
-        //       value={userHand.value}
-        //     />
-        //   );
-        // });
 
+        // calculate hand style and card postion
+        let totalCardsInHand = cardsInHand
+          .map(suit => suit.length)
+          .reduce((sum, len) => sum + len, 0);
+        let totalSuitType = cardsInHand.filter(
+          suit => suit.length !== 0,
+        ).length;
+
+        let horCardStyle =
+                    direction[index] === "north" || direction[index] === "south"
+                      ? {
+                        left:
+                                  (window.innerWidth -
+                                      (50 * totalCardsInHand + 50)) /
+                                  2
+                      }
+                      : null;
+
+        const getHandHeight = suitNum => {
+          let cardh = 125,
+            shift = 80;
+          return (
+            suitNum * cardh - (cardh - shift) * (suitNum - 1) + 60
+          );
+        };
+
+        let verCardStyle =
+                    direction[index] === "west" || direction[index] === "east"
+                      ? {
+                        top:
+                                  (window.innerHeight -
+                                      getHandHeight(totalSuitType)) /
+                                  2
+                      }
+                      : null;
         return (
-          <div className={direction[index]} key={getRandomKey()}>
-            <br />
-
-            <h2>{player}</h2>
-
-            <div>{cardsInHand}</div>
+          <div
+            className={direction[index]}
+            style={horCardStyle || verCardStyle}
+            key={getRandomKey()}>
+            <div className="hand-inner">
+              <div className="user-hand">{cardsInHand}</div>
+              <Player name={player} />
+            </div>
           </div>
         );
       });
@@ -293,7 +317,6 @@ export default class Game extends React.Component {
     return (
       <div className="game">
         <div className="arena">
-          <Player name="abc" />
           <div className="hands">{hands}</div>
           <Trick
             cards={cards}

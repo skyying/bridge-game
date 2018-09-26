@@ -49,6 +49,7 @@ export default class Trick extends React.Component {
         );
       });
     }
+    // let trickStyle = {left: (window.innerWidth - 320) / 2, top:  }
     return (
       <div className="trick-area">
         <div className="trick-area-inner">{currentTrick}</div>

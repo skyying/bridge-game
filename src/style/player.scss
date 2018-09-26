@@ -2,9 +2,9 @@ $bg:#FCFBF8;
 $textColor: #515151;
 .player {
   width: 100%;
-  max-width: 170px;
   background-color:$bg;
   color: $textColor;
+  padding-right: 20px;
   border-radius: 40px;
   font-size: 20px;
   display: flex;
@@ -19,5 +19,9 @@ $textColor: #515151;
     height: 46px;
     border-radius: 46px;
     overflow: hidden;
+  }
+  .name{
+    
+    display: inline;
   }
 }
