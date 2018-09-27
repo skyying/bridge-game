@@ -9,18 +9,37 @@ import "../style/auction.scss";
 export default class Auction extends React.Component {
   constructor(props) {
     super(props);
-
     let game = this.props.game;
     this.state = {
       currentTrick: game.bid.trick,
       visibility: false,
       current: null
     };
-    this.setTrump = this.setTrump.bind(this);
     this.updateBid = this.updateBid.bind(this);
+    this.validateUserTurnAndsetTrump = this.validateUserTurnAndsetTrump.bind(this);
   }
-  setTrump(index) {
-    this.setState({currentTrick: index, current: index, visibility: true});
+  validateUserTurnAndsetTrump(index) {
+
+    // check if already current user's turn to give his bid
+    if (!this.props.currentUser || !this.props.game) return;
+    let game = this.props.game;
+
+    if (game.players && this.props.currentUser) {
+
+      // if currentUser's Index is same as game deal, let him give bid
+      
+      let currentUserIndex = game.players.findIndex(
+        player => player === this.props.currentUser,
+      );
+      if (currentUserIndex === game.deal) {
+        this.setState({
+          currentTrick: index,
+          current: index,
+          visibility: true
+        });
+      }
+    }
+
   }
   updateBid(trump, opt = null) {
     let newBid,
@@ -35,7 +54,7 @@ export default class Auction extends React.Component {
       let result = this.props.game.bid.result || [];
       result.push(Object.assign({}, bid));
 
-      // update bid taker, when give a trump bid, 
+      // update bid taker, when give a trump bid,
       // record who is the last bid giver;
       newBid = Object.assign(
         {},
@@ -116,7 +135,9 @@ export default class Auction extends React.Component {
     let allTrickOpt = trickOpt.map((opt, index) => (
       <button
         className={opt === this.state.current ? "current" : null}
-        onClick={() => this.setTrump(opt)}
+        onClick={() => {
+          this.validateUserTurnAndsetTrump(opt);
+        }}
         key={getRandomKey()}>
         {opt + 1}
       </button>

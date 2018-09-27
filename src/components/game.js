@@ -241,7 +241,7 @@ export default class Game extends React.Component {
       // shown on bottom
 
       let currentUserIndex = players.findIndex(
-        user => user === this.props.user,
+        user => user === this.props.currentUser,
       );
 
       // if current user is a player, shift card
@@ -394,6 +394,7 @@ export default class Game extends React.Component {
         <div className="auction">
           {game.bid && (
             <Auction
+              currentUser={this.props.currentUser}
               isFinishAuction={isFinishAuction}
               endAuction={this.endAuction}
               gameIndex={table.length - 1}
