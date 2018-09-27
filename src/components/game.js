@@ -264,7 +264,6 @@ export default class Game extends React.Component {
         );
       }
 
-
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
         let playerIndex = index; // zero will alwasy be current login user
@@ -318,11 +317,10 @@ export default class Game extends React.Component {
           // playerIndex === 0 means current user
           if (playerIndex === 0 || playerIndex === flipIndex) {
             return each.map((card, i) => (
-              <CardWithClickEvt
+              <Card
                 name={`l${index} item-${i}`}
-                isFront={true}
+                flipUp={true}
                 evt={this.deal}
-                isOpen={true}
                 key={getRandomKey()}
                 value={card.value}
               />
@@ -330,9 +328,10 @@ export default class Game extends React.Component {
           } else {
             return each.map((card, i) => {
               return (
-                <CardFilpDown
+                <Card
                   name={`l${index} item-${i}`}
                   key={getRandomKey()}
+                  flipUp={false}
                 />
               );
             });
@@ -417,15 +416,3 @@ export default class Game extends React.Component {
     );
   }
 }
-
-// <div onClick={this.reset}>reset game</div>
-// {game.bid && (
-//   <Auction
-//     gameIndex={table.length - 1}
-//     game={game}
-//     tableId={this.props.tableId}
-//   />
-// )}
-
-// <div>this is game comp</div>
-// <div>{domPlayers}</div>

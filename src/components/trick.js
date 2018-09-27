@@ -33,7 +33,7 @@ export default class Trick extends React.Component {
           if (userHand.trick === maxTrick) {
             return (
               <Card
-                isOpen={true}
+                flipUp={true}
                 key={getRandomKey()}
                 value={userHand.value}
               />

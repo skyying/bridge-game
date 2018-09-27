@@ -16,18 +16,18 @@ export default class Auction extends React.Component {
       current: null
     };
     this.updateBid = this.updateBid.bind(this);
-    this.validateUserTurnAndsetTrump = this.validateUserTurnAndsetTrump.bind(this);
+    this.validateUserTurnAndsetTrump = this.validateUserTurnAndsetTrump.bind(
+      this,
+    );
   }
   validateUserTurnAndsetTrump(index) {
-
     // check if already current user's turn to give his bid
     if (!this.props.currentUser || !this.props.game) return;
     let game = this.props.game;
 
     if (game.players && this.props.currentUser) {
-
       // if currentUser's Index is same as game deal, let him give bid
-      
+
       let currentUserIndex = game.players.findIndex(
         player => player === this.props.currentUser,
       );
@@ -39,11 +39,10 @@ export default class Auction extends React.Component {
         });
       }
     }
-
   }
   updateBid(trump, opt = null) {
     let newBid,
-      isGameStart = false;
+      isFinishAuction = false;
 
     if (trump >= 0 && trump !== null) {
       let bid = {
@@ -68,10 +67,14 @@ export default class Auction extends React.Component {
       result.push({opt: opt});
 
       // is game start
+
       if (result.length > 4) {
-        isGameStart = result
-          .slice(result.length - 4)
-          .every(res => res.opt === "Pass");
+        isFinishAuction =
+                    result.length >= 4 &&
+                    result.some(bid => bid.trick >= 0) &&
+                    result
+                      .slice(result.length - 3)
+                      .every(res => res.opt === "Pass");
       }
 
       // update bid
@@ -81,7 +84,11 @@ export default class Auction extends React.Component {
     }
 
     let deal = this.props.game.deal;
-    deal = (deal + (isGameStart ? 1 : 1)) % 4;
+    if (isFinishAuction) {
+      deal = (this.props.game.bid.declarer + 1) % 4;
+    } else {
+      deal = (deal + 1) % 4;
+    }
 
     let newGame = Object.assign(
       {},
@@ -95,6 +102,7 @@ export default class Auction extends React.Component {
       gameIndex: this.props.gameIndex,
       game: newGame
     });
+
     this.setState({visibility: false, current: null});
   }
   render() {

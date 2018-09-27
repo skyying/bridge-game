@@ -9,39 +9,56 @@ export const CardFilpDown = ({name}) => {
   return (
     <div className={`card-wrapper ${name}`}>
       <div className="card flip-down">
-        <div className="card-inner"></div>
+        <div className="card-inner" />
       </div>
     </div>
   );
 };
 
-export const Card = ({value, isOpen, isFront = true}) => {
+export const Card = ({value, evt = null, flipUp, name = null}) => {
+
   let kind = Math.floor(value / CARD_NUM.HAND);
-  if (isFront) {
+  let wrapperName = name ? `card-wrapper ${name}` : "card-wrapper";
+
+  if (flipUp) {
     return (
-      <div className="card flip-up">
-        <div className="card-inner">
-          <div
-            className={
-              kind === 1 || kind === 2
-                ? "red value"
-                : "black value"
-            }>
-            {CARD_RANK[value % CARD_NUM.HAND]}
+      <div
+        className={wrapperName}
+        onClick={() => {
+          if (evt) {
+            evt(value);
+          }
+        }}>
+        <div className="card flip-up">
+          <div className="card-inner">
+            <div
+              className={
+                kind === 1 || kind === 2
+                  ? "red value"
+                  : "black value"
+              }>
+              {CARD_RANK[value % CARD_NUM.HAND]}
+            </div>
+            {SUIT_SHAPE[kind](0.24)}
           </div>
-          {SUIT_SHAPE[kind](0.24)}
         </div>
       </div>
     );
   } else {
-    return <div className="card flip-down" />;
+    return (
+      <div className={wrapperName}>
+        <div className="card flip-down">
+          <div className="card-inner" />
+        </div>
+      </div>
+    );
   }
 };
 
-export const CardWithClickEvt = ({value, isOpen, isFront, evt, name}) => {
+export const CardWithClickEvt = ({value, evt, name}) => {
   return (
     <div className={`card-wrapper ${name}`} onClick={() => evt(value)}>
-      <Card value={value} isOpen={isOpen} />
+      <Card value={value} />
     </div>
   );
 };
