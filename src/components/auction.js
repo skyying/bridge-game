@@ -34,10 +34,16 @@ export default class Auction extends React.Component {
       // udpate result
       let result = this.props.game.bid.result || [];
       result.push(Object.assign({}, bid));
-      // update bid
-      newBid = Object.assign({}, this.props.game.bid, bid, {
-        result: result
-      });
+
+      // update bid taker, when give a trump bid, 
+      // record who is the last bid giver;
+      newBid = Object.assign(
+        {},
+        this.props.game.bid,
+        bid,
+        {declarer: this.props.game.deal},
+        {result: result},
+      );
     } else {
       let result = this.props.game.bid.result || [];
       result.push({opt: opt});
@@ -129,6 +135,7 @@ export default class Auction extends React.Component {
         {SUIT_SHAPE[opt](0.25)}
       </div>
     ));
+
     let result = game.bid.result;
 
     let DoubleBtn = result &&
@@ -165,7 +172,9 @@ export default class Auction extends React.Component {
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>
-        {!game.bid.result && <div className="notes"> Start Auction </div>}
+        {!game.bid.result && (
+          <div className="notes"> Start Auction </div>
+        )}
         <AuctionList scale={0.2} result={game.bid.result} />
         <div className="option-wrapper">
           <div className="tricks">{allTrickOpt}</div>

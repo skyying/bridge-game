@@ -285,7 +285,7 @@ export default class Game extends React.Component {
         let cardsInHand = display.map((each, index) => {
           // use playerIndex to decide flip up whose cards
           // playerIndex === 0 means current user
-          if (playerIndex === 0 ) {
+          if (playerIndex === 0) {
             return each.map((card, i) => (
               <CardWithClickEvt
                 name={`l${index} item-${i}`}
