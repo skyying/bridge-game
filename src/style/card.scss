@@ -3,9 +3,12 @@ $card-bg: #FCFBF8;
 $card-red:#FF525D;
 $card-black:#222222;
 
-.card {
+.card, .flip-down {
   // border: 10px solid rgba(37,37,37,0.20);
   background-color: rgba(0, 0, 0, 0.18);
+  -moz-box-shadow:0px 0px 20px rgba(#000000, 0.1);
+  -webkit-box-shadow:0px 0px 20px rgba(#000000, 0.1);
+  box-shadow:0px 0px 20px rgba(#000000, 0.1);
   width: $card-w;
   padding: 5px;
   height: 123px;
@@ -27,6 +30,13 @@ $card-black:#222222;
   } 
   .black{
     color: $card-black;
+  }
+}
+
+.flip-down{
+  background-color: #AFB9C4;
+  .card-inner{
+    background-color: #4A90E2;
   }
 }
 

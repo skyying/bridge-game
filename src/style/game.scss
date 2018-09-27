@@ -120,6 +120,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     .card-wrapper{
       position: absolute;
     }
+
     $elements: 4;
     @for $i from 0 to $elements {
       .l#{$i}{

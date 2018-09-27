@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
-import {Card, CardWithClickEvt} from "./card.js";
+import {Card, CardWithClickEvt, CardFilpDown} from "./card.js";
 import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
 import {TrickScore} from "./trickScore.js";
@@ -241,47 +241,72 @@ export default class Game extends React.Component {
         ];
       }
       // create dom element by cards in user's hand
-
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
         let playerIndex = index;
-
         hand = hand
           .sort((a, b) => a.value - b.value)
           .filter(card => card.trick === 0);
-
         if (index === 1) {
           hand = hand.sort((a, b) => b.value - a.value);
         }
-
         // handle display issue for both weat/east players
         let handCopy = hand.map(userHand =>
           Object.assign({}, userHand),
         );
-
         let display = [[], [], [], []];
-
         let newHand = handCopy.map(card =>
           display[Math.floor(card.value / 13)].push(card),
         );
 
+        // handle flip down card, group them into n rows base on
+        // how many cards left
         display = display.filter(item => item.length !== 0);
+        // decide to flip down which players card
+        // use playerIndex to decide , playerIndex 0 means current user
+        if (playerIndex > 0) {
+          let flat = display.flat();
+          let len = flat.length;
+          if (Math.floor(len / 3) < 1 && len > 1) {
+            let mid = Math.floor(len / 2);
+            flat = [flat.slice(0, mid), flat.slice(mid, len)];
+            display = flat;
+          } else if (Math.floor(len / 3) > 1) {
+            let threeRow = [[], [], []];
+            flat.map((card, index) =>
+              threeRow[index % 3].push(card),
+            );
+            display = threeRow;
+          }
+        }
 
         // handle sort isssue of west player, should sort
         // from big to small
-
-        let cardsInHand = display.map((each, index) =>
-          each.map((card, i) => (
-            <CardWithClickEvt
-              name={`l${index} item-${i}`}
-              isFront={true}
-              evt={this.deal}
-              isOpen={true}
-              key={getRandomKey()}
-              value={card.value}
-            />
-          )),
-        );
+        let cardsInHand = display.map((each, index) => {
+          // use playerIndex to decide flip up whose cards
+          // playerIndex === 0 means current user
+          if (playerIndex === 0 ) {
+            return each.map((card, i) => (
+              <CardWithClickEvt
+                name={`l${index} item-${i}`}
+                isFront={true}
+                evt={this.deal}
+                isOpen={true}
+                key={getRandomKey()}
+                value={card.value}
+              />
+            ));
+          } else {
+            return each.map((card, i) => {
+              return (
+                <CardFilpDown
+                  name={`l${index} item-${i}`}
+                  key={getRandomKey()}
+                />
+              );
+            });
+          }
+        });
 
         // calculate hand style and card postion
         let totalCardsInHand = cardsInHand
