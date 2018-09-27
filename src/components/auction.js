@@ -165,6 +165,7 @@ export default class Auction extends React.Component {
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>
+        {!game.bid.result && <div className="notes"> Start Auction </div>}
         <AuctionList scale={0.2} result={game.bid.result} />
         <div className="option-wrapper">
           <div className="tricks">{allTrickOpt}</div>

@@ -332,9 +332,9 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
-    let isFinishAuction,
-      result = game.bid.result;
-    if (game && game.bid && result) {
+    let isFinishAuction;
+    if (game && game.bid && game.bid.result) {
+      let result = game.bid.result;
       isFinishAuction =
                 result.length >= 4 &&
                 result.some(bid => bid.trick >= 0) &&
