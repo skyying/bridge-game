@@ -202,6 +202,21 @@ export default class Game extends React.Component {
     let cards = game.cards;
     let players = game.players;
 
+    // set true to give dummy's card to declarer
+
+    let isFinishAuction;
+    if (game && game.bid && game.bid.result) {
+      let result = game.bid.result;
+      isFinishAuction =
+                result.length >= 4 &&
+                result.some(bid => bid.trick >= 0) &&
+                result
+                  .slice(result.length - 3)
+                  .every(res => res.opt === "Pass");
+    }
+
+    let dummyMode = isFinishAuction && true;
+
     let direction = ["south", "west", "north", "east"];
     let domPlayers = [],
       cardsByPlayer,
@@ -240,10 +255,25 @@ export default class Game extends React.Component {
           ...players.slice(0, currentUserIndex)
         ];
       }
+
       // create dom element by cards in user's hand
+      let flipIndex = dummyMode ? (game.bid.declarer + 2) % 4 : 6;
+      if (flipIndex < 4) {
+        flipIndex = playerIDByCurrentUser.findIndex(
+          player => player === game.players[flipIndex],
+        );
+      }
+
+
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
-        let playerIndex = index;
+        let playerIndex = index; // zero will alwasy be current login user
+
+        // makesure dummy hand can view declarer's card
+        if (flipIndex === 0) {
+          flipIndex = 2;
+        }
+
         hand = hand
           .sort((a, b) => a.value - b.value)
           .filter(card => card.trick === 0);
@@ -264,7 +294,8 @@ export default class Game extends React.Component {
         display = display.filter(item => item.length !== 0);
         // decide to flip down which players card
         // use playerIndex to decide , playerIndex 0 means current user
-        if (playerIndex > 0) {
+
+        if (playerIndex !== 0 && playerIndex !== flipIndex) {
           let flat = display.flat();
           let len = flat.length;
           if (Math.floor(len / 3) < 1 && len > 1) {
@@ -285,7 +316,7 @@ export default class Game extends React.Component {
         let cardsInHand = display.map((each, index) => {
           // use playerIndex to decide flip up whose cards
           // playerIndex === 0 means current user
-          if (playerIndex === 0) {
+          if (playerIndex === 0 || playerIndex === flipIndex) {
             return each.map((card, i) => (
               <CardWithClickEvt
                 name={`l${index} item-${i}`}
@@ -357,16 +388,6 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
-    let isFinishAuction;
-    if (game && game.bid && game.bid.result) {
-      let result = game.bid.result;
-      isFinishAuction =
-                result.length >= 4 &&
-                result.some(bid => bid.trick >= 0) &&
-                result
-                  .slice(result.length - 3)
-                  .every(res => res.opt === "Pass");
-    }
     return (
       <div className="game">
         {isFinishAuction && <AuctionResult game={game} />}
