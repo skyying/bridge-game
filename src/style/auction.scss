@@ -15,6 +15,7 @@
     .thumbnail-group{
       grid-gap: 5px 0;
       display: grid;
+      padding-bottom: 10px;
       justify-items: center;
       grid-template: 1fr / 1fr 1fr 1fr 1fr;
       .thumbnail{
@@ -43,7 +44,7 @@
 }
 
 .record{
-  padding: 10px 0;
+  padding: 0px 0 10px;
   border-top: 1px solid #E1E1E1;
   border-bottom: 1px solid #E1E1E1;
   display: flex;
@@ -92,9 +93,9 @@
   }
 }
 
-.other-btns{
-  display: flex;
-  padding: 5px 12px 10px;
+.trumps{
+  // display: flex;
+  // padding: 5px 12px 10px;
   > button {
     padding: 5px 13px;
     border: none;
@@ -110,6 +111,7 @@
     margin-left: 5px;
   }
 }
+
 .auction-inner{
   .trumps{
     padding-left: 12px;

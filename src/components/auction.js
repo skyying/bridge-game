@@ -12,13 +12,14 @@ export default class Auction extends React.Component {
     let game = this.props.game;
     this.state = {
       currentTrick: game.bid.trick,
+      visibility: false,
       current: null
     };
     this.setTrump = this.setTrump.bind(this);
     this.updateBid = this.updateBid.bind(this);
   }
   setTrump(index) {
-    this.setState({currentTrick: index, current: index});
+    this.setState({currentTrick: index, current: index, visibility: true});
   }
   updateBid(trump, opt = null) {
     let newBid,
@@ -68,6 +69,7 @@ export default class Auction extends React.Component {
       gameIndex: this.props.gameIndex,
       game: newGame
     });
+    this.setState({visibility: false, current: null});
   }
   render() {
     let {game, tableId, gameIndex} = this.props;
@@ -216,19 +218,25 @@ export default class Auction extends React.Component {
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>
-        <div className="record">{resultList}</div>
+        {game.bid &&
+                    game.bid.result &&
+                    game.bid.result.length > 0 && (
+          <div className="record">{resultList}</div>
+        )}
         <div>
-          <div className="other-btns">
-            <button
-              className="pass"
-              onClick={() => this.updateBid(null, "Pass")}>
-                            Pass
-            </button>
-            {DoubleBtn}
-            {ReDoubleBtn}
-          </div>
           <div className="tricks">{allTrickOpt}</div>
-          <div className="trumps">{selectedTrump}</div>
+          {this.state.visibility && (
+            <div className="trumps">
+              {selectedTrump}
+              <button
+                className="pass"
+                onClick={() => this.updateBid(null, "Pass")}>
+                                Pass
+              </button>
+              {DoubleBtn}
+              {ReDoubleBtn}
+            </div>
+          )}
         </div>
       </div>
     );
