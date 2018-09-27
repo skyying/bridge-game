@@ -14,8 +14,9 @@
     box-shadow:0px 0px 20px rgba(#000000, 0.1);
     .thumbnail-group{
       grid-gap: 5px 0;
-      display: grid;
       padding-bottom: 10px;
+      display: grid;
+      border-bottom: 1px solid #E1E1E1;
       justify-items: center;
       grid-template: 1fr / 1fr 1fr 1fr 1fr;
       .thumbnail{
@@ -42,11 +43,13 @@
   }
 
 }
+.option-wrapper{
+  border-top: 1px solid #E1E1E1;
+  padding-top: 10px;
+  margin-top: 10px;
+}
 
 .record{
-  padding: 0px 0 10px;
-  border-top: 1px solid #E1E1E1;
-  border-bottom: 1px solid #E1E1E1;
   display: flex;
   margin: 10px 0;
   flex-direction: column;
@@ -130,6 +133,47 @@
         justify-content: center;
         align-items: center;
         display: flex;
+      }
+    }
+  }
+}
+
+
+.auction-result{
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  z-index: 99;
+
+  .auction-result-inner{
+    padding: 20px;
+    position: relative;
+    width: 200px;
+    border-radius: 3px;
+    background-color: #F7F5F0;
+    -moz-box-shadow:0px 0px 20px rgba(#000000, 0.1);
+    -webkit-box-shadow:0px 0px 20px rgba(#000000, 0.1);
+    box-shadow:0px 0px 20px rgba(#000000, 0.1);
+    .thumbnail-group{
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E1E1E1;
+      grid-gap: 5px 0;
+      display: grid;
+      justify-items: center;
+      grid-template: 1fr / 1fr 1fr 1fr 1fr;
+      .thumbnail{
+        margin-right: 10px;
+        background-color: #D2ADB0;
+        width: 20px;
+        height: 20px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      overflow: hidden;}
+      span{
+        color: #fff;
+        font-size: 12px;
       }
     }
   }

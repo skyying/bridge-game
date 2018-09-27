@@ -10,10 +10,15 @@ import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
 import {TrickScore} from "./trickScore.js";
 import Auction from "./auction.js";
 import {Player} from "./player.js";
+import {AuctionResult} from "./auctionResult.js";
 
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
+    let game = this.props.table[this.props.table.length - 1];
+    this.state = {
+      endAuction: game.order >= 0
+    };
     this.currentMaxTrick = this.currentMaxTrick.bind(this);
     this.deal = this.deal.bind(this);
     this.getNextMaxTrick = this.getNextMaxTrick.bind(this);
@@ -21,10 +26,11 @@ export default class Game extends React.Component {
     this.reset = this.reset.bind(this);
     this.shuffle = this.shuffle.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
-
+    this.endAuction = this.endAuction.bind(this);
     // when player is ready, shuffle cards
     this.suffleCardsWhenReady();
   }
+
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let table = this.props.table;
@@ -38,6 +44,7 @@ export default class Game extends React.Component {
       }
     }
   }
+
   // so far, how many tricks have been played ?
   getNextMaxTrick() {
     let table = this.props.table;
@@ -115,6 +122,9 @@ export default class Game extends React.Component {
     }
 
     return winnerCard || null;
+  }
+  endAuction() {
+    this.setState({endAuction: true});
   }
   deal(value) {
     let table = this.props.table;
@@ -322,11 +332,24 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
+    let isFinishAuction,
+      result = game.bid.result;
+    if (game && game.bid && result) {
+      isFinishAuction =
+                result.length >= 4 &&
+                result.some(bid => bid.trick >= 0) &&
+                result
+                  .slice(result.length - 3)
+                  .every(res => res.opt === "Pass");
+    }
     return (
       <div className="game">
+        {isFinishAuction && <AuctionResult game={game} />}
         <div className="auction">
           {game.bid && (
             <Auction
+              isFinishAuction={isFinishAuction}
+              endAuction={this.endAuction}
               gameIndex={table.length - 1}
               game={game}
               tableId={this.props.tableId}

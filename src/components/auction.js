@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {SUIT_SHAPE, BID_NUM} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
+import {AuctionList} from "./auctionList.js";
 import "../style/auction.scss";
 
 export default class Auction extends React.Component {
@@ -159,71 +160,13 @@ export default class Auction extends React.Component {
         <span>{player[0]}</span>
       </div>
     ));
-    let resultList;
-    if (result) {
-      let resultsNum = result.length;
-      resultList = Array.from({length: Math.ceil(resultsNum / 4)})
-        .fill(0)
-        .map((res, index) => (
-          <div key={getRandomKey()} className="row">
-            {Array.from({length: 4})
-              .fill(0)
-              .map((re, j) => {
-                let resultItem = result[index * 4 + j];
-                if (resultItem && resultItem.opt) {
-                  return (
-                    <div
-                      key={getRandomKey()}
-                      className="bid-result">
-                      {resultItem.opt}
-                    </div>
-                  );
-                } else if (
-                  resultItem &&
-                                    resultItem.trick >= 0
-                ) {
-                  return (
-                    <div
-                      key={getRandomKey()}
-                      className="bid-result">
-                      <div>{resultItem.trick + 1}</div>
-                      {SUIT_SHAPE[resultItem.trump](0.2)}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={getRandomKey()}
-                      className="bid-result">
-                      {null}
-                    </div>
-                  );
-                }
-              })}
-          </div>
-        ));
-    }
-    let isFinishAuction;
-    if (result) {
-      isFinishAuction =
-                result.length >= 4 &&
-                result.some(bid => bid.trick >= 0) &&
-                result
-                  .slice(result.length - 3)
-                  .every(res => res.opt === "Pass");
-    }
-
-    if (isFinishAuction) return null;
+    if (this.props.isFinishAuction) return null;
 
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>
-        {game.bid &&
-                    game.bid.result &&
-                    game.bid.result.length > 0 && (
-          <div className="record">{resultList}</div>
-        )}
-        <div>
+        <AuctionList scale={0.2} result={game.bid.result} />
+        <div className="option-wrapper">
           <div className="tricks">{allTrickOpt}</div>
           {this.state.visibility && (
             <div className="trumps">
@@ -242,6 +185,12 @@ export default class Auction extends React.Component {
     );
   }
 }
+
+// {game.bid &&
+//             game.bid.result &&
+//             game.bid.result.length > 0 && (
+//   <div className="record">{resultList}</div>
+// )}
 
 // <h1>{this.props.game.players[this.props.game.deal]}</h1>
 // <div className="row">
