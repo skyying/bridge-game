@@ -23,7 +23,6 @@ export default class Game extends React.Component {
     this.deal = this.deal.bind(this);
     this.getNextMaxTrick = this.getNextMaxTrick.bind(this);
     this.handleWinner = this.handleWinner.bind(this);
-    this.reset = this.reset.bind(this);
     this.shuffle = this.shuffle.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
     this.endAuction = this.endAuction.bind(this);
@@ -90,6 +89,7 @@ export default class Game extends React.Component {
       let [firstHand] = cardsMatchCurrentTrick.filter(
         card => card.order === first,
       );
+
       // which card has max value by the bid trump
       const findMaxValueByTrump = (arr, trump) => {
         let list = arr
@@ -100,6 +100,7 @@ export default class Game extends React.Component {
           .sort((cardA, cardB) => cardB.value - cardA.value);
         return list.length ? list[0] : null;
       };
+
       // trump matters most, else, decide by what first hand has draw
       if (trump !== NO_TRUMP) {
         // filter trump cards, and compare their face value
@@ -153,17 +154,11 @@ export default class Game extends React.Component {
 
       dispatchToDatabase("UPDATE_WINNER_CARD", {
         winnerCard: card,
+        deal: card.player,
         table: table,
         id: this.props.tableId
       });
     }
-  }
-  reset() {
-    let tableId = this.props.tableId;
-    dispatchToDatabase("RESET_GAME", {
-      data: {cards: null, players: ["a", "b", "c", "d"]},
-      id: tableId
-    });
   }
   shuffle() {
     // refactor this to other function
@@ -280,7 +275,6 @@ export default class Game extends React.Component {
           hand = hand.sort((a, b) => b.value - a.value);
         }
 
-
         let currentUserIndex = game.players.findIndex(
           player => player === this.props.currentUser,
         );
@@ -301,9 +295,11 @@ export default class Game extends React.Component {
         display = display.filter(item => item.length !== 0);
         // decide to flip down which players card
         // use playerIndex to decide , playerIndex 0 means current user
-        
 
-        if (playerIndex !== currentUserIndex && playerIndex !== flipIndex) {
+        if (
+          playerIndex !== currentUserIndex &&
+                    playerIndex !== flipIndex
+        ) {
           let flat = display.flat();
           let len = flat.length;
           if (Math.floor(len / 3) < 1 && len > 1) {
@@ -327,9 +323,11 @@ export default class Game extends React.Component {
 
           let canBeClick =
                         isFinishAuction &&
-                        (playerIndex === currentUserIndex );
+                        players[game.deal] === player &&
+                        playerIndex === currentUserIndex;
 
-          let flipUp =  playerIndex === currentUserIndex ||
+          let flipUp =
+                        playerIndex === currentUserIndex ||
                         playerIndex === flipIndex;
 
           return each.map((card, i) => (
@@ -378,6 +376,7 @@ export default class Game extends React.Component {
                                   2
                       }
                       : null;
+
         return (
           <div
             className={direction[index]}
@@ -385,7 +384,13 @@ export default class Game extends React.Component {
             key={getRandomKey()}>
             <div className="hand-inner">
               <div className="user-hand">{cardsInHand}</div>
-              <Player name={player} />
+              <Player
+                current={
+                  players[game.deal] === player &&
+                                    isFinishAuction
+                }
+                name={player}
+              />
             </div>
           </div>
         );
@@ -394,6 +399,7 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
+        <div onClick={this.suffleCardsWhenReady}>shuffle</div>
         {isFinishAuction && <AuctionResult game={game} />}
         <div className="auction">
           {game.bid && (

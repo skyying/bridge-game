@@ -42,13 +42,8 @@ export const store = createStore(
 
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
-    case "RESET_GAME": {
-      // create a game
-      app.updateTableDataByID(action.id, action.data);
-      break;
-    }
     case "CREATE_NEW_GAME": {
-      // temp game 
+      // temp game
       app.setNodeByPath("tables/", {0: action.game});
       break;
     }
@@ -88,6 +83,7 @@ export const dispatchToDatabase = (type, action) => {
       let winner = action.winnerCard;
 
       winner.isWin = true;
+      currentGame.deal = winner.player;
       cards[targetCardIndex] = winner;
 
       currentTable.push(currentGame);
@@ -131,6 +127,8 @@ export const dispatchToDatabase = (type, action) => {
         // update trick to current nth trick, e.g. players have play 4 tricks
         // so far, the maxTrick will be 5
         currentCard.trick = action.maxTrick;
+        // record who has this card
+        currentCard.player = (action.deal + 4 - 1) % 4;
 
         app.updateTableGameDataByPath(
           `${action.id}/${gameIndex}/cards/${targetCardInex}/`,
