@@ -32,12 +32,7 @@ export const store = createStore(
     tables: [
       [
         {
-          players: [
-            "1",
-            "2",
-            "3",
-            EMPTY_SEAT
-          ]
+          players: ["1", "2", "3", EMPTY_SEAT]
         }
       ]
     ]
@@ -50,6 +45,11 @@ export const dispatchToDatabase = (type, action) => {
     case "RESET_GAME": {
       // create a game
       app.updateTableDataByID(action.id, action.data);
+      break;
+    }
+    case "CREATE_NEW_GAME": {
+      // temp game 
+      app.setNodeByPath("tables/", {0: action.game});
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
@@ -65,9 +65,9 @@ export const dispatchToDatabase = (type, action) => {
         bid: action.bid,
         order: -1
       };
+
       let game = Object.assign({}, currentGame, newGame);
       currentTable.push(game);
-
       let table = getObj(action.id, currentTable);
       app.updateTableDataByID(table);
       break;
@@ -172,6 +172,7 @@ export const dispatchToDatabase = (type, action) => {
         `${action.id}/${action.gameIndex}/`,
         action.game,
       );
+      break;
     }
     default:
       return null;

@@ -42,7 +42,8 @@ export default class Auction extends React.Component {
   }
   updateBid(trump, opt = null) {
     let newBid,
-      isFinishAuction = false;
+      isFinishAuction = false,
+      declarer = this.props.game.bid.declarer;
 
     if (trump >= 0 && trump !== null) {
       let bid = {
@@ -55,11 +56,13 @@ export default class Auction extends React.Component {
 
       // update bid taker, when give a trump bid,
       // record who is the last bid giver;
+      declarer = this.props.game.deal;
+
       newBid = Object.assign(
         {},
         this.props.game.bid,
         bid,
-        {declarer: this.props.game.deal},
+        {declarer: declarer},
         {result: result},
       );
     } else {
@@ -68,13 +71,15 @@ export default class Auction extends React.Component {
 
       // is game start
 
-      if (result.length > 4) {
+      if (result.length >= 4) {
+        let isAllPass = result
+          .slice(result.length - 3, result.length)
+          .every(res => res.opt === "Pass");
+        let isGreaterThanFour = result.length >= 4;
+        let hasValidTrump = result.some(bid => bid.trick >= 0);
+
         isFinishAuction =
-                    result.length >= 4 &&
-                    result.some(bid => bid.trick >= 0) &&
-                    result
-                      .slice(result.length - 3)
-                      .every(res => res.opt === "Pass");
+                    isAllPass && isGreaterThanFour && hasValidTrump;
       }
 
       // update bid
@@ -85,7 +90,7 @@ export default class Auction extends React.Component {
 
     let deal = this.props.game.deal;
     if (isFinishAuction) {
-      deal = (this.props.game.bid.declarer + 1) % 4;
+      deal = (declarer + 1) % 4;
     } else {
       deal = (deal + 1) % 4;
     }

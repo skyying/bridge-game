@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
-import {Card, CardWithClickEvt, CardFilpDown} from "./card.js";
+import {Card} from "./card.js";
 import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
 import {TrickScore} from "./trickScore.js";
@@ -140,7 +140,7 @@ export default class Game extends React.Component {
       maxTrick: this.getNextMaxTrick(),
       id: this.props.tableId,
       order: game.order + 1,
-      deal: (currentPlayer + 1) % 4
+      deal: (game.deal + 1) % 4
     });
 
     let winnerCard = this.handleWinner(value);
@@ -279,6 +279,14 @@ export default class Game extends React.Component {
         if (index === 1) {
           hand = hand.sort((a, b) => b.value - a.value);
         }
+
+
+        let currentUserIndex = game.players.findIndex(
+          player => player === this.props.currentUser,
+        );
+
+        currentUserIndex = 0;
+
         // handle display issue for both weat/east players
         let handCopy = hand.map(userHand =>
           Object.assign({}, userHand),
@@ -293,8 +301,9 @@ export default class Game extends React.Component {
         display = display.filter(item => item.length !== 0);
         // decide to flip down which players card
         // use playerIndex to decide , playerIndex 0 means current user
+        
 
-        if (playerIndex !== 0 && playerIndex !== flipIndex) {
+        if (playerIndex !== currentUserIndex && playerIndex !== flipIndex) {
           let flat = display.flat();
           let len = flat.length;
           if (Math.floor(len / 3) < 1 && len > 1) {
@@ -315,27 +324,23 @@ export default class Game extends React.Component {
         let cardsInHand = display.map((each, index) => {
           // use playerIndex to decide flip up whose cards
           // playerIndex === 0 means current user
-          if (playerIndex === 0 || playerIndex === flipIndex) {
-            return each.map((card, i) => (
-              <Card
-                name={`l${index} item-${i}`}
-                flipUp={true}
-                evt={this.deal}
-                key={getRandomKey()}
-                value={card.value}
-              />
-            ));
-          } else {
-            return each.map((card, i) => {
-              return (
-                <Card
-                  name={`l${index} item-${i}`}
-                  key={getRandomKey()}
-                  flipUp={false}
-                />
-              );
-            });
-          }
+
+          let canBeClick =
+                        isFinishAuction &&
+                        (playerIndex === currentUserIndex );
+
+          let flipUp =  playerIndex === currentUserIndex ||
+                        playerIndex === flipIndex;
+
+          return each.map((card, i) => (
+            <Card
+              name={`l${index} item-${i}`}
+              flipUp={flipUp}
+              evt={canBeClick ? this.deal : null}
+              key={getRandomKey()}
+              value={card.value}
+            />
+          ));
         });
 
         // calculate hand style and card postion
