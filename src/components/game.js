@@ -127,6 +127,7 @@ export default class Game extends React.Component {
   endAuction() {
     this.setState({endAuction: true});
   }
+
   deal(value) {
     let table = this.props.table;
     if (!table) {
@@ -134,13 +135,14 @@ export default class Game extends React.Component {
     }
     let game = table[table.length - 1];
     let currentPlayer = game.deal;
+    let order = game.order + 1;
 
     dispatchToDatabase("UPDATE_CURRENT_TRICK", {
       table: table,
       value: value,
       maxTrick: this.getNextMaxTrick(),
       id: this.props.tableId,
-      order: game.order + 1,
+      order: order,
       deal: (game.deal + 1) % 4
     });
 
@@ -154,6 +156,7 @@ export default class Game extends React.Component {
 
       dispatchToDatabase("UPDATE_WINNER_CARD", {
         winnerCard: card,
+        order: order,
         deal: card.player,
         table: table,
         id: this.props.tableId
@@ -196,7 +199,21 @@ export default class Game extends React.Component {
     let game = table.map(game => Object.assign({}, game)).pop();
     let cards = game.cards;
     let players = game.players;
-
+    let firstCard;
+    if (cards && cards.length >= 4) {
+      console.log(
+        game.order,
+        cards
+          .filter(card => card.order >= 0)
+          .sort((a, b) => b.order - a.order),
+      );
+      firstCard =
+                cards
+                  .filter(card => card.order % 4 === 0)
+                  .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
+                null;
+    }
+    console.log("firstCard", firstCard);
     // set true to give dummy's card to declarer
 
     let isFinishAuction;
