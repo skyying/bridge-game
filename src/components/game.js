@@ -199,23 +199,20 @@ export default class Game extends React.Component {
     let game = table.map(game => Object.assign({}, game)).pop();
     let cards = game.cards;
     let players = game.players;
+
+    // what is the first card of current trick
+    // in order to let players only can draw card as the same suit
     let firstCard;
-    if (cards && cards.length >= 4) {
-      console.log(
-        game.order,
-        cards
-          .filter(card => card.order >= 0)
-          .sort((a, b) => b.order - a.order),
-      );
+    // every run, first player to draw can draw any card
+    if (cards && cards.length >= 4 && game.order % 4 !== 3) {
       firstCard =
                 cards
                   .filter(card => card.order % 4 === 0)
                   .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
                 null;
     }
-    console.log("firstCard", firstCard);
-    // set true to give dummy's card to declarer
 
+    // check if fishish auction
     let isFinishAuction;
     if (game && game.bid && game.bid.result) {
       let result = game.bid.result;
@@ -227,21 +224,13 @@ export default class Game extends React.Component {
                   .every(res => res.opt === "Pass");
     }
 
+    // set true to give dummy's card to declarer
     let dummyMode = isFinishAuction && true;
 
+    // class name for each hand
     let direction = ["south", "west", "north", "east"];
-    let domPlayers = [],
-      cardsByPlayer,
-      playerIDByCurrentUser,
-      hands;
 
-    if (players) {
-      for (let key in players) {
-        domPlayers.push(
-          <div key={getRandomKey()}> {players[key]} </div>,
-        );
-      }
-    }
+    let cardsByPlayer, playerIDByCurrentUser, hands;
 
     // turn cards to 4 hands
     if (cards && cards.length === CARD_NUM.TOTAL) {
@@ -334,6 +323,17 @@ export default class Game extends React.Component {
 
         // handle sort isssue of west player, should sort
         // from big to small
+
+        let cardItems = display.flat();
+        let hasSameSuitWithFirstCard =
+                    firstCard &&
+                    cardItems.filter(card => {
+                      return (
+                        Math.floor(card.value / 13) ===
+                            Math.floor(firstCard.value / 13)
+                      );
+                    }).length > 0;
+
         let cardsInHand = display.map((each, index) => {
           // use playerIndex to decide flip up whose cards
           // playerIndex === 0 means current user
@@ -347,11 +347,27 @@ export default class Game extends React.Component {
                         playerIndex === currentUserIndex ||
                         playerIndex === flipIndex;
 
+          // if those card has same suit with first player,
+          // users need only to draw those cards
+          // if not, they can draw any cards
+          let cardEvt = card => {
+            if (
+              firstCard === null ||
+                            !hasSameSuitWithFirstCard ||
+                            Math.floor(card.value / 13) ===
+                                Math.floor(firstCard.value / 13)
+            ) {
+              return this.deal;
+            } else {
+              return null;
+            }
+          };
+
           return each.map((card, i) => (
             <Card
               name={`l${index} item-${i}`}
               flipUp={flipUp}
-              evt={canBeClick ? this.deal : null}
+              evt={canBeClick ? cardEvt(card) : null}
               key={getRandomKey()}
               value={card.value}
             />
