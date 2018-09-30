@@ -30,13 +30,9 @@ export default class ScoreBoard extends React.Component {
         player: playerIndex,
         tableId: tableId,
         game: game,
-        value: isAllReady ? false : true,
+        value: true,
         gameIndex: gameIndex
       });
-    }
-
-    if (isAllReady) {
-      this.props.startGame();
     }
   }
   render() {

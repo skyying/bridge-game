@@ -18,16 +18,16 @@ export const app = {
       .ref(path)
       .set(data);
   },
-  updateTableDataByID: data => {
+  updateTableDataByID: (id, data) => {
     firebaseApp
       .database()
-      .ref("tables/")
+      .ref(`tables/${id}/`)
       .set(data);
   },
   updateTableGameDataByPath: (path, game) => {
     firebaseApp
       .database()
-      .ref("tables/"+path)
+      .ref("tables/" + path)
       .set(game);
   }
 };

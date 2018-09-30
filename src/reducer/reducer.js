@@ -2,7 +2,7 @@ import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {app} from "../firebase/firebase.js";
 import {getObj} from "../helper/helper.js";
-import {EMPTY_SEAT} from "../components/constant.js";
+import {EMPTY_SEAT, DEFAULT_GAME} from "../components/constant.js";
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
@@ -35,9 +35,22 @@ export const store = createStore(
 
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
-    case "CREATE_NEW_GAME": {
-      // temp game
-      app.setNodeByPath("tables/", {0: action.game});
+    case "CREATE_TABLE": {
+      console.log("action.newTableId ", action.tableId);
+      if (action.tableId > 0) {
+        let players = DEFAULT_GAME.players.slice(0);
+        players[0] = action.currentUser;
+        let newTable = [
+          Object.assign({}, DEFAULT_GAME, {
+            players: players
+          })
+        ];
+        app.updateTableDataByID(action.tableId, newTable);
+      } else {
+        // first table is create by system
+        app.updateTableDataByID(action.tableId, [DEFAULT_GAME]);
+      }
+
       break;
     }
     case "READY_A_PLAYER": {
@@ -60,20 +73,15 @@ export const dispatchToDatabase = (type, action) => {
       let currentTable = action.table.map(game =>
         Object.assign({}, game),
       );
-      let currentGame = currentTable.pop();
-      let newGame = {
-        cards: action.cards,
-        deal: 0,
-        bid: action.bid,
-        order: -1,
-        isGameOver: false,
-        ready: [false, false, false, false]
-      };
 
-      let game = Object.assign({}, currentGame, newGame);
-      currentTable.push(game);
-      let table = getObj(action.id, currentTable);
-      app.updateTableDataByID(table);
+      let currentGame = currentTable.pop();
+      let newGame = Object.assign({}, currentGame, {
+        cards: action.cards
+      });
+
+      currentTable.push(newGame);
+      // let table = getObj(action.id, currentTable);
+      app.updateTableDataByID(action.id, currentTable);
       break;
     }
     case "UPDATE_WINNER_CARD": {
@@ -97,21 +105,22 @@ export const dispatchToDatabase = (type, action) => {
       currentGame.deal = winner.player;
       cards[targetCardIndex] = winner;
 
-
       // 51 means the index in the card array , the n-52 cards is given
       if (action.order === 51) {
         currentGame.isGameOver = true;
       }
 
       currentTable.push(currentGame);
-      let table = getObj(action.id, currentTable);
+      // let table = getObj(action.id, currentTable);
 
       if (action.order === 51) {
-
         // when at last run, wait for 1.5s to reset state
-        setTimeout(() => app.updateTableDataByID(table), 1500);
+        setTimeout(
+          () => app.updateTableDataByID(action.id, currentTable),
+          1500,
+        );
       } else {
-        app.updateTableDataByID(table);
+        app.updateTableDataByID(action.id, currentTable);
       }
 
       break;
@@ -186,10 +195,10 @@ export const dispatchToDatabase = (type, action) => {
         currentGame.players[emptyIndex] = action.currentUser;
       }
       currentTable.push(currentGame);
-      let currentTableObj = getObj(action.id, currentTable);
+      // let currentTableObj = getObj(action.id, currentTable);
 
       // udpate player data to database
-      app.updateTableDataByID(currentTableObj);
+      app.updateTableDataByID(action.id, currentTable);
       break;
     }
     case "UPDATE_AUCTION": {

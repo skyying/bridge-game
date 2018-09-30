@@ -15,7 +15,21 @@ export const SUIT_SHAPE = {
   1: scale => <Diamond scale={scale} />,
   2: scale => <Heart scale={scale} />,
   3: scale => <Spade scale={scale} />,
-  4: scale => <div>NT</div>,
+  4: scale => <div>NT</div>
 };
 
 export const CARD_RANK = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
+
+export const DEFAULT_GAME = {
+  deal: 0,
+  bid: {
+    isDb: false,
+    isRdb: false,
+    trick: 0,
+    trump: -1
+  },
+  order: -1,
+  isGameOver: false,
+  ready: [false, false, false, false],
+  players: [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT]
+};

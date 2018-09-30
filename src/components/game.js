@@ -6,7 +6,7 @@ import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
 import Trick from "./trick.js";
-import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
+import {CARD_NUM, EMPTY_SEAT, NO_TRUMP, DEFAULT_GAME} from "./constant.js";
 import TrickScore from "./trickScore.js";
 import ScoreBoard from "./scoreBoard.js";
 import Auction from "./auction.js";
@@ -46,15 +46,30 @@ export default class Game extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
   }
+  componentDidUpdate(prevProps) {
+    let newGame = this.props.table[this.props.table.length - 1];
+    let oldGame = prevProps.table[prevProps.table.length - 1];
+    if (
+      !newGame.ready.every(
+        (player, index) => player === oldGame.ready[index],
+      )
+    ) {
+      if (newGame.ready.every(player => player === true)) {
+        this.props.createNewGame();
+      }
+    }
+  }
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let table = this.props.table;
     if (table) {
       let curentGame = table.slice(0).pop();
+
+      let isAllReady = curentGame.ready.every(player => player === true);
       let isFourSeatsFull = curentGame.players.every(
         seat => seat !== EMPTY_SEAT,
       );
-      if (isFourSeatsFull && curentGame.cards && curentGame.isGameOver) {
+      if (isFourSeatsFull && !curentGame.cards && curentGame.order < 0) {
         this.shuffle();
       }
     }
@@ -182,7 +197,6 @@ export default class Game extends React.Component {
   shuffle() {
     // refactor this to other function
     // default bid trick / trump option
-    let bid = {isDb: false, isRdb: false, trick: 0, trump: -1};
     // create array from 0 - 51
     let cards = Array.from({length: CARD_NUM.TOTAL})
       .fill(0)
@@ -204,8 +218,7 @@ export default class Game extends React.Component {
     dispatchToDatabase("ADD_NEW_DECK_TO_TABLE", {
       table: this.props.table,
       id: this.props.tableId,
-      cards: cards,
-      bid: bid
+      cards: cards
     });
   }
 
@@ -215,7 +228,6 @@ export default class Game extends React.Component {
     let game = table.map(game => Object.assign({}, game)).pop();
     let {cards, players, ready, isGameOver} = game;
 
-    console.log("isGameOver", isGameOver);
     // what is the first card of current trick
     // in order to let players only can draw card as the same suit
     let firstCard;
@@ -473,6 +485,23 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
+        {
+          // should delete this
+        }
+        <div>
+          <ScoreBoard
+            startGame={this.suffleCardsWhenReady}
+            currentUser={this.props.currentUser}
+            windowWidth={this.state.windowWidth}
+            widnowHeight={this.state.windowHeight}
+            tableId={this.props.tableId}
+            gameIndex={table.length - 1}
+            game={game}
+          />
+        </div>
+        {
+          // should delete this
+        }
         <div onClick={this.suffleCardsWhenReady}>shuffle</div>
         {isFinishAuction && (
           <AuctionResult

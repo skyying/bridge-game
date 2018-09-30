@@ -17,7 +17,6 @@ export default class Lobby extends React.Component {
   }
   render() {
     console.log("COMP: LOBBY");
-    console.log(this.props.tables);
     return (
       <div>
             this is lobby table list
