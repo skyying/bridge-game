@@ -10,6 +10,7 @@
 
   .player-ready-list-inner{
     padding: 30px;
+    align-items: center;
     border-radius: 3px;
     background-color: #F4F4EB;
     max-width: 500px;
@@ -46,4 +47,17 @@
       background-color: #B8E986;
     }
   }
+
+  .btn-wrapper{
+  
+    display: flex;
+    justify-content:center;
+    .btn {
+      width: 120px;
+    }
+  }
+  .notes{
+    text-align: center;
+  }
+
 }

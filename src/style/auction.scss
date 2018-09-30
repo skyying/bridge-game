@@ -40,9 +40,12 @@
       div.current{
         background-color: #FF525D;
         color: #fff;
+        animation: breath 3s;
+        animation-iteration-count:infinite;
       }
     }
   }
+
 
 
 }
@@ -197,5 +200,18 @@
     .auction-result-inner{
       padding: 12px 10px;
     }
+  }
+}
+
+@keyframes breath {
+  0%    {
+    background-color: #000;
+  }
+  60%   {
+    background-color: #FF525D;
+    opacity: 1;
+  }
+  100%  {
+    background-color: #000;
   }
 }

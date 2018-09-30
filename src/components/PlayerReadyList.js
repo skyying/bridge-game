@@ -12,6 +12,8 @@ export default class PlayerReadyList extends React.Component {
   }
   setReadyState(playerIndex) {
     let {currentUser, game, tableId, gameIndex} = this.props;
+    if (!this.props.game) return;
+
     let ready = this.props.game.ready;
     dispatchToDatabase("READY_A_PLAYER", {
       player: playerIndex,
@@ -49,7 +51,11 @@ export default class PlayerReadyList extends React.Component {
       </div>
     ));
 
+    let currentUserCanPlay;
     if (players.includes(currentUser)) {
+      currentUserCanPlay = players.some(
+        (player, index) => player === currentUser && !ready[index],
+      );
       playBtns = players.map((player, index) => {
         if (player === currentUser && !ready[index]) {
           return (
@@ -58,21 +64,23 @@ export default class PlayerReadyList extends React.Component {
                 key={getRandomKey()}
                 onClick={() => this.setReadyState(index)}
                 className="btn">
-                                Play
+                                加入牌局
               </button>
             </div>
           );
         } else {
-          return <div key={getRandomKey()} />;
+          return null;
         }
       });
     }
-
     return (
       <div className="player-ready-list">
         <div className="player-ready-list-inner">
           <div className="row"> {thumbnails}</div>
-          <div className="row">{playBtns}</div>
+          {currentUserCanPlay && (
+            <div className="btn-wrapper">{playBtns}</div>
+          )}
+          <div className="notes">等待加入中...</div>
         </div>
       </div>
     );

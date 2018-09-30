@@ -81,7 +81,7 @@ export default class ScoreBoard extends React.Component {
             <div className="result">
               <div className="words">{resultWords}</div>
             </div>
-            <div>
+            <div className="btn-wrapper">
               <button onClick={this.recordGame} className="btn">
                                 Start a new Game
               </button>

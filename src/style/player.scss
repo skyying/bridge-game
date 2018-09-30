@@ -20,11 +20,33 @@ $textColor: #515151;
     border-radius: 38px;
     overflow: hidden;
   }
-  div.current {
-    background-color: #FF525D;
-  }
+  // div.current {
+  //   background-color: #FF525D;
+  //   animation: breath 3s;
+  //   animation-iteration-count:infinite;
+  // }
   .name{
     display: inline;
   }
 }
 
+
+.current {
+  .thumbnail {
+    background-color: #FF525D;
+    animation: breath 3s;
+    animation-iteration-count:infinite;
+  }
+}
+
+@keyframes breath {
+  0%{
+    background-color:lighten( #FF525D , 10%);
+  }
+  60%   {
+    background-color: #FF525D;
+  }
+  100%  {
+    background-color:lighten( #FF525D , 10%);
+  }
+}

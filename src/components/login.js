@@ -7,14 +7,13 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "leslie"
+      name: ""
     };
     this.handleName = this.handleName.bind(this);
   }
   handleName(e) {
     this.setState({name: e.target.value});
   }
-
   render() {
     return (
       <div>

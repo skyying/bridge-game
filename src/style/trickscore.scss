@@ -18,9 +18,10 @@
     width: 260px;
   }
 
-    .group-wrapper{
-      display: flex;
-    }
+  .group-wrapper{
+    display: flex;
+    width: 100%;
+  }
   .thumbnail-group{
     min-width: 60px;
     display: flex;
@@ -70,7 +71,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     overflow:hidden;
-    
+
     .trick-score-inner{
       padding: 30px;
       min-width: 300px;
@@ -93,13 +94,17 @@
         width: 100%;
         padding: 10px 0;
       }
-      .btn{
-        width: 100%;
-        max-width: 120px;
-        padding: 7px 5px;
-      }
     }
+  }
+  .btn{
+    width: 100%;
+    max-width: 150px;
+    padding: 7px 5px;
   }
 }
 
 
+.btn-wrapper{
+  display: flex;
+  justify-content: center;
+}
