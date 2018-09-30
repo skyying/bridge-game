@@ -14,16 +14,23 @@ export default class TableList extends React.Component {
     super(props);
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.createTable = this.createTable.bind(this);
-    if (!this.props.tables) {
-      this.createTable();
-    }
+  }
+  componentDidMount() {
+
+    console.log("component did mount", this.props.tables);
+    // should refactor this, write a promise for timeOut;
+    setTimeout(() => {
+      if (!this.props.tables) {
+        this.createTable();
+      }
+    }, 1500);
   }
   createTable() {
     let {tables} = this.props;
     let newTableId = tables ? tables.length : 0;
     dispatchToDatabase("CREATE_TABLE", {
       tableId: newTableId,
-      currentUser: this.props.currentUser,
+      currentUser: this.props.currentUser
     });
   }
   addPlayerToTable(id) {

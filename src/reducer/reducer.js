@@ -171,34 +171,28 @@ export const dispatchToDatabase = (type, action) => {
           currentCard,
         );
       }
-
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {
       let currentTable = action.table.map(game =>
         Object.assign({}, game),
       );
+
       let currentGame = currentTable.pop();
-      if (!currentGame.players) {
-        currentGame.players = [
-          EMPTY_SEAT,
-          EMPTY_SEAT,
-          EMPTY_SEAT,
-          EMPTY_SEAT
-        ];
-      }
-      let emptyIndex = currentGame.players.indexOf(EMPTY_SEAT);
-      if (emptyIndex >= 0) {
-        // if there are any empty seats, fill them first, else
-        // fill them by squence
 
-        currentGame.players[emptyIndex] = action.currentUser;
-      }
-      currentTable.push(currentGame);
-      // let currentTableObj = getObj(action.id, currentTable);
+      console.log("currentGame, before", currentGame.players);
 
-      // udpate player data to database
-      app.updateTableDataByID(action.id, currentTable);
+      let emptySeatIndex = currentGame.players.findIndex(
+        seat => seat === EMPTY_SEAT,
+      );
+      if (emptySeatIndex >= 0) {
+        currentGame.players[emptySeatIndex] = action.currentUser;
+        currentTable.push(currentGame);
+
+        console.log("currentGame, after", currentGame.players);
+        // let currentTableObj = getObj(action.id, currentTable);
+        app.updateTableDataByID(action.id, currentTable);
+      }
       break;
     }
     case "UPDATE_AUCTION": {

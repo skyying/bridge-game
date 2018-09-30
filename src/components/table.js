@@ -15,13 +15,13 @@ export default class Table extends React.Component {
       tableId: tableId,
       table: this.props.tables[tableId]
     });
-
   }
   render() {
     let tableId = this.props.match.params.id;
     return (
       <div>
         <Game
+          createNewGame={this.createNewGame}
           currentUser={this.props.currentUser}
           tableId={tableId}
           table={this.props.tables[tableId]}

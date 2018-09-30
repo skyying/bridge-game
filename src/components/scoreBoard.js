@@ -8,32 +8,7 @@ import "../style/btn.scss";
 export default class ScoreBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.setReadyState = this.setReadyState.bind(this);
-  }
-  setReadyState() {
-    let {currentUser, game, tableId, gameIndex} = this.props;
-    let ready = this.props.game.ready;
-
-    //  find current user index
-    let playerIndex = game.players.findIndex(
-      player => player === currentUser,
-    );
-
-    // see if others still not ready
-    let isAllReady =
-            ready.filter(
-              (player, index) => player === false && index !== playerIndex,
-            ).length === 0;
-
-    if (playerIndex >= 0) {
-      dispatchToDatabase("READY_A_PLAYER", {
-        player: playerIndex,
-        tableId: tableId,
-        game: game,
-        value: true,
-        gameIndex: gameIndex
-      });
-    }
+    // this.setReadyState = this.setReadyState.bind(this);
   }
   render() {
     let {game, windowWidth, windowHeight, currentUser} = this.props;
@@ -54,21 +29,33 @@ export default class ScoreBoard extends React.Component {
     });
 
     let result = {
-      win: "Congrets! You Win",
-      lose: "Try again ?"
+      win: "當溫拿的感覺原來如此, 94 送",
+      lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
     };
     let resultWords = null;
     let playerIndex = game.players.indexOf(currentUser);
-    if (playerIndex >= 0) {
-      if (playerIndex % 2 === 0 && scoreTeamOne > scoreTeamTwo) {
-        resultWords = result.win;
-      } else {
-        resultWords = result.lose;
-      }
-    } else {
-      resultWords = "";
-    }
 
+    let {declarer, trick} = game.bid;
+    let targetTrick = 6 + trick;
+    let isDeclarerInTeamOne = declarer % 2 === 0;
+
+    // if user is curretn user
+    if (playerIndex >= 0) {
+      // if user is declearer
+      if (isDeclarerInTeamOne) {
+        if (playerIndex % 2 === 0 && scoreTeamOne >= targetTrick) {
+          resultWords = result.win;
+        } else {
+          resultWords = result.lose;
+        }
+      } else {
+        if (playerIndex % 2 !== 0 && scoreTeamTwo >= targetTrick) {
+          resultWords = result.win;
+        } else {
+          resultWords = result.lose;
+        }
+      }
+    }
     return (
       <div className="game-over-board">
         <TrickScore
@@ -80,16 +67,15 @@ export default class ScoreBoard extends React.Component {
           game={this.props.game}>
           <div className="result">
             <div className="words">{resultWords}</div>
-            <div>
-              <button
-                onClick={this.setReadyState}
-                className="btn">
-                                Play again
-              </button>
-            </div>
           </div>
         </TrickScore>
       </div>
     );
   }
 }
+
+// <div>
+//     <button onClick={this.setReadyState} className="btn">
+//         Play again
+//     </button>
+// </div>;

@@ -12,6 +12,7 @@ import ScoreBoard from "./scoreBoard.js";
 import Auction from "./auction.js";
 import {Player} from "./player.js";
 import {AuctionResult} from "./auctionResult.js";
+import PlayerReadyList from "./playerReadyList.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Game extends React.Component {
     this.endAuction = this.endAuction.bind(this);
     this.handleResize = this.handleResize.bind(this);
     // when player is ready, shuffle cards
-    this.suffleCardsWhenReady();
+    // this.suffleCardsWhenReady();
   }
   handleResize() {
     this.setState({
@@ -55,7 +56,7 @@ export default class Game extends React.Component {
       )
     ) {
       if (newGame.ready.every(player => player === true)) {
-        this.props.createNewGame();
+        this.suffleCardsWhenReady();
       }
     }
   }
@@ -64,12 +65,10 @@ export default class Game extends React.Component {
     let table = this.props.table;
     if (table) {
       let curentGame = table.slice(0).pop();
-
-      let isAllReady = curentGame.ready.every(player => player === true);
       let isFourSeatsFull = curentGame.players.every(
         seat => seat !== EMPTY_SEAT,
       );
-      if (isFourSeatsFull && !curentGame.cards && curentGame.order < 0) {
+      if (isFourSeatsFull && !curentGame.cards) {
         this.shuffle();
       }
     }
@@ -482,23 +481,34 @@ export default class Game extends React.Component {
         </div>
       );
     }
+    let isAllReady = game.ready.every(player => player === true);
 
     return (
       <div className="game">
-        {
-          // should delete this
-        }
-        <div>
-          <ScoreBoard
-            startGame={this.suffleCardsWhenReady}
+        {!isAllReady && (
+          <PlayerReadyList
+            suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={this.props.currentUser}
-            windowWidth={this.state.windowWidth}
-            widnowHeight={this.state.windowHeight}
+            game={game}
             tableId={this.props.tableId}
             gameIndex={table.length - 1}
-            game={game}
           />
-        </div>
+        )}
+        {
+          // should delete this
+          //
+          // <div>
+          //   <ScoreBoard
+          //     startGame={this.suffleCardsWhenReady}
+          //     currentUser={this.props.currentUser}
+          //     windowWidth={this.state.windowWidth}
+          //     widnowHeight={this.state.windowHeight}
+          //     tableId={this.props.tableId}
+          //     gameIndex={table.length - 1}
+          //     game={game}
+          //   />
+          // </div>
+        }
         {
           // should delete this
         }
@@ -511,7 +521,8 @@ export default class Game extends React.Component {
           />
         )}
         <div className="auction">
-          {game.bid && (
+          {game.bid &&
+                        game.cards && (
             <Auction
               currentUser={this.props.currentUser}
               isFinishAuction={isFinishAuction}
