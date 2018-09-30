@@ -282,8 +282,11 @@ export default class Game extends React.Component {
           ...players.slice(currentUserIndex),
           ...players.slice(0, currentUserIndex)
         ];
+      } else {
+        // for non player scenario
+        cardsByPlayer = cardsByPlayer.slice(0);
+        playerIDByCurrentUser = players.slice(0);
       }
-
       // create dom element by cards in user's hand
       let flipIndex = dummyMode ? (game.bid.declarer + 2) % 4 : 6;
       if (flipIndex < 4) {
@@ -291,6 +294,8 @@ export default class Game extends React.Component {
           player => player === game.players[flipIndex],
         );
       }
+
+      let isCurrentUserPlayer = players.includes(this.props.currentUser);
 
       hands = cardsByPlayer.map((hand, index) => {
         let player = playerIDByCurrentUser[index];
@@ -366,11 +371,13 @@ export default class Game extends React.Component {
           // playerIndex === 0 means current user
 
           let canBeClick =
+                        isCurrentUserPlayer &&
                         isFinishAuction &&
                         players[game.deal] === player &&
-                        playerIndex === currentUserIndex;
+                        playerIndex === currentUserIndex 
 
           let flipUp =
+                        !isCurrentUserPlayer ||
                         playerIndex === currentUserIndex ||
                         playerIndex === flipIndex;
 
