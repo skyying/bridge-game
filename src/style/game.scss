@@ -2,19 +2,23 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
 *{
   // border: 1px solid red; /* remove it */
 }
+
+
+
+
+
+
+
+
+
+
 .game {
   background-image:$gameBg;
   width: 100%;
   height: calc(100vh - 60px);
   position: relative;
   .trick-area{
-    position: absolute;
-    top: calc( (100% - 270px) / 2);
-    left: calc( (100% - 320px) / 2);
-    width: 320px;
-    height: 255px;
     .trick-area-inner{
-      position: relative;
       width: 100%;
       height: 100%;
       .trick-card-wrapper {
@@ -33,23 +37,34 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
         width: 100px;
         height: auto;
         position: absolute;
+        transition: all 0.5s;
+        animation-duration: 0.2s; 
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in; 
       }
-
       .south-card{
-        bottom: 0;
-        left:calc(50% - 50px);
+        top: 50%;
+        left: 50%;
+        animation-name: south-card-fly-center;
+        transform: translate(-50%, 0%);
       }
       .north-card{
-        top: 0;
-        left:calc(50% - 50px);
+        animation-name: north-card-fly-center;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -100%);
       }
       .east-card{
-        right: 2%;
-        top: calc(50% - 68px);
+        top: 50%;
+        left: 50%;
+        transform: translate(50%, -50%);
+        animation-name: east-card-fly-center;
       }
       .west-card{
-        left: 2%;
-        top: calc(50% - 68px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-150%, -50%);
+        animation-name: west-card-fly-center;
       }
     }
   }
@@ -168,3 +183,155 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
 
 
 
+
+@keyframes south-card-fly-center {
+  0% {
+    top: 50%;
+    left: 50%;
+    visibility: hidden;
+    transform: translate(-50%, 0%);
+    opacity: 0;
+  }
+  10% {
+    left: 50%;
+    opacity: 1;
+    top: 70%;
+    visibility: visible;
+    transform: translate(-50%, 0%);
+  }
+  100% {
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0%);
+  }
+}
+
+@keyframes north-card-fly-center {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    visibility: hidden;
+    opacity: 0;
+  }
+  10% {
+    left: 50%;
+    transform: translate(-50%, -100%);
+    visibility: visible;
+    opacity: 1;
+    top: 30%;
+  }
+  100% {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+  }
+}
+
+
+@keyframes east-card-fly-center {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(50%, -50%);
+    visibility: hidden;
+    opacity: 0;
+  }
+  10% {
+    top: 50%;
+    transform: translate(50%, -50%);
+    visibility: visible;
+    opacity: 1;
+    left: 70%;
+  }
+  100% {
+    top: 50%;
+    transform: translate(50%, -50%);
+    visibility: visible;
+    opacity: 1;
+    left: 50%;
+  }
+}
+
+
+@keyframes west-card-fly-center {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-150%, -50%);
+    opacity: 0;
+    visibility: hidden;
+  }
+  10% {
+    top: 50%;
+    transform: translate(-150%, -50%);
+    visibility: visible;
+    opacity: 1;
+    left: 30%;
+  }
+  100% {
+    top: 50%;
+    visibility: visible;
+    transform: translate(-150%, -50%);
+    opacity: 1;
+    left: 50%;
+  }
+}
+
+
+
+// .game {
+//   .trick-area{
+//     .trick-area-inner{
+//       .trick-card-wrapper {
+//       }
+//       .east-card-fade-out{
+//         animation-iteration-count: 1;
+//         animation-timing-function: ease-in; 
+//       }
+
+//        $duration: 2s;
+//        $delay: 1s;
+//       .south-card{
+//         top: 50%;
+//         left: 50%;
+//         animation-name: fly-out;
+//         animation-duration: $duration; 
+//         animation-delay: $delay;
+//         opacity: 0;
+//       }
+//       .south-card-fade-out{
+//         animation-name: fly-out;
+//         animation-delay: $delay;
+//         animation-duration: $duration;  
+//         opacity: 0;
+//       }
+//       .north-card-fade-out{
+//         animation-name: fly-out;
+//         animation-delay: $delay; 
+//         animation-duration: $duration;   
+//         opacity: 0;
+//       }
+//       .west-card-fade-out{
+//         animation-name: fly-out;
+//         animation-delay: $delay; 
+//         animation-duration: $duration;   
+//         opacity: 0;
+//       }
+//     }
+//   }
+// }
+
+
+// @keyframes fly-out {
+//   0%{
+//     opacity: 1;
+//   }
+//   100%{
+//     opacity: 0;
+//   }
+
+// }

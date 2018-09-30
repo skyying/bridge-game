@@ -28,14 +28,7 @@ export const store = createStore(
   appReducer,
   {
     currentUser: null,
-    isLoad: false,
-    tables: [
-      [
-        {
-          players: ["1", "2", "3", EMPTY_SEAT]
-        }
-      ]
-    ]
+    isLoad: false
   },
   applyMiddleware(thunk),
 );
@@ -45,6 +38,20 @@ export const dispatchToDatabase = (type, action) => {
     case "CREATE_NEW_GAME": {
       // temp game
       app.setNodeByPath("tables/", {0: action.game});
+      break;
+    }
+    case "READY_A_PLAYER": {
+      // if all four player are ready,
+      // start a new game automatically;
+      let game = action.game;
+      let ready = game.ready;
+      let readyCopy = [
+        ...ready.slice(0, action.player),
+        action.value,
+        ...ready.slice(action.player + 1, ready.length)
+      ];
+      let path = `tables/${action.tableId}/${action.gameIndex}/ready/`;
+      app.setNodeByPath(path, readyCopy);
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
@@ -58,7 +65,9 @@ export const dispatchToDatabase = (type, action) => {
         cards: action.cards,
         deal: 0,
         bid: action.bid,
-        order: -1
+        order: -1,
+        isGameOver: false,
+        ready: [false, false, false, false]
       };
 
       let game = Object.assign({}, currentGame, newGame);
@@ -88,9 +97,23 @@ export const dispatchToDatabase = (type, action) => {
       currentGame.deal = winner.player;
       cards[targetCardIndex] = winner;
 
+
+      // 51 means the index in the card array , the n-52 cards is given
+      if (action.order === 51) {
+        currentGame.isGameOver = true;
+      }
+
       currentTable.push(currentGame);
       let table = getObj(action.id, currentTable);
-      app.updateTableDataByID(table);
+
+      if (action.order === 51) {
+
+        // when at last run, wait for 1.5s to reset state
+        setTimeout(() => app.updateTableDataByID(table), 1500);
+      } else {
+        app.updateTableDataByID(table);
+      }
+
       break;
     }
     case "UPDATE_CURRENT_TRICK": {

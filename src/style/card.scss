@@ -40,3 +40,18 @@ $card-black:#222222;
   }
 }
 
+
+.click-able{
+  transform: translateY(0%);
+  transition: all 0.2s;
+  cursor: pointer;
+  &:hover{
+    transform: translateY(-10%);
+    transition: all 0.2s;
+    cursor: pointer;
+    .card-inner{
+      background-color: #fff;
+    }
+  }
+
+}

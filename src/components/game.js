@@ -7,7 +7,8 @@ import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
 import Trick from "./trick.js";
 import {CARD_NUM, EMPTY_SEAT, NO_TRUMP} from "./constant.js";
-import {TrickScore} from "./trickScore.js";
+import TrickScore from "./trickScore.js";
+import ScoreBoard from "./scoreBoard.js";
 import Auction from "./auction.js";
 import {Player} from "./player.js";
 import {AuctionResult} from "./auctionResult.js";
@@ -17,7 +18,9 @@ export default class Game extends React.Component {
     super(props);
     let game = this.props.table[this.props.table.length - 1];
     this.state = {
-      endAuction: game.order >= 0
+      endAuction: game.order >= 0,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight
     };
     this.currentMaxTrick = this.currentMaxTrick.bind(this);
     this.deal = this.deal.bind(this);
@@ -26,10 +29,23 @@ export default class Game extends React.Component {
     this.shuffle = this.shuffle.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
     this.endAuction = this.endAuction.bind(this);
+    this.handleResize = this.handleResize.bind(this);
     // when player is ready, shuffle cards
     this.suffleCardsWhenReady();
   }
-
+  handleResize() {
+    this.setState({
+      windowWidth: window.innerWidth,
+      height: window.innerHeight
+    });
+  }
+  componentDidMount() {
+    this.handleResize();
+    window.addEventListener("resize", this.handleResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let table = this.props.table;
@@ -38,7 +54,7 @@ export default class Game extends React.Component {
       let isFourSeatsFull = curentGame.players.every(
         seat => seat !== EMPTY_SEAT,
       );
-      if (!curentGame.cards && isFourSeatsFull) {
+      if (isFourSeatsFull && curentGame.cards && curentGame.isGameOver) {
         this.shuffle();
       }
     }
@@ -197,9 +213,9 @@ export default class Game extends React.Component {
     console.log("COMP: Game");
     let table = this.props.table;
     let game = table.map(game => Object.assign({}, game)).pop();
-    let cards = game.cards;
-    let players = game.players;
+    let {cards, players, ready, isGameOver} = game;
 
+    console.log("isGameOver", isGameOver);
     // what is the first card of current trick
     // in order to let players only can draw card as the same suit
     let firstCard;
@@ -211,6 +227,7 @@ export default class Game extends React.Component {
                   .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
                 null;
     }
+    let isEndOfCurrentTrick = game.order % 4 === 3;
 
     // check if fishish auction
     let isFinishAuction;
@@ -350,24 +367,28 @@ export default class Game extends React.Component {
           // if those card has same suit with first player,
           // users need only to draw those cards
           // if not, they can draw any cards
-          let cardEvt = card => {
-            if (
+          let allowClickEvt = card => {
+            return (
               firstCard === null ||
                             !hasSameSuitWithFirstCard ||
                             Math.floor(card.value / 13) ===
                                 Math.floor(firstCard.value / 13)
-            ) {
-              return this.deal;
-            } else {
-              return null;
-            }
+            );
           };
 
           return each.map((card, i) => (
             <Card
-              name={`l${index} item-${i}`}
+              name={
+                canBeClick && allowClickEvt(card)
+                  ? `click-able l${index} item-${i}`
+                  : `l${index} item-${i}`
+              }
               flipUp={flipUp}
-              evt={canBeClick ? cardEvt(card) : null}
+              evt={
+                canBeClick && allowClickEvt(card)
+                  ? this.deal
+                  : null
+              }
               key={getRandomKey()}
               value={card.value}
             />
@@ -386,7 +407,7 @@ export default class Game extends React.Component {
                     direction[index] === "north" || direction[index] === "south"
                       ? {
                         left:
-                                  (window.innerWidth -
+                                  (this.state.windowWidth -
                                       (50 * totalCardsInHand + 50)) /
                                   2
                       }
@@ -404,7 +425,7 @@ export default class Game extends React.Component {
                     direction[index] === "west" || direction[index] === "east"
                       ? {
                         top:
-                                  (window.innerHeight -
+                                  (this.state.windowHeight -
                                       getHandHeight(totalSuitType)) /
                                   2
                       }
@@ -430,10 +451,36 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
+    // dom elements
+
+    if (isGameOver) {
+      return (
+        <div className="game">
+          <div>
+            <ScoreBoard
+              startGame={this.suffleCardsWhenReady}
+              currentUser={this.props.currentUser}
+              windowWidth={this.state.windowWidth}
+              widnowHeight={this.state.windowHeight}
+              tableId={this.props.tableId}
+              gameIndex={table.length - 1}
+              game={game}
+            />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="game">
         <div onClick={this.suffleCardsWhenReady}>shuffle</div>
-        {isFinishAuction && <AuctionResult game={game} />}
+        {isFinishAuction && (
+          <AuctionResult
+            windowWidth={this.state.windowWidth}
+            windowHeight={this.state.windowHeight}
+            game={game}
+          />
+        )}
         <div className="auction">
           {game.bid && (
             <Auction
@@ -452,9 +499,23 @@ export default class Game extends React.Component {
             cards={cards}
             cardsByPlayer={cardsByPlayer}
             currentMaxTrick={this.currentMaxTrick}
+            order={game.order}
+            isTrickFinish={isEndOfCurrentTrick}
           />
-          <TrickScore game={game} />
+          <TrickScore
+            resizeRatio={0.15}
+            innerStyle={{
+              bottom: Math.ceil(this.state.windowWidth / 500) * 5,
+              right: Math.ceil(this.state.windowWidth / 500) * 5
+            }}
+            thumbnailSize={30}
+            name="right-bottom-pos"
+            windowWidth={this.state.windowWidth}
+            widnowHeight={this.state.windowHeight}
+            game={game}
+          />
         </div>
+
         <div className="sidebar" />
       </div>
     );

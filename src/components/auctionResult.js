@@ -10,7 +10,7 @@ export class AuctionResult extends React.Component {
     super(props);
   }
   render() {
-    let game = this.props.game;
+    let {game, windowWidth, windowHeight} = this.props;
     if (!game || !game.bid.result) {
       return null;
     }
@@ -20,13 +20,15 @@ export class AuctionResult extends React.Component {
       </div>
     ));
     return (
-      <div className="auction-result">
+      <div
+        className="auction-result"
+        style={{
+          top: Math.ceil(windowWidth / 500) * 5,
+          right: Math.ceil(windowWidth / 500) * 5
+        }}>
         <div className="auction-result-inner">
           <div className="thumbnail-group">{playerThumbnails}</div>
-          <AuctionList
-            scale={0.15}
-            result={this.props.game.bid.result}
-          />
+          <AuctionList scale={0.15} result={game.bid.result} />
         </div>
       </div>
     );

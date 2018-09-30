@@ -1,0 +1,14 @@
+
+ .btn {
+  width: 80%;
+  padding: 5px 13px;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 38px;
+  background-color: #4A90E2;
+  transition: all 0.5s;
+  &:hover{
+    background-color: lighten(#4A90E2, 10%)
+  }
+}

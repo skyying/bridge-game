@@ -5,21 +5,17 @@ import {CARD_NUM, CARD_RANK, SUIT_SHAPE} from "./constant.js";
 import "../style/reset.scss";
 import "../style/card.scss";
 
-export const CardFilpDown = ({name}) => {
+export const TrickCard = ({value}) => {
   return (
-    <div className={`card-wrapper ${name}`}>
-      <div className="card flip-down">
-        <div className="card-inner" />
-      </div>
+    <div className="abbbbbbbbbbbbb">
+      <Card flipUp={true} value={value} />
     </div>
   );
 };
 
 export const Card = ({value, evt = null, flipUp, name = null}) => {
-
   let kind = Math.floor(value / CARD_NUM.HAND);
   let wrapperName = name ? `card-wrapper ${name}` : "card-wrapper";
-
   if (flipUp) {
     return (
       <div
@@ -53,12 +49,4 @@ export const Card = ({value, evt = null, flipUp, name = null}) => {
       </div>
     );
   }
-};
-
-export const CardWithClickEvt = ({value, evt, name}) => {
-  return (
-    <div className={`card-wrapper ${name}`} onClick={() => evt(value)}>
-      <Card value={value} />
-    </div>
-  );
 };

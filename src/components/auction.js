@@ -112,6 +112,12 @@ export default class Auction extends React.Component {
   }
   render() {
     let {game, tableId, gameIndex} = this.props;
+
+    let players = game.players;
+    let isCurrentUser =
+            players && players[game.deal] === this.props.currentUser;
+    console.log("isCurrentUser", isCurrentUser);
+
     let value = game.bid.trick * 5 + game.bid.trump;
 
     // todo: refactor
@@ -211,10 +217,8 @@ export default class Auction extends React.Component {
         )}
         <AuctionList scale={0.2} result={game.bid.result} />
         <div className="option-wrapper">
-          <div className="tricks">{allTrickOpt}</div>
-          {this.state.visibility && (
-            <div className="trumps">
-              {selectedTrump}
+          {isCurrentUser && (
+            <div className="other-btns">
               <button
                 className="pass"
                 onClick={() => this.updateBid(null, "Pass")}>
@@ -224,23 +228,13 @@ export default class Auction extends React.Component {
               {ReDoubleBtn}
             </div>
           )}
+          <div className="tricks">{allTrickOpt}</div>
+          {this.state.visibility && (
+            <div className="trumps">{selectedTrump}</div>
+          )}
         </div>
       </div>
     );
   }
 }
 
-// {game.bid &&
-//             game.bid.result &&
-//             game.bid.result.length > 0 && (
-//   <div className="record">{resultList}</div>
-// )}
-
-// <h1>{this.props.game.players[this.props.game.deal]}</h1>
-// <div className="row">
-//   <div className="bid-result" />
-//   <div className="bid-result">PASS</div>
-//   <div className="bid-result">PASS</div>
-//   <div className="bid-result">PASS</div>
-// </div>
-// <h1>{this.props.game.players[this.props.game.deal]}</h1>
