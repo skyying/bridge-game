@@ -73,9 +73,3 @@ export default class ScoreBoard extends React.Component {
     );
   }
 }
-
-// <div>
-//     <button onClick={this.setReadyState} className="btn">
-//         Play again
-//     </button>
-// </div>;

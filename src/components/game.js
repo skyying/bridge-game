@@ -222,7 +222,6 @@ export default class Game extends React.Component {
   }
 
   render() {
-    console.log("COMP: Game");
     let table = this.props.table;
     let game = table.map(game => Object.assign({}, game)).pop();
     let {cards, players, ready, isGameOver} = game;

@@ -44,7 +44,6 @@ class App extends React.Component {
     dispatch("STOP_LOADING", {isLoad: true});
   }
   render() {
-    console.log("COMP: APP");
     if (!this.state.isLoad) {
       return <Loading />;
     }

@@ -43,7 +43,6 @@ export default class TableList extends React.Component {
     });
   }
   render() {
-    console.log("COMP, TABLE_LIST");
     let {tables} = this.props;
     if (!tables) {
       return <div>loading table data...</div>;

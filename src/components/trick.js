@@ -21,8 +21,6 @@ export default class Trick extends React.Component {
     }
   }
   render() {
-    console.log(this.props.order);
-    console.log(this.state);
     let direction = ["south-card", "west-card", "north-card", "east-card"];
     let {
       order,

@@ -8,7 +8,6 @@ export default class TrickScore extends React.Component {
     super(props);
   }
   render() {
-    console.log("COMP: TRICK_SCORE");
     let {game, windowWidth, windowHeight} = this.props;
     if (!game || !game.cards) {
       return null;
