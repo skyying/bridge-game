@@ -9,12 +9,11 @@ export default class Table extends React.Component {
   }
   createNewGame() {
     let tableId = this.props.match.params.id;
-
     // append a new game to databse
-    dispatchToDatabase("CREATE_NEW_GAME", {
-      tableId: tableId,
-      table: this.props.tables[tableId]
-    });
+    // dispatchToDatabase("CREATE_NEW_GAME", {
+    //   tableId: tableId,
+    //   table: this.props.tables[tableId]
+    // });
   }
   render() {
     let tableId = this.props.match.params.id;

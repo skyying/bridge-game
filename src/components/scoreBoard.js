@@ -8,7 +8,18 @@ import "../style/btn.scss";
 export default class ScoreBoard extends React.Component {
   constructor(props) {
     super(props);
-    // this.setReadyState = this.setReadyState.bind(this);
+    this.recordGame = this.recordGame.bind(this);
+  }
+  recordGame() {
+    let {game, table} = this.props;
+    if (game.order !== 51 || !table) {
+      return;
+    }
+    dispatchToDatabase("CREATE_NEW_GAME", {
+      tableId: this.props.tableId,
+      gameId: this.props.table.length,
+      players: this.props.game.players
+    });
   }
   render() {
     let {game, windowWidth, windowHeight, currentUser} = this.props;
@@ -56,6 +67,7 @@ export default class ScoreBoard extends React.Component {
         }
       }
     }
+
     return (
       <div className="game-over-board">
         <TrickScore
@@ -65,8 +77,15 @@ export default class ScoreBoard extends React.Component {
           windowWidth={this.props.windowWidth}
           widnowHeight={this.props.windowHeight}
           game={this.props.game}>
-          <div className="result">
-            <div className="words">{resultWords}</div>
+          <div>
+            <div className="result">
+              <div className="words">{resultWords}</div>
+            </div>
+            <div>
+              <button onClick={this.recordGame} className="btn">
+                                Start a new Game
+              </button>
+            </div>
           </div>
         </TrickScore>
       </div>

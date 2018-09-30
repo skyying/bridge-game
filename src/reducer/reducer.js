@@ -36,7 +36,6 @@ export const store = createStore(
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
     case "CREATE_TABLE": {
-      console.log("action.newTableId ", action.tableId);
       if (action.tableId > 0) {
         let players = DEFAULT_GAME.players.slice(0);
         players[0] = action.currentUser;
@@ -50,8 +49,14 @@ export const dispatchToDatabase = (type, action) => {
         // first table is create by system
         app.updateTableDataByID(action.tableId, [DEFAULT_GAME]);
       }
-
       break;
+    }
+    case "CREATE_NEW_GAME": {
+      let game = Object.assign({}, DEFAULT_GAME, {
+        players: action.players
+      });
+      let path = `tables/${action.tableId}/${action.gameId}`;
+      app.setNodeByPath(path, game);
     }
     case "READY_A_PLAYER": {
       // if all four player are ready,
@@ -98,31 +103,17 @@ export const dispatchToDatabase = (type, action) => {
       let targetCardIndex = cards.findIndex(
         card => card.value === action.winnerCard.value,
       );
-
       let winner = action.winnerCard;
-
       winner.isWin = true;
       currentGame.deal = winner.player;
       cards[targetCardIndex] = winner;
-
       // 51 means the index in the card array , the n-52 cards is given
       if (action.order === 51) {
         currentGame.isGameOver = true;
       }
-
       currentTable.push(currentGame);
       // let table = getObj(action.id, currentTable);
-
-      if (action.order === 51) {
-        // when at last run, wait for 1.5s to reset state
-        setTimeout(
-          () => app.updateTableDataByID(action.id, currentTable),
-          1500,
-        );
-      } else {
-        app.updateTableDataByID(action.id, currentTable);
-      }
-
+      app.updateTableDataByID(action.id, currentTable);
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
@@ -180,8 +171,6 @@ export const dispatchToDatabase = (type, action) => {
 
       let currentGame = currentTable.pop();
 
-      console.log("currentGame, before", currentGame.players);
-
       let emptySeatIndex = currentGame.players.findIndex(
         seat => seat === EMPTY_SEAT,
       );
@@ -189,7 +178,6 @@ export const dispatchToDatabase = (type, action) => {
         currentGame.players[emptySeatIndex] = action.currentUser;
         currentTable.push(currentGame);
 
-        console.log("currentGame, after", currentGame.players);
         // let currentTableObj = getObj(action.id, currentTable);
         app.updateTableDataByID(action.id, currentTable);
       }

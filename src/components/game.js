@@ -475,11 +475,13 @@ export default class Game extends React.Component {
               tableId={this.props.tableId}
               gameIndex={table.length - 1}
               game={game}
+              table={this.props.table}
             />
           </div>
         </div>
       );
     }
+
     let isAllReady = game.ready.every(player => player === true);
 
     return (
@@ -511,7 +513,6 @@ export default class Game extends React.Component {
         {
           // should delete this
         }
-        <div onClick={this.suffleCardsWhenReady}>shuffle</div>
         {isFinishAuction && (
           <AuctionResult
             windowWidth={this.state.windowWidth}
@@ -554,7 +555,6 @@ export default class Game extends React.Component {
             game={game}
           />
         </div>
-
         <div className="sidebar" />
       </div>
     );
