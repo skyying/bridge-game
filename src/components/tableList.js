@@ -16,7 +16,6 @@ export default class TableList extends React.Component {
     this.createTable = this.createTable.bind(this);
   }
   componentDidMount() {
-    console.log("component did mount", this.props.tables);
     // should refactor this, write a promise for timeOut;
     setTimeout(() => {
       if (!this.props.tables) {

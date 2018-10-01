@@ -221,22 +221,26 @@ export default class Game extends React.Component {
     });
   }
 
+  getFirstCard(game) {
+    if (!game) {
+      return null;
+    }
+    // what is the first card of current trick
+    // in order to let players only can draw card as the same suit
+    if (game.cards && game.cards.length >= 4 && game.order % 4 !== 3) {
+      return (
+        game.cards
+          .filter(card => card.order % 4 === 0)
+          .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
+                null
+      );
+    }
+  }
   render() {
     let table = this.props.table;
     let game = table.map(game => Object.assign({}, game)).pop();
     let {cards, players, ready, isGameOver} = game;
 
-    // what is the first card of current trick
-    // in order to let players only can draw card as the same suit
-    let firstCard;
-    // every run, first player to draw can draw any card
-    if (cards && cards.length >= 4 && game.order % 4 !== 3) {
-      firstCard =
-                cards
-                  .filter(card => card.order % 4 === 0)
-                  .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
-                null;
-    }
     let isEndOfCurrentTrick = game.order % 4 === 3;
 
     // check if fishish auction
@@ -287,6 +291,7 @@ export default class Game extends React.Component {
         cardsByPlayer = cardsByPlayer.slice(0);
         playerIDByCurrentUser = players.slice(0);
       }
+
       // create dom element by cards in user's hand
       let flipIndex = dummyMode ? (game.bid.declarer + 2) % 4 : 6;
       if (flipIndex < 4) {
@@ -295,10 +300,11 @@ export default class Game extends React.Component {
         );
       }
 
+      let currentTurnPlayer = players[game.deal];
       let isCurrentUserPlayer = players.includes(this.props.currentUser);
 
       hands = cardsByPlayer.map((hand, index) => {
-        let player = playerIDByCurrentUser[index];
+        let playerInOffsetPlayerList = playerIDByCurrentUser[index];
         let playerIndex = index; // zero will alwasy be current login user
 
         // makesure dummy hand can view declarer's card
@@ -356,6 +362,8 @@ export default class Game extends React.Component {
         // handle sort isssue of west player, should sort
         // from big to small
 
+        let firstCard = this.getFirstCard(game);
+
         let cardItems = display.flat();
         let hasSameSuitWithFirstCard =
                     firstCard &&
@@ -369,12 +377,20 @@ export default class Game extends React.Component {
         let cardsInHand = display.map((each, index) => {
           // use playerIndex to decide flip up whose cards
           // playerIndex === 0 means current user
+          let declarerIndex = game.bid.declarer;
+
+          let dummyPlayerIndex = (declarerIndex + 2) % 4;
+          let dummyPlayer = players[dummyPlayerIndex];
+          let declarerPlayer = players[declarerIndex];
+
 
           let canBeClick =
-                        isCurrentUserPlayer &&
                         isFinishAuction &&
-                        players[game.deal] === player &&
-                        playerIndex === currentUserIndex 
+                        currentTurnPlayer === playerInOffsetPlayerList &&
+                        playerIndex === currentUserIndex &&
+                        isCurrentUserPlayer;
+
+          console.log("canBeClick", canBeClick);
 
           let flipUp =
                         !isCurrentUserPlayer ||
@@ -457,10 +473,11 @@ export default class Game extends React.Component {
               <div className="user-hand">{cardsInHand}</div>
               <Player
                 current={
-                  players[game.deal] === player &&
+                  currentTurnPlayer ===
+                                        playerInOffsetPlayerList &&
                                     isFinishAuction
                 }
-                name={player}
+                name={playerInOffsetPlayerList}
               />
             </div>
           </div>
@@ -502,24 +519,6 @@ export default class Game extends React.Component {
             gameIndex={table.length - 1}
           />
         )}
-        {
-          // should delete this
-          //
-          // <div>
-          //   <ScoreBoard
-          //     startGame={this.suffleCardsWhenReady}
-          //     currentUser={this.props.currentUser}
-          //     windowWidth={this.state.windowWidth}
-          //     widnowHeight={this.state.windowHeight}
-          //     tableId={this.props.tableId}
-          //     gameIndex={table.length - 1}
-          //     game={game}
-          //   />
-          // </div>
-        }
-        {
-          // should delete this
-        }
         {isFinishAuction && (
           <AuctionResult
             windowWidth={this.state.windowWidth}
