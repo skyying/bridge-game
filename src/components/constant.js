@@ -6,6 +6,7 @@ export const CARD_NUM = {
   HAND: 13
 };
 
+export const PLAYER_NUM = 4;
 export const EMPTY_SEAT = -1;
 export const NO_TRUMP = 4;
 export const BID_NUM = [1, 2, 3, 4, 5, 6, 7];
@@ -33,3 +34,5 @@ export const DEFAULT_GAME = {
   ready: [false, false, false, false],
   players: [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT]
 };
+
+

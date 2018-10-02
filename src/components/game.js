@@ -12,6 +12,13 @@ import ScoreBoard from "./scoreBoard.js";
 import Auction from "./auction.js";
 import {Player} from "./player.js";
 import {AuctionResult} from "./auctionResult.js";
+import {
+  hasSameSuitWithFirstCard,
+  getOffsetDatabyCurrentUser,
+  mapFlipDownCards,
+  getFirstCard
+} from "./examineCards.js";
+import {getWinnerCard} from "./getWinnerCard.js";
 import PlayerReadyList from "./playerReadyList.js";
 
 export default class Game extends React.Component {
@@ -23,16 +30,13 @@ export default class Game extends React.Component {
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight
     };
-    this.currentMaxTrick = this.currentMaxTrick.bind(this);
     this.deal = this.deal.bind(this);
     this.getNextMaxTrick = this.getNextMaxTrick.bind(this);
-    this.handleWinner = this.handleWinner.bind(this);
     this.shuffle = this.shuffle.bind(this);
     this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
     this.endAuction = this.endAuction.bind(this);
     this.handleResize = this.handleResize.bind(this);
-    // when player is ready, shuffle cards
-    // this.suffleCardsWhenReady();
+    this.getAuctionStatus = this.getAuctionStatus.bind(this);
   }
   handleResize() {
     this.setState({
@@ -88,72 +92,6 @@ export default class Game extends React.Component {
     }
     return maxTrick;
   }
-  currentMaxTrick() {
-    let table = this.props.table;
-    if (!table) return;
-    let cards = table[table.length - 1].cards;
-    return Math.max(...cards.map(card => card.trick));
-  }
-  handleWinner(value) {
-    let table = this.props.table,
-      game = table[table.length - 1],
-      cards = game.cards,
-      maxTrick = this.currentMaxTrick();
-
-    let {trump} = game.bid;
-    let cardsMatchCurrentTrick = cards
-      .map((card, index) => Object.assign({}, card, {index: index}))
-      .filter(
-        card =>
-          (card.trick === maxTrick && card.trick > 0) ||
-                    card.value === value,
-      );
-    let winnerCard,
-      noTrumpCards = false;
-
-    if (cardsMatchCurrentTrick.length === 4) {
-      // which card is first been played
-      let first = Math.min(
-        ...cardsMatchCurrentTrick.map(card => card.order),
-      );
-      let [firstHand] = cardsMatchCurrentTrick.filter(
-        card => card.order === first,
-      );
-
-      // which card has max value by the bid trump
-      const findMaxValueByTrump = (arr, trump) => {
-        let list = arr
-          .filter(
-            item =>
-              Math.floor(item.value / CARD_NUM.HAND) === trump,
-          )
-          .sort((cardA, cardB) => cardB.value - cardA.value);
-        return list.length ? list[0] : null;
-      };
-
-      // trump matters most, else, decide by what first hand has draw
-      if (trump !== NO_TRUMP) {
-        // filter trump cards, and compare their face value
-        let tmp = findMaxValueByTrump(cardsMatchCurrentTrick, trump);
-        if (tmp !== null) {
-          winnerCard = tmp;
-        } else {
-          noTrumpCards = true;
-        }
-      }
-
-      if (trump === NO_TRUMP || noTrumpCards) {
-        // if their quotient are the same, compare their value, else, let first win
-        let trumpRef = Math.floor(firstHand.value / CARD_NUM.HAND);
-        winnerCard = findMaxValueByTrump(
-          cardsMatchCurrentTrick,
-          trumpRef,
-        );
-      } // end of no trump
-    }
-
-    return winnerCard || null;
-  }
   endAuction() {
     this.setState({endAuction: true});
   }
@@ -176,7 +114,7 @@ export default class Game extends React.Component {
       deal: (game.deal + 1) % 4
     });
 
-    let winnerCard = this.handleWinner(value);
+    let winnerCard = getWinnerCard(table, value);
 
     // make sure winnerCard exists, and write winner to database
     if (winnerCard) {
@@ -220,92 +158,57 @@ export default class Game extends React.Component {
       cards: cards
     });
   }
+  getAuctionStatus(game) {
+    // check if fishish auction
+    let result = game.bid.result;
 
-  getFirstCard(game) {
-    if (!game) {
-      return null;
+    if (!game || !result) {
+      return false;
     }
-    // what is the first card of current trick
-    // in order to let players only can draw card as the same suit
-    if (game.cards && game.cards.length >= 4 && game.order % 4 !== 3) {
-      return (
-        game.cards
-          .filter(card => card.order % 4 === 0)
-          .sort((cardA, cardB) => cardB.order - cardA.order)[0] ||
-                null
-      );
-    }
+    return (
+      result.length >= 4 &&
+            result.some(bid => bid.trick >= 0) &&
+            result.slice(result.length - 3).every(res => res.opt === "Pass")
+    );
   }
   render() {
-    let table = this.props.table;
+    let {table, currentUser} = this.props;
     let game = table.map(game => Object.assign({}, game)).pop();
     let {cards, players, ready, isGameOver} = game;
 
     let isEndOfCurrentTrick = game.order % 4 === 3;
-
-    // check if fishish auction
-    let isFinishAuction;
-    if (game && game.bid && game.bid.result) {
-      let result = game.bid.result;
-      isFinishAuction =
-                result.length >= 4 &&
-                result.some(bid => bid.trick >= 0) &&
-                result
-                  .slice(result.length - 3)
-                  .every(res => res.opt === "Pass");
-    }
-
+    let isFinishAuction = this.getAuctionStatus(game);
     // set true to give dummy's card to declarer
-    let dummyMode = isFinishAuction && true;
+    let isDummyMode = isFinishAuction && true;
 
     // class name for each hand
     let direction = ["south", "west", "north", "east"];
-
-    let cardsByPlayer, playerIDByCurrentUser, hands;
+    let hands;
+    let {cardsByPlayer, offsetPlayers, offsetIndex} =
+            getOffsetDatabyCurrentUser(game, currentUser) || {};
 
     // turn cards to 4 hands
     if (cards && cards.length === CARD_NUM.TOTAL) {
-      cardsByPlayer = players.map((userIndex, index) => {
-        return cards.filter((card, i) => i % players.length === index);
-      });
-
-      // shift current user's index to zero, so their cards will
-      // shown on bottom
-
       let currentUserIndex = players.findIndex(
-        user => user === this.props.currentUser,
+        user => user === currentUser,
       );
 
-      // if current user is a player, shift card
-      if (!(currentUserIndex < 0)) {
-        cardsByPlayer = [
-          ...cardsByPlayer.slice(currentUserIndex),
-          ...cardsByPlayer.slice(0, currentUserIndex)
-        ];
-        playerIDByCurrentUser = [
-          ...players.slice(currentUserIndex),
-          ...players.slice(0, currentUserIndex)
-        ];
-      } else {
-        // for non player scenario
-        cardsByPlayer = cardsByPlayer.slice(0);
-        playerIDByCurrentUser = players.slice(0);
-      }
-
       // create dom element by cards in user's hand
-      let flipIndex = dummyMode ? (game.bid.declarer + 2) % 4 : 6;
+      let flipIndex = isDummyMode ? (game.bid.declarer + 2) % 4 : 6;
+
       if (flipIndex < 4) {
-        flipIndex = playerIDByCurrentUser.findIndex(
+        flipIndex = offsetPlayers.findIndex(
           player => player === game.players[flipIndex],
         );
       }
 
       let currentTurnPlayer = players[game.deal];
-      let isCurrentUserPlayer = players.includes(this.props.currentUser);
+      let isCurrentUserPlayer = players.includes(currentUser);
 
       hands = cardsByPlayer.map((hand, index) => {
-        let playerInOffsetPlayerList = playerIDByCurrentUser[index];
-        let playerIndex = index; // zero will alwasy be current login user
+        let playerHand = offsetPlayers[index];
+        // let playerHand = offsetPlayers[index];
+        let playerHandIndex = index; // zero will alwasy be current login user
 
         // makesure dummy hand can view declarer's card
         if (flipIndex === 0) {
@@ -319,83 +222,83 @@ export default class Game extends React.Component {
           hand = hand.sort((a, b) => b.value - a.value);
         }
 
-        let currentUserIndex = game.players.findIndex(
-          player => player === this.props.currentUser,
-        );
-
-        currentUserIndex = 0;
+        let currentUserIndex = 0;
 
         // handle display issue for both weat/east players
         let handCopy = hand.map(userHand =>
           Object.assign({}, userHand),
         );
         let display = [[], [], [], []];
-        let newHand = handCopy.map(card =>
-          display[Math.floor(card.value / 13)].push(card),
+        handCopy.map(card =>
+          display[Math.floor(card.value / CARD_NUM.HAND)].push(card),
         );
 
         // handle flip down card, group them into n rows base on
         // how many cards left
         display = display.filter(item => item.length !== 0);
         // decide to flip down which players card
-        // use playerIndex to decide , playerIndex 0 means current user
-
+        // use playerHandIndex to decide , playerHandIndex 0 means current user
         if (
-          playerIndex !== currentUserIndex &&
-                    playerIndex !== flipIndex
+          playerHandIndex !== currentUserIndex &&
+                    playerHandIndex !== flipIndex
         ) {
-          let flat = display.flat();
-          let len = flat.length;
-          if (Math.floor(len / 3) < 1 && len > 1) {
-            let mid = Math.floor(len / 2);
-            flat = [flat.slice(0, mid), flat.slice(mid, len)];
-            display = flat;
-          } else if (Math.floor(len / 3) > 1) {
-            let threeRow = [[], [], []];
-            flat.map((card, index) =>
-              threeRow[index % 3].push(card),
-            );
-            display = threeRow;
-          }
+          display = mapFlipDownCards(display.flat());
         }
 
         // handle sort isssue of west player, should sort
         // from big to small
 
-        let firstCard = this.getFirstCard(game);
+        let firstCard = getFirstCard(game);
 
-        let cardItems = display.flat();
-        let hasSameSuitWithFirstCard =
-                    firstCard &&
-                    cardItems.filter(card => {
-                      return (
-                        Math.floor(card.value / 13) ===
-                            Math.floor(firstCard.value / 13)
-                      );
-                    }).length > 0;
+        let hasFollowSameSuit = hasSameSuitWithFirstCard(
+          firstCard,
+          display.flat(),
+        );
 
         let cardsInHand = display.map((each, index) => {
-          // use playerIndex to decide flip up whose cards
-          // playerIndex === 0 means current user
+
+          // use playerHandIndex to decide flip up whose cards
+          // playerHandIndex === 0 means current user
           let declarerIndex = game.bid.declarer;
 
           let dummyPlayerIndex = (declarerIndex + 2) % 4;
           let dummyPlayer = players[dummyPlayerIndex];
+
           let declarerPlayer = players[declarerIndex];
 
-
+          // if player is nither declarer nor dummy plaer
+          let isValidCard = isFinishAuction && isCurrentUserPlayer;
           let canBeClick =
-                        isFinishAuction &&
-                        currentTurnPlayer === playerInOffsetPlayerList &&
-                        playerIndex === currentUserIndex &&
-                        isCurrentUserPlayer;
+                        isValidCard &&
+                        // current player is equal to south;
+                        currentTurnPlayer === playerHand &&
+                        playerHandIndex === currentUserIndex;
 
-          console.log("canBeClick", canBeClick);
+          // current turn is dummay hand, and current login user is declare,
+          // let current user can control dummy hand's card
+          if (
+            isDummyMode &&
+                        isValidCard &&
+                        dummyPlayer === currentTurnPlayer
+          ) {
+            if (
+              currentUser === declarerPlayer &&
+                            playerHandIndex === 2
+            ) {
+              canBeClick = true;
+            }
+            if (
+              currentUser === dummyPlayer &&
+                            playerHandIndex === currentUserIndex
+            ) {
+              canBeClick = false;
+            }
+          }
 
           let flipUp =
                         !isCurrentUserPlayer ||
-                        playerIndex === currentUserIndex ||
-                        playerIndex === flipIndex;
+                        playerHandIndex === currentUserIndex ||
+                        playerHandIndex === flipIndex;
 
           // if those card has same suit with first player,
           // users need only to draw those cards
@@ -403,9 +306,9 @@ export default class Game extends React.Component {
           let allowClickEvt = card => {
             return (
               firstCard === null ||
-                            !hasSameSuitWithFirstCard ||
-                            Math.floor(card.value / 13) ===
-                                Math.floor(firstCard.value / 13)
+                            !hasFollowSameSuit ||
+                            Math.floor(card.value / CARD_NUM.HAND) ===
+                                Math.floor(firstCard.value / CARD_NUM.HAND)
             );
           };
 
@@ -473,11 +376,10 @@ export default class Game extends React.Component {
               <div className="user-hand">{cardsInHand}</div>
               <Player
                 current={
-                  currentTurnPlayer ===
-                                        playerInOffsetPlayerList &&
+                  currentTurnPlayer === playerHand &&
                                     isFinishAuction
                 }
-                name={playerInOffsetPlayerList}
+                name={playerHand}
               />
             </div>
           </div>
@@ -486,14 +388,13 @@ export default class Game extends React.Component {
     } // end of cards
 
     // dom elements
-
     if (isGameOver) {
       return (
         <div className="game">
           <div>
             <ScoreBoard
               startGame={this.suffleCardsWhenReady}
-              currentUser={this.props.currentUser}
+              currentUser={currentUser}
               windowWidth={this.state.windowWidth}
               widnowHeight={this.state.windowHeight}
               tableId={this.props.tableId}
@@ -513,7 +414,7 @@ export default class Game extends React.Component {
         {!isAllReady && (
           <PlayerReadyList
             suffleCardsWhenReady={this.suffleCardsWhenReady}
-            currentUser={this.props.currentUser}
+            currentUser={currentUser}
             game={game}
             tableId={this.props.tableId}
             gameIndex={table.length - 1}
@@ -530,7 +431,7 @@ export default class Game extends React.Component {
           {game.bid &&
                         game.cards && (
             <Auction
-              currentUser={this.props.currentUser}
+              currentUser={currentUser}
               isFinishAuction={isFinishAuction}
               endAuction={this.endAuction}
               gameIndex={table.length - 1}
@@ -544,7 +445,6 @@ export default class Game extends React.Component {
           <Trick
             cards={cards}
             cardsByPlayer={cardsByPlayer}
-            currentMaxTrick={this.currentMaxTrick}
             order={game.order}
             isTrickFinish={isEndOfCurrentTrick}
           />

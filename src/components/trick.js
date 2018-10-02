@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {getRandomKey} from "../helper/helper.js";
 import {Card, TrickCard} from "./card.js";
+import {getCurrentMaxTrick} from "./getCurrentMaxTrick.js";
 import "../style/game.scss";
 
 export default class Trick extends React.Component {
@@ -22,19 +23,13 @@ export default class Trick extends React.Component {
   }
   render() {
     let direction = ["south-card", "west-card", "north-card", "east-card"];
-    let {
-      order,
-      cards,
-      cardsByPlayer,
-      isTrickFinish,
-      currentMaxTrick
-    } = this.props;
+    let {order, cards, cardsByPlayer, isTrickFinish} = this.props;
     if (!cards) {
       return null;
     }
 
     let currentTrick = null,
-      maxTrick = currentMaxTrick();
+      maxTrick = getCurrentMaxTrick(cards);
 
     // cause maxTrick will increase if there are already four cards
     if (maxTrick === 0) {
