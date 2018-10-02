@@ -7,6 +7,9 @@ import {
 } from "./constant.js";
 
 export const hasSameSuitWithFirstCard = (firstCard, cards) => {
+  if (!cards) {
+    return false;
+  }
   return (
     firstCard &&
         cards.filter(card => {
@@ -56,6 +59,7 @@ export const getOffsetDatabyCurrentUser = (game, currentUser) => {
 };
 
 export const mapFlipDownCards = dislayList => {
+  if (!dislayList) return;
   let flat = dislayList.flat();
   let len = flat.length;
   if (Math.floor(len / 3) < 1 && len > 1) {

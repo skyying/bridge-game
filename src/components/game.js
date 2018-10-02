@@ -228,6 +228,7 @@ export default class Game extends React.Component {
         let handCopy = hand.map(userHand =>
           Object.assign({}, userHand),
         );
+
         let display = [[], [], [], []];
         handCopy.map(card =>
           display[Math.floor(card.value / CARD_NUM.HAND)].push(card),
@@ -236,13 +237,17 @@ export default class Game extends React.Component {
         // handle flip down card, group them into n rows base on
         // how many cards left
         display = display.filter(item => item.length !== 0);
+
         // decide to flip down which players card
         // use playerHandIndex to decide , playerHandIndex 0 means current user
         if (
           playerHandIndex !== currentUserIndex &&
                     playerHandIndex !== flipIndex
         ) {
-          display = mapFlipDownCards(display.flat());
+          let mapResult = mapFlipDownCards(display);
+          if (mapResult) {
+            display = mapResult;
+          }
         }
 
         // handle sort isssue of west player, should sort
@@ -256,7 +261,6 @@ export default class Game extends React.Component {
         );
 
         let cardsInHand = display.map((each, index) => {
-
           // use playerHandIndex to decide flip up whose cards
           // playerHandIndex === 0 means current user
           let declarerIndex = game.bid.declarer;

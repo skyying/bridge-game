@@ -12,6 +12,9 @@ const findMaxValueByTrump = (arr, trump) => {
   return list.length ? list[0] : null;
 };
 
+// handle winner card logic
+// if there are any cards with same rank as trump, compare their face value
+// else follow first card's rank to compare value;
 export const getWinnerCard = (table, cardValue) => {
   if (!table) return;
   let game = table[table.length - 1],
@@ -39,12 +42,14 @@ export const getWinnerCard = (table, cardValue) => {
     if (trump !== NO_TRUMP) {
       // filter trump cards, and compare their face value
       let tmp = findMaxValueByTrump(cardsMatchCurrentTrick, trump);
+
       if (tmp !== null) {
         winnerCard = tmp;
       } else {
         noTrumpCards = true;
       }
     }
+
     if (trump === NO_TRUMP || noTrumpCards) {
       // if their quotient are the same, compare their value, else, let first win
       let trumpRef = Math.floor(firstHand.value / CARD_NUM.HAND);
@@ -54,3 +59,9 @@ export const getWinnerCard = (table, cardValue) => {
 
   return winnerCard || null;
 };
+
+
+
+
+
+
