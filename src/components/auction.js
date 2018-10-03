@@ -9,7 +9,7 @@ import "../style/auction.scss";
 export default class Auction extends React.Component {
   constructor(props) {
     super(props);
-    let game = this.props.game;
+    let {game} = this.props;
     this.state = {
       currentTrick: game.bid.trick,
       visibility: false,
@@ -20,15 +20,15 @@ export default class Auction extends React.Component {
       this,
     );
   }
+
   validateUserTurnAndsetTrump(index) {
     // check if already current user's turn to give his bid
-    if (!this.props.currentUser || !this.props.game) return;
-    let game = this.props.game;
-
-    if (game.players && this.props.currentUser) {
+    let {game, currentUser, players} = this.props;
+    if (!currentUser || !game) return;
+    if (players && currentUser) {
       // if currentUser's Index is same as game deal, let him give bid
 
-      let currentUserIndex = game.players.findIndex(
+      let currentUserIndex = players.findIndex(
         player => player === this.props.currentUser,
       );
       if (currentUserIndex === game.deal) {
@@ -103,20 +103,16 @@ export default class Auction extends React.Component {
     );
 
     dispatchToDatabase("UPDATE_AUCTION", {
-      id: this.props.tableId,
-      gameIndex: this.props.gameIndex,
+      tableId: this.props.tableId,
       game: newGame
     });
 
     this.setState({visibility: false, current: null});
   }
   render() {
-    let {game, tableId, gameIndex} = this.props;
-
-    let players = game.players;
+    let {game, tableId, players} = this.props;
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser;
-    console.log("isCurrentUser", isCurrentUser);
 
     let value = game.bid.trick * 5 + game.bid.trump;
 
@@ -196,7 +192,7 @@ export default class Auction extends React.Component {
       </button>
     );
 
-    let playerThumbnails = this.props.game.players.map((player, index) => (
+    let playerThumbnails = players.map((player, index) => (
       <div
         key={getRandomKey()}
         className={
@@ -237,4 +233,3 @@ export default class Auction extends React.Component {
     );
   }
 }
-

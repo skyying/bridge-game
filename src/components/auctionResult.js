@@ -10,11 +10,12 @@ export class AuctionResult extends React.Component {
     super(props);
   }
   render() {
-    let {game, windowWidth, windowHeight} = this.props;
+    let {table, windowWidth, windowHeight} = this.props;
+    let {game, players} = table;
     if (!game || !game.bid.result) {
       return null;
     }
-    let playerThumbnails = game.players.map((player, index) => (
+    let playerThumbnails = players.map((player, index) => (
       <div key={getRandomKey()} className="thumbnail">
         <span>{player[0]}</span>
       </div>

@@ -38,7 +38,11 @@ export default class Login extends React.Component {
         </Link>
         <br />
         <Link onClick={() => this.props.login("3")} to="/lobby">
-                    player 3 
+                    player 3
+        </Link>
+        <br />
+        <Link onClick={() => this.props.login("4")} to="/lobby">
+                    player 4
         </Link>
       </div>
     );

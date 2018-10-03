@@ -32,3 +32,10 @@ export const getObj = (key, value) => {
 export const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+export const getObjSortKey = obj => {
+  if (!obj) {
+    return null;
+  }
+  return Object.keys(obj).sort((a, b) => a < b);
+};

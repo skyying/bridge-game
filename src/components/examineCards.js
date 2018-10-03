@@ -21,10 +21,10 @@ export const hasSameSuitWithFirstCard = (firstCard, cards) => {
   );
 };
 
-export const getOffsetDatabyCurrentUser = (game, currentUser) => {
+export const getOffsetDatabyCurrentUser = (players, game, currentUser) => {
   if (!game || !game.cards) return;
 
-  let {cards, players} = game;
+  let {cards} = game;
 
   let cardsByPlayer = players
     .map((userIndex, index) => {

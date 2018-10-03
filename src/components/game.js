@@ -20,11 +20,12 @@ import {
 } from "./examineCards.js";
 import {getWinnerCard} from "./getWinnerCard.js";
 import PlayerReadyList from "./playerReadyList.js";
+import Timer from "./timer.js";
 
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
-    let game = this.props.table[this.props.table.length - 1];
+    let {game} = this.props.table;
     this.state = {
       endAuction: game.order >= 0,
       windowWidth: window.innerWidth,
@@ -52,39 +53,36 @@ export default class Game extends React.Component {
     window.removeEventListener("resize", this.handleResize);
   }
   componentDidUpdate(prevProps) {
-    let newGame = this.props.table[this.props.table.length - 1];
-    let oldGame = prevProps.table[prevProps.table.length - 1];
+    let newTable = this.props.table;
+    let oldTable = prevProps.table;
+
     if (
-      !newGame.ready.every(
-        (player, index) => player === oldGame.ready[index],
+      !newTable.ready.every(
+        (player, index) => player === oldTable.ready[index],
       )
     ) {
-      if (newGame.ready.every(player => player === true)) {
+      if (newTable.ready.every(player => player === true)) {
         this.suffleCardsWhenReady();
       }
     }
   }
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
-    let table = this.props.table;
-    if (table) {
-      let curentGame = table.slice(0).pop();
-      let isFourSeatsFull = curentGame.players.every(
-        seat => seat !== EMPTY_SEAT,
-      );
-      if (isFourSeatsFull && !curentGame.cards) {
+    let {players, game} = this.props.table;
+    if (players) {
+      let isFourSeatsFull = players.every(seat => seat !== EMPTY_SEAT);
+      if (isFourSeatsFull && !game.cards) {
         this.shuffle();
       }
     }
   }
-
   // so far, how many tricks have been played ?
   getNextMaxTrick() {
-    let table = this.props.table;
-    if (!table) {
+    let {game} = this.props.table;
+    if (!game) {
       return;
     }
-    let cards = table[table.length - 1].cards,
+    let cards = game.cards,
       maxTrick = Math.max(...cards.map(card => card.trick)),
       maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
     if (maxTrick === 0 || maxTrickNum >= 4) {
@@ -97,24 +95,31 @@ export default class Game extends React.Component {
   }
 
   deal(value) {
-    let table = this.props.table;
-    if (!table) {
+    let {table, tableId} = this.props;
+    let {game} = this.props.table;
+    if (!game) {
       return;
     }
-    let game = table[table.length - 1];
     let currentPlayer = game.deal;
     let order = game.order + 1;
 
-    dispatchToDatabase("UPDATE_CURRENT_TRICK", {
-      table: table,
-      value: value,
-      maxTrick: this.getNextMaxTrick(),
-      id: this.props.tableId,
-      order: order,
-      deal: (game.deal + 1) % 4
-    });
+    dispatchToDatabase(
+      "UPDATE_CURRENT_TRICK",
+      Object.assign(
+        {},
+        {
+          tableId: tableId,
+          table: table,
+          value: value,
+          time: new Date().getTime(),
+          maxTrick: this.getNextMaxTrick(),
+          order: order,
+          deal: (game.deal + 1) % 4
+        },
+      ),
+    );
 
-    let winnerCard = getWinnerCard(table, value);
+    let winnerCard = getWinnerCard(game, value);
 
     // make sure winnerCard exists, and write winner to database
     if (winnerCard) {
@@ -122,13 +127,16 @@ export default class Game extends React.Component {
       let card = Object.assign({}, winnerCard);
       delete card.index;
 
-      dispatchToDatabase("UPDATE_WINNER_CARD", {
-        winnerCard: card,
-        order: order,
-        deal: card.player,
-        table: table,
-        id: this.props.tableId
-      });
+      dispatchToDatabase(
+        "UPDATE_WINNER_CARD",
+        Object.assign({}, this.props, {
+          tableId: tableId,
+          table: table,
+          winnerCard: card,
+          order: order,
+          deal: card.player
+        }),
+      );
     }
   }
   shuffle() {
@@ -154,7 +162,7 @@ export default class Game extends React.Component {
     // todo bid
     dispatchToDatabase("ADD_NEW_DECK_TO_TABLE", {
       table: this.props.table,
-      id: this.props.tableId,
+      tableId: this.props.tableId,
       cards: cards
     });
   }
@@ -172,9 +180,9 @@ export default class Game extends React.Component {
     );
   }
   render() {
-    let {table, currentUser} = this.props;
-    let game = table.map(game => Object.assign({}, game)).pop();
-    let {cards, players, ready, isGameOver} = game;
+    let {table, currentUser, tableId} = this.props;
+    let {game, players, ready} = table;
+    let {cards, isGameOver} = game;
 
     let isEndOfCurrentTrick = game.order % 4 === 3;
     let isFinishAuction = this.getAuctionStatus(game);
@@ -185,7 +193,7 @@ export default class Game extends React.Component {
     let direction = ["south", "west", "north", "east"];
     let hands;
     let {cardsByPlayer, offsetPlayers, offsetIndex} =
-            getOffsetDatabyCurrentUser(game, currentUser) || {};
+            getOffsetDatabyCurrentUser(players, game, currentUser) || {};
 
     // turn cards to 4 hands
     if (cards && cards.length === CARD_NUM.TOTAL) {
@@ -198,7 +206,7 @@ export default class Game extends React.Component {
 
       if (flipIndex < 4) {
         flipIndex = offsetPlayers.findIndex(
-          player => player === game.players[flipIndex],
+          player => player === players[flipIndex],
         );
       }
 
@@ -391,6 +399,10 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
+    console.log("table ready in render", table.ready);
+    let isAllReady = table.ready.every(player => player === true);
+    console.log("isAllReady", isAllReady);
+
     // dom elements
     if (isGameOver) {
       return (
@@ -401,46 +413,42 @@ export default class Game extends React.Component {
               currentUser={currentUser}
               windowWidth={this.state.windowWidth}
               widnowHeight={this.state.windowHeight}
-              tableId={this.props.tableId}
-              gameIndex={table.length - 1}
-              game={game}
-              table={this.props.table}
+              tableId={tableId}
+              table={table}
             />
           </div>
         </div>
       );
     }
 
-    let isAllReady = game.ready.every(player => player === true);
-
     return (
       <div className="game">
+        <Timer time={game.time} />
         {!isAllReady && (
           <PlayerReadyList
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
-            game={game}
+            table={this.props.table}
             tableId={this.props.tableId}
-            gameIndex={table.length - 1}
           />
         )}
         {isFinishAuction && (
           <AuctionResult
             windowWidth={this.state.windowWidth}
             windowHeight={this.state.windowHeight}
-            game={game}
+            table={table}
           />
         )}
         <div className="auction">
           {game.bid &&
                         game.cards && (
             <Auction
-              currentUser={currentUser}
               isFinishAuction={isFinishAuction}
               endAuction={this.endAuction}
-              gameIndex={table.length - 1}
+              tableId={tableId}
               game={game}
-              tableId={this.props.tableId}
+              currentUser={currentUser}
+              players={players}
             />
           )}
         </div>
@@ -462,7 +470,7 @@ export default class Game extends React.Component {
             name="right-bottom-pos"
             windowWidth={this.state.windowWidth}
             widnowHeight={this.state.windowHeight}
-            game={game}
+            table={this.props.table}
           />
         </div>
         <div className="sidebar" />

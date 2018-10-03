@@ -30,9 +30,7 @@ export const DEFAULT_GAME = {
     trump: -1
   },
   order: -1,
-  isGameOver: false,
-  ready: [false, false, false, false],
-  players: [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT]
+  isGameOver: false
 };
 
-
+export const PLAYERS = [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT];

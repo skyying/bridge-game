@@ -2,7 +2,7 @@ import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {app} from "../firebase/firebase.js";
 import {getObj} from "../helper/helper.js";
-import {EMPTY_SEAT, DEFAULT_GAME} from "../components/constant.js";
+import {EMPTY_SEAT, DEFAULT_GAME, PLAYERS} from "../components/constant.js";
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
@@ -36,68 +36,70 @@ export const store = createStore(
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
     case "CREATE_TABLE": {
-      if (action.tableId > 0) {
-        let players = DEFAULT_GAME.players.slice(0);
+      if (action.tableNum > 0) {
+        let players = PLAYERS.slice(0);
         players[0] = action.currentUser;
-        let newTable = [
-          Object.assign({}, DEFAULT_GAME, {
-            players: players
-          })
-        ];
-        app.updateTableDataByID(action.tableId, newTable);
+        let tableKey = app.getNewChildKey("tables");
+        let newTable = {
+          linkId: action.tableRef || new Date().getTime(),
+          game: DEFAULT_GAME,
+          players: players,
+          ready: [false, false, false, false]
+        };
+        app.setNodeByPath(`tables/${tableKey}`, newTable);
       } else {
         // first table is create by system
-        app.updateTableDataByID(action.tableId, [DEFAULT_GAME]);
+        let tableKey = app.getNewChildKey("tables");
+        let newTable = {
+          linkId: action.tableRef || new Date().getTime(),
+          game: DEFAULT_GAME,
+          players: PLAYERS,
+          ready: [false, false, false, false]
+        };
+        app.setNodeByPath(`tables/${tableKey}`, newTable);
       }
       break;
     }
     case "CREATE_NEW_GAME": {
-      let game = Object.assign({}, DEFAULT_GAME, {
-        players: action.players
-      });
-      let path = `tables/${action.tableId}/${action.gameId}`;
-      app.setNodeByPath(path, game);
+      let {table, tableId} = action;
+      let tableData = Object.assign({}, table);
+      let {record, game} = tableData;
+      if (record) {
+        record.push(game);
+      } else {
+        record = [game];
+      }
+      tableData.record = record;
+      tableData.game = Object.assign({}, DEFAULT_GAME);
+      app.updateTableDataByID(`${tableId}`, tableData);
+      break;
     }
     case "READY_A_PLAYER": {
       // if all four player are ready,
       // start a new game automatically;
-      let game = action.game;
-      let ready = game.ready;
-      let readyCopy = [
-        ...ready.slice(0, action.player),
-        action.value,
-        ...ready.slice(action.player + 1, ready.length)
-      ];
-      let path = `tables/${action.tableId}/${action.gameIndex}/ready/`;
-      app.setNodeByPath(path, readyCopy);
+      let {table, playerIndex, tableId} = action;
+      let path = `tables/${tableId}/ready/${playerIndex}`;
+      app.setNodeByPath(path, true);
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
       // todo, use high order function to wrap this
       // create a game
-      let currentTable = action.table.map(game =>
-        Object.assign({}, game),
-      );
-
-      let currentGame = currentTable.pop();
-      let newGame = Object.assign({}, currentGame, {
+      let {cards, table, tableId} = action;
+      let newGame = Object.assign({}, table.game, {
         cards: action.cards
       });
 
-      currentTable.push(newGame);
-      // let table = getObj(action.id, currentTable);
-      app.updateTableDataByID(action.id, currentTable);
+      app.updateTableDataByID(`${tableId}/game/`, newGame);
       break;
     }
     case "UPDATE_WINNER_CARD": {
       // todo, use high order function to wrap this
-      let currentTable = action.table.map(game =>
-        Object.assign({}, game),
-      );
+      let {tableId, table} = action;
+      let game = Object.assign({}, table.game);
 
-      let currentGame = currentTable.pop();
-      let cards = currentGame.cards;
-      currentGame.order = action.order;
+      let cards = game.cards;
+      game.order = action.order;
 
       // update which player will draw first
       let targetCardIndex = cards.findIndex(
@@ -105,33 +107,29 @@ export const dispatchToDatabase = (type, action) => {
       );
       let winner = action.winnerCard;
       winner.isWin = true;
-      currentGame.deal = winner.player;
+      game.deal = winner.player;
       cards[targetCardIndex] = winner;
       // 51 means the index in the card array , the n-52 cards is given
       if (action.order === 51) {
-        currentGame.isGameOver = true;
+        game.isGameOver = true;
       }
-      currentTable.push(currentGame);
-      // let table = getObj(action.id, currentTable);
-      app.updateTableDataByID(action.id, currentTable);
+      app.updateTableDataByID(`${tableId}/game/`, game);
+      app.updateTableDataByID(`${tableId}/ready/`, [
+        false,
+        false,
+        false,
+        false
+      ]);
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
       // update this is how many trick players have been draw
 
-      let currentTable = action.table.map(game =>
-        Object.assign({}, game),
-      );
+      let {table, tableId, order, deal} = action;
+      let {game} = table;
+      app.updateTableGameDataByPath(`${tableId}/game/order/`, order);
 
-      let gameIndex = currentTable.length - 1;
-      let currentGame = currentTable.pop();
-      let order = action.order;
-      app.updateTableGameDataByPath(
-        `${action.id}/${gameIndex}/order/`,
-        order,
-      );
-
-      let cards = currentGame.cards;
+      let cards = game.cards;
 
       let targetCardInex = cards.findIndex(
         card => card.value === action.value,
@@ -141,51 +139,45 @@ export const dispatchToDatabase = (type, action) => {
       currentCard.order = order;
 
       // update deal order, who can draw card next
-      app.updateTableGameDataByPath(
-        `${action.id}/${gameIndex}/deal`,
-        action.deal,
-      );
+      app.updateTableGameDataByPath(`${tableId}/game/deal/`, deal);
 
       // this card has been draw in nth trick
       // set current trick number to this card
       if (currentCard.trick === 0) {
-        // save card data to database
-
         // update trick to current nth trick, e.g. players have play 4 tricks
         // so far, the maxTrick will be 5
         currentCard.trick = action.maxTrick;
         // record who has this card
-        currentCard.player = (action.deal + 4 - 1) % 4;
+        currentCard.player = (deal + 4 - 1) % 4;
 
         app.updateTableGameDataByPath(
-          `${action.id}/${gameIndex}/cards/${targetCardInex}/`,
+          `${action.tableId}/game/cards/${targetCardInex}`,
           currentCard,
         );
       }
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {
-      let currentTable = action.table.map(game =>
-        Object.assign({}, game),
-      );
-
-      let currentGame = currentTable.pop();
-
-      let emptySeatIndex = currentGame.players.findIndex(
-        seat => seat === EMPTY_SEAT,
-      );
+      let {table, currentUser, tableId} = action;
+      let players = table.players.slice(0);
+      let emptySeatIndex = players.findIndex(seat => seat === EMPTY_SEAT);
       if (emptySeatIndex >= 0) {
-        currentGame.players[emptySeatIndex] = action.currentUser;
-        currentTable.push(currentGame);
+        players[emptySeatIndex] = currentUser;
 
         // let currentTableObj = getObj(action.id, currentTable);
-        app.updateTableDataByID(action.id, currentTable);
+        app.setNodeByPath(`tables/${tableId}/players/`, players);
       }
       break;
     }
     case "UPDATE_AUCTION": {
+      // in order to detect if some user isn't online anymore
+      // record current to database when a current user is deal
       app.updateTableGameDataByPath(
-        `${action.id}/${action.gameIndex}/`,
+        `${action.tableId}/time/`,
+        new Date().getTime(),
+      );
+      app.updateTableGameDataByPath(
+        `${action.tableId}/game/`,
         action.game,
       );
       break;

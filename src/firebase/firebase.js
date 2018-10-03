@@ -18,6 +18,13 @@ export const app = {
       .ref(path)
       .set(data);
   },
+  getNewChildKey: node => {
+    return firebaseApp
+      .database()
+      .ref()
+      .child(node)
+      .push().key;
+  },
   updateTableDataByID: (id, data) => {
     firebaseApp
       .database()

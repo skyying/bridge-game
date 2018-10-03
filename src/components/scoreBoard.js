@@ -11,18 +11,19 @@ export default class ScoreBoard extends React.Component {
     this.recordGame = this.recordGame.bind(this);
   }
   recordGame() {
-    let {game, table} = this.props;
-    if (game.order !== 51 || !table) {
+    let {table, tableId} = this.props;
+    let {game} = table;
+    if (!table || game.order !== 51) {
       return;
     }
     dispatchToDatabase("CREATE_NEW_GAME", {
-      tableId: this.props.tableId,
-      gameId: this.props.table.length,
-      players: this.props.game.players
+      tableId: tableId,
+      table: table
     });
   }
   render() {
-    let {game, windowWidth, windowHeight, currentUser} = this.props;
+    let {windowWidth, table, windowHeight, currentUser} = this.props;
+    let {game, players} = this.props.table;
     if (!game || !game.cards) {
       return null;
     }
@@ -44,7 +45,7 @@ export default class ScoreBoard extends React.Component {
       lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
     };
     let resultWords = null;
-    let playerIndex = game.players.indexOf(currentUser);
+    let playerIndex = players.indexOf(currentUser);
 
     let {declarer, trick} = game.bid;
     let targetTrick = 6 + trick;
@@ -76,7 +77,7 @@ export default class ScoreBoard extends React.Component {
           thumbnailSize={46}
           windowWidth={this.props.windowWidth}
           widnowHeight={this.props.windowHeight}
-          game={this.props.game}>
+          table={this.props.table}>
           <div>
             <div className="result">
               <div className="words">{resultWords}</div>

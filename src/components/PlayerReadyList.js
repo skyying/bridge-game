@@ -11,26 +11,23 @@ export default class PlayerReadyList extends React.Component {
     this.setReadyState = this.setReadyState.bind(this);
   }
   setReadyState(playerIndex) {
-    let {currentUser, game, tableId, gameIndex} = this.props;
-    if (!this.props.game) return;
-
-    let ready = this.props.game.ready;
+    let {currentUser, table, tableId} = this.props;
+    if (!table) return;
+    let {game} = table;
     dispatchToDatabase("READY_A_PLAYER", {
-      player: playerIndex,
+      playerIndex: playerIndex,
       tableId: tableId,
-      game: game,
-      value: true,
-      gameIndex: gameIndex
+      table: table
     });
   }
 
   render() {
-    let {game, currentUser} = this.props;
+    let {table, currentUser} = this.props;
+    let {game, ready, players} = table;
     if (!game) {
       return null;
     }
-
-    let {players, ready, isGameOver, order} = game;
+    let {isGameOver, order} = game;
 
     let isEmptySeat = players.some(seat => seat === EMPTY_SEAT);
     let isAllPlayerReady = ready.every(player => player === true);
@@ -87,5 +84,3 @@ export default class PlayerReadyList extends React.Component {
   }
 }
 
-// <div className="row">{playBtns}</div>
-// <div className="row" />

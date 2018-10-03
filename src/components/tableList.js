@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatch} from "../reducer/reducer.js";
 import {EMPTY_SEAT} from "../components/constant.js";
-import {getObj} from "../helper/helper.js";
+import {getObj, getObjSortKey} from "../helper/helper.js";
 import {app} from "../firebase/firebase.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 
@@ -22,45 +22,55 @@ export default class TableList extends React.Component {
         this.createTable();
       }
     }, 1500);
-
   }
-  createTable() {
-    let {tables} = this.props;
-    let newTableId = tables ? tables.length : 0;
+  createTable(tableRef) {
+    let tableNum;
+    if (this.props.tables) {
+      tableNum = Object.keys(this.props.tables).length;
+    } else {
+      tableNum = 0;
+    }
     dispatchToDatabase("CREATE_TABLE", {
-      tableId: newTableId,
+      tableNum: tableNum,
+      tableRef: tableRef,
       currentUser: this.props.currentUser
     });
   }
-  addPlayerToTable(id) {
+  addPlayerToTable(tableId) {
     let tables = this.props.tables;
     if (!tables) return;
     dispatchToDatabase("ADD_PLAYER_TO_TABLE", {
-      table: tables[id],
-      currentUser: this.props.currentUser,
-      id: id
+      table: tables[tableId],
+      tableId: tableId,
+      currentUser: this.props.currentUser
     });
   }
   render() {
     let {tables} = this.props;
-    if (!tables) {
+    let keys = getObjSortKey(tables);
+    if (!tables || !keys) {
       return <div>loading table data...</div>;
     }
-    let tablesLink = tables.map((table, index) => {
+    let tablesLink = keys.map((key, index) => {
+      let linkId = tables[key]["linkId"];
       return (
         <Link
           key={getRandomKey()}
-          onClick={() => this.addPlayerToTable(index)}
-          to={`/table/${index}`}>
+          onClick={() => this.addPlayerToTable(key)}
+          to={`/table/${linkId}`}>
                     第 {index} 桌
         </Link>
       );
     });
-    let lastIndex = tables.length;
-    console.log("lastIndex", lastIndex);
+
+    // as a ref of tableId
+    let tableRef = new Date().getTime();
+
     return (
       <div>
-        <Link onClick={this.createTable} to={`/table/${lastIndex}`}>
+        <Link
+          onClick={() => this.createTable(tableRef)}
+          to={`/table/${tableRef}`}>
                     create table
         </Link>
         {tablesLink}

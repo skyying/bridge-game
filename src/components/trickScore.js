@@ -8,8 +8,9 @@ export default class TrickScore extends React.Component {
     super(props);
   }
   render() {
-    let {game, windowWidth, windowHeight} = this.props;
-    if (!game || !game.cards) {
+    let {table, windowWidth, windowHeight} = this.props;
+    let {game, players} = table;
+    if (!table || !table.game.cards) {
       return null;
     }
     let scoreTeamOne = 0,
@@ -24,7 +25,7 @@ export default class TrickScore extends React.Component {
         scoreTeamTwo += winningScore;
       }
     });
-    let [player1, player2, player3, player4] = game.players;
+    let [player1, player2, player3, player4] = players;
     let innerStyle = this.props.innerStyle;
     let resizeRatio = this.props.ratio || 0.15;
     let thumbnailStyle = {
@@ -45,34 +46,46 @@ export default class TrickScore extends React.Component {
           style={{
             width: windowWidth * resizeRatio
           }}>
-            <div className="group-wrapper">
-              <div className="group">
+          <div className="group-wrapper">
+            <div className="group">
+              <div
+                className="thumbnail-group"
+                style={{
+                  minWidth: this.props.thumbnailSize * 2
+                }}>
                 <div
-                  className="thumbnail-group"
-                  style={{minWidth: this.props.thumbnailSize * 2}}>
-                  <div className="thumbnail" style={thumbnailStyle}>
-                    <span>{player1[0]}</span>
-                  </div>
-                  <div className="thumbnail" style={thumbnailStyle}>
-                    <span>{player3[0]}</span>
-                  </div>
+                  className="thumbnail"
+                  style={thumbnailStyle}>
+                  <span>{player1[0]}</span>
                 </div>
-                <div className="score">{scoreTeamOne}</div>
-              </div>
-              <div className="group">
                 <div
-                  className="thumbnail-group"
-                  style={{minWidth: this.props.thumbnailSize * 2}}>
-                  <div className="thumbnail" style={thumbnailStyle}>
-                    <span>{player2[0]}</span>
-                  </div>
-                  <div className="thumbnail" style={thumbnailStyle}>
-                    <span>{player4[0]}</span>
-                  </div>
+                  className="thumbnail"
+                  style={thumbnailStyle}>
+                  <span>{player3[0]}</span>
                 </div>
-                <div className="score">{scoreTeamTwo}</div>
               </div>
+              <div className="score">{scoreTeamOne}</div>
             </div>
+            <div className="group">
+              <div
+                className="thumbnail-group"
+                style={{
+                  minWidth: this.props.thumbnailSize * 2
+                }}>
+                <div
+                  className="thumbnail"
+                  style={thumbnailStyle}>
+                  <span>{player2[0]}</span>
+                </div>
+                <div
+                  className="thumbnail"
+                  style={thumbnailStyle}>
+                  <span>{player4[0]}</span>
+                </div>
+              </div>
+              <div className="score">{scoreTeamTwo}</div>
+            </div>
+          </div>
           {this.props.children}
         </div>
       </div>
