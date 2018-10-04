@@ -8,6 +8,8 @@ const Game = require("./src/game.js");
 const Db = require("./src/db.js");
 const Tables = require("./src/tables.js");
 const Auction = require("./src/auction.js");
+const Players = require("./src/players.js");
+const state = require("./src/gameState.js");
 Db.init();
 
 // when a new table is added, add table id to list;
@@ -36,37 +38,59 @@ listenTableRemoved("tables", snapshot => {
 
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
-    let table = snapshot.val();
-    let {ready, gameState} = table;
-    if (gameState === 0) {
+    let tableData = snapshot.val();
+    let {ready, gameState, id, timeStamp} = tableData;
+    if (timeStamp !== tableIdList[id].timeStamp) {
+        tableIdList[id].timeStamp = timeStamp;
+    }
+    if (gameState === state.phase.join) {
         let isAllReady = ready.every(state => state === true);
+        let readyCount = ready.filter(state => state === true).length;
         if (isAllReady) {
-            Db.setTableData("gameState", table.id, 1);
+            let newTable = Object.assign(
+                {},
+                tableData,
+                {gameState: state.phase.auction},
+                {timeStamp: new Date().getTime()},
+            );
+            Db.setTableDataById(newTable);
+            // should set to a button
+        } else if (readyCount === 1) {
+            initTimer(
+                tableIdList[tableData.id],
+                tableData,
+                Players.addAvatar,
+                6000,
+            );
         }
-    } else if (gameState === 1) {
+    } else if (gameState === state.phase.auction) {
         // if still in acution, set timer
-        if (!Auction.isFinish(table)) {
-            initTimer(tableIdList[table.id], table);
+        if (!Auction.isFinish(tableData)) {
+            initTimer(
+                tableIdList[tableData.id],
+                tableData,
+                Auction.update,
+                6000,
+            );
         } else {
-            Db.setTableData("gameState", table.id, 2);
+            Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
-    } else if (gameState === 2) {
-      console.log("game state === 2");
+    } else if (gameState === state.phase.playing) {
+        return;
     }
 });
 
-const initTimer = (timer, table) => {
+// timer.timer = setTimeout(() => Auction.update(table), 6000);
+const initTimer = (timer, table, callback, interval) => {
     if (timer.timer) {
         clearTimeout(timer.timer);
     }
-    timer.timer = setTimeout(() => Auction.update(table), 6000);
-    console.log(table.timeStamp);
+    timer.timer = null;
+    timer.timer = setTimeout(() => {
+        callback(table);
+    }, interval);
 };
 
-let tableTimer, timers;
-let waitingInterval = 3000;
-
-// test
 exports.helloWorld = functions.https.onRequest((request, response) => {
     response.send(test());
 });
