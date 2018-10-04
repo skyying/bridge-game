@@ -1,81 +1,72 @@
 "use strict";
 
 const functions = require("firebase-functions");
-// import * as functions from "firebase-functions";
-
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const request = require("request");
 const app = require("express")();
-
-// The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require("firebase-admin");
-admin.initializeApp();
-
-const getAllDataOnce = (path, callback) => {
-    admin
-        .database()
-        .ref(path)
-        .once("value", callback);
-};
-// functions for change data in database
-const listenPathDataChange = type => (path, callback) =>
-    admin
-        .database()
-        .ref(path)
-        .on(type, callback);
-
-const alwaysListenPathDataChange = listenPathDataChange("value");
+const Game = require("./src/game.js");
+const Db = require("./src/db.js");
+const Tables = require("./src/tables.js");
+const Auction = require("./src/auction.js");
+Db.init();
 
 // when a new table is added, add table id to list;
-const listenNewTableAdded = listenPathDataChange("child_added");
-const listenTableRemoved = listenPathDataChange("child_removed");
+const listenNewTableAdded = Db.listenPathDataChange("child_added");
+const listenTableRemoved = Db.listenPathDataChange("child_removed");
+const listenTableChanged = Db.listenPathDataChange("child_changed");
 
-let tableIdList = [];
-const fetchLiveTableId = (newTable, tableIdList) => {
-    let tableId = newTable.id;
-    tableIdList.push({id: tableId, timer: null});
-    console.log("tableIdList, in fetchLiveTableId", tableIdList);
-};
-
-// when a table is deleted, remove it from list;
-
-const removeLiveTableId = (oldTableList, newTableList) => {
-    return oldTableList.findIndex(table => newTableList[table.id] !== true);
-};
-
-const fitlerRemovedTable = (oldTables, newTables) => {};
+let tableIdList = {};
 
 // if new table is added, update table list
-listenNewTableAdded("tables", snapshot =>
-    fetchLiveTableId(snapshot.val(), tableIdList),
-);
+listenNewTableAdded("tables", snapshot => {
+    Tables.getAll(snapshot.val(), tableIdList);
+    console.log("new table", snapshot.val());
+});
 // if table is removed, update current table list
 listenTableRemoved("tables", snapshot => {
-    getAllDataOnce("tables", tables => {
-        let removedIndex = removeLiveTableId(tableIdList, tables.val());
-        console.log("removedIndex", removedIndex);
-        tableIdList.splice(removedIndex, 1);
-        console.log("tableIdList, in remove,", tableIdList);
+    Db.getAllDataOnce("tables", tables => {
+        let removeKey = Tables.update(tableIdList, tables.val());
+        if (removeKey < 0) {
+            tableIdList = {};
+        } else {
+            delete tableIdList[removeKey];
+        }
     });
 });
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    response.send(test());
+// when table is change, handle TimeStamp
+listenTableChanged("tables", snapshot => {
+    let table = snapshot.val();
+    let {ready, gameState} = table;
+    if (gameState === 0) {
+        let isAllReady = ready.every(state => state === true);
+        if (isAllReady) {
+            Db.setTableData("gameState", table.id, 1);
+        }
+    } else if (gameState === 1) {
+        // if still in acution, set timer
+        if (!Auction.isFinish(table)) {
+            initTimer(tableIdList[table.id], table);
+        } else {
+            Db.setTableData("gameState", table.id, 2);
+        }
+    } else if (gameState === 2) {
+      console.log("game state === 2");
+    }
 });
+
+const initTimer = (timer, table) => {
+    if (timer.timer) {
+        clearTimeout(timer.timer);
+    }
+    timer.timer = setTimeout(() => Auction.update(table), 6000);
+    console.log(table.timeStamp);
+};
 
 let tableTimer, timers;
 let waitingInterval = 3000;
 
-const stop = timer => {
-    if (timer) {
-        clearTimout(timer);
-        timer = 0;
-    }
-};
-
-const startCountDown = (timer, id) => {
-    if (timer) {
-        stop();
-    }
-    return setTimeout(() => deal, waitingInterval);
-};
+// test
+exports.helloWorld = functions.https.onRequest((request, response) => {
+    response.send(test());
+});
