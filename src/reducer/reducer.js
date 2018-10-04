@@ -2,7 +2,12 @@ import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {app} from "../firebase/firebase.js";
 import {getObj} from "../helper/helper.js";
-import {EMPTY_SEAT, DEFAULT_GAME, PLAYERS} from "../components/constant.js";
+import {
+  GAME_STATE,
+  EMPTY_SEAT,
+  DEFAULT_GAME,
+  PLAYERS
+} from "../components/constant.js";
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
@@ -36,12 +41,16 @@ export const store = createStore(
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
     case "CREATE_TABLE": {
+      let timeStamp = new Date().getTime();
       if (action.tableNum > 0) {
         let players = PLAYERS.slice(0);
         players[0] = action.currentUser;
         let tableKey = app.getNewChildKey("tables");
         let newTable = {
-          linkId: action.tableRef || new Date().getTime(),
+          timeStamp: action.tableRef || timeStamp,
+          gameState: 0,
+          id: tableKey,
+          linkId: action.tableRef || timeStamp,
           game: DEFAULT_GAME,
           players: players,
           ready: [false, false, false, false]
@@ -51,6 +60,9 @@ export const dispatchToDatabase = (type, action) => {
         // first table is create by system
         let tableKey = app.getNewChildKey("tables");
         let newTable = {
+          timeStamp: action.tableRef || timeStamp,
+          gameState: "join",
+          id: tableKey,
           linkId: action.tableRef || new Date().getTime(),
           game: DEFAULT_GAME,
           players: PLAYERS,
@@ -80,6 +92,13 @@ export const dispatchToDatabase = (type, action) => {
       let {table, playerIndex, tableId} = action;
       let path = `tables/${tableId}/ready/${playerIndex}`;
       app.setNodeByPath(path, true);
+
+      // updateTimer
+      app.updateTableGameDataByPath(
+        `${tableId}/timeStamp/`,
+        new Date().getTime(),
+      );
+
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
@@ -140,6 +159,10 @@ export const dispatchToDatabase = (type, action) => {
 
       // update deal order, who can draw card next
       app.updateTableGameDataByPath(`${tableId}/game/deal/`, deal);
+      app.updateTableGameDataByPath(
+        `${tableId}/timeStamp/`,
+        new Date().getTime(),
+      );
 
       // this card has been draw in nth trick
       // set current trick number to this card
@@ -173,12 +196,12 @@ export const dispatchToDatabase = (type, action) => {
       // in order to detect if some user isn't online anymore
       // record current to database when a current user is deal
       app.updateTableGameDataByPath(
-        `${action.tableId}/time/`,
-        new Date().getTime(),
-      );
-      app.updateTableGameDataByPath(
         `${action.tableId}/game/`,
         action.game,
+      );
+      app.updateTableGameDataByPath(
+        `${action.tableId}/timeStamp/`,
+        new Date().getTime(),
       );
       break;
     }

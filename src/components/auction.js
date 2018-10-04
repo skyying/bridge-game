@@ -103,6 +103,7 @@ export default class Auction extends React.Component {
     );
 
     dispatchToDatabase("UPDATE_AUCTION", {
+      isFinishAuction: isFinishAuction,
       tableId: this.props.tableId,
       game: newGame
     });

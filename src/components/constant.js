@@ -34,3 +34,9 @@ export const DEFAULT_GAME = {
 };
 
 export const PLAYERS = [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT];
+export const GAME_STATE = {
+  join: "join",
+  auction: "auction",
+  playing: "playing",
+  gameover: "gameover"
+};

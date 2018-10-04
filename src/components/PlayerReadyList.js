@@ -14,13 +14,14 @@ export default class PlayerReadyList extends React.Component {
     let {currentUser, table, tableId} = this.props;
     if (!table) return;
     let {game} = table;
+    let players = table.players.slice(0);
+
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
       tableId: tableId,
       table: table
     });
   }
-
   render() {
     let {table, currentUser} = this.props;
     let {game, ready, players} = table;
@@ -83,4 +84,3 @@ export default class PlayerReadyList extends React.Component {
     );
   }
 }
-
