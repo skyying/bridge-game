@@ -10,6 +10,7 @@ const Tables = require("./src/tables.js");
 const Auction = require("./src/auction.js");
 const Players = require("./src/players.js");
 const state = require("./src/gameState.js");
+
 Db.init();
 
 // when a new table is added, add table id to list;
@@ -22,6 +23,7 @@ let tableIdList = {};
 // if new table is added, update table list
 listenNewTableAdded("tables", snapshot => {
     Tables.getAll(snapshot.val(), tableIdList);
+    console.log("tableIdList", tableIdList);
     console.log("new table", snapshot.val());
 });
 // if table is removed, update current table list
@@ -39,6 +41,7 @@ listenTableRemoved("tables", snapshot => {
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
     let tableData = snapshot.val();
+    console.log("gameState-----", tableData.gameState);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
         tableIdList[id].timeStamp = timeStamp;
@@ -53,14 +56,15 @@ listenTableChanged("tables", snapshot => {
                 {gameState: state.phase.auction},
                 {timeStamp: new Date().getTime()},
             );
+            console.log("is all ready, wirte data");
             Db.setTableDataById(newTable);
-            // should set to a button
+            // todo: should set to a button
         } else if (readyCount === 1) {
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
                 Players.addAvatar,
-                6000,
+                2000,
             );
         }
     } else if (gameState === state.phase.auction) {
@@ -70,14 +74,17 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Auction.update,
-                6000,
+                3000,
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
     } else if (gameState === state.phase.playing) {
-        return;
+        if (tableData.game.order < 51) {
+            initTimer(tableIdList[tableData.id], tableData, Game.deal, 3000);
+        }
     }
+    return;
 });
 
 // timer.timer = setTimeout(() => Auction.update(table), 6000);
