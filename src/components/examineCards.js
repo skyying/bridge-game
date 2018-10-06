@@ -5,6 +5,7 @@ import {
   NO_TRUMP,
   DEFAULT_GAME
 } from "./constant.js";
+import {getRandomInt} from "../helper/helper.js";
 
 export const hasSameSuitWithFirstCard = (firstCard, cards) => {
   if (!cards) {
@@ -88,4 +89,44 @@ export const getFirstCard = game => {
       .sort((cardA, cardB) => cardB.order - cardA.order)[0];
   }
   return null;
+};
+
+export const shuffleCards = () => {
+  let cards = getRandomCards();
+  while (!validateShuffle(cards)) {
+    cards = getRandomCards();
+    console.log("shuffle cards");
+  }
+  return cards;
+};
+
+const showCards = cards => {
+  return [0, 0, 0, 0]
+    .map((userIndex, index) => {
+      return cards.filter((card, i) => i % 4 === index);
+    })
+    .slice(0)
+    .map(hand =>
+      hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0)),
+    );
+};
+
+const getRandomCards = () => {
+  let cards = Array.from({length: CARD_NUM.TOTAL})
+    .fill(0)
+    .map((card, i) => i);
+
+  // shuffle array algorithm
+  for (let i = cards.length - 1; i > 0; i--) {
+    let randomIndex = getRandomInt(0, CARD_NUM.TOTAL - 1);
+    [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
+  }
+
+  return cards;
+};
+
+const validateShuffle = cards => {
+  return showCards(cards).every(
+    hand => hand.reduce((sum, value) => value + sum, 0) >= 7,
+  );
 };

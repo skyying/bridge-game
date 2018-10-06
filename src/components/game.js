@@ -16,7 +16,8 @@ import {
   hasSameSuitWithFirstCard,
   getOffsetDatabyCurrentUser,
   mapFlipDownCards,
-  getFirstCard
+  getFirstCard,
+  shuffleCards
 } from "./examineCards.js";
 import {getWinnerCard} from "./getWinnerCard.js";
 import PlayerReadyList from "./playerReadyList.js";
@@ -140,25 +141,12 @@ export default class Game extends React.Component {
     }
   }
   shuffle() {
-    // refactor this to other function
-    // default bid trick / trump option
-    // create array from 0 - 51
-    let cards = Array.from({length: CARD_NUM.TOTAL})
-      .fill(0)
-      .map((card, i) => i);
-
-    // shuffle array algorithm
-    for (let i = cards.length - 1; i > 0; i--) {
-      let randomIndex = getRandomInt(0, CARD_NUM.TOTAL - 1);
-      [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
-    }
-
+    let cards = shuffleCards();
     // get new cards
     cards = cards.map(card => ({
       value: card,
       trick: 0
     }));
-
     // todo bid
     dispatchToDatabase("ADD_NEW_DECK_TO_TABLE", {
       table: this.props.table,
