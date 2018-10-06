@@ -4,6 +4,7 @@ exports.init = () => {
     this.admin.initializeApp();
 };
 
+
 exports.getAllDataOnce = (path, callback) => {
     this.admin
         .database()
@@ -29,4 +30,12 @@ exports.setTableData = (path, id, data) => {
         .database()
         .ref(`tables/${id}/${path}`)
         .set(data);
+};
+
+exports.getNewChildKey = node => {
+    return this.admin
+        .database()
+        .ref()
+        .child(node)
+        .push().key;
 };

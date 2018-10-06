@@ -11,20 +11,19 @@ const Auction = require("./src/auction.js");
 const Players = require("./src/players.js");
 const state = require("./src/gameState.js");
 
-Db.init();
+let tableIdList = {};
 
-// when a new table is added, add table id to list;
+Db.init();
+Tables.init();
+
 const listenNewTableAdded = Db.listenPathDataChange("child_added");
 const listenTableRemoved = Db.listenPathDataChange("child_removed");
 const listenTableChanged = Db.listenPathDataChange("child_changed");
-
-let tableIdList = {};
+// when a new table is added, add table id to list;
 
 // if new table is added, update table list
 listenNewTableAdded("tables", snapshot => {
     Tables.getAll(snapshot.val(), tableIdList);
-    console.log("tableIdList", tableIdList);
-    console.log("new table", snapshot.val());
 });
 // if table is removed, update current table list
 listenTableRemoved("tables", snapshot => {
@@ -32,6 +31,7 @@ listenTableRemoved("tables", snapshot => {
         let removeKey = Tables.update(tableIdList, tables.val());
         if (removeKey < 0) {
             tableIdList = {};
+            Tables.create();
         } else {
             delete tableIdList[removeKey];
         }
@@ -56,10 +56,11 @@ listenTableChanged("tables", snapshot => {
                 {gameState: state.phase.auction},
                 {timeStamp: new Date().getTime()},
             );
-            console.log("is all ready, wirte data");
+            
             Db.setTableDataById(newTable);
             // todo: should set to a button
         } else if (readyCount === 1) {
+            
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
@@ -69,20 +70,26 @@ listenTableChanged("tables", snapshot => {
         }
     } else if (gameState === state.phase.auction) {
         // if still in acution, set timer
-        if (!Auction.isFinish(tableData)) {
+        let isFinishAuction = Auction.isFinish(tableData);
+        if (!isFinishAuction) {
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
                 Auction.update,
-                3000,
+                4000,
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
     } else if (gameState === state.phase.playing) {
         if (tableData.game.order < 51) {
-            initTimer(tableIdList[tableData.id], tableData, Game.deal, 10000);
+            initTimer(tableIdList[tableData.id], tableData, Game.deal, 6000);
         }
+    } else if (gameState === state.phase.gameover) {
+        
+        initTimer(tableIdList[tableData.id], tableData, Tables.close, 10000);
+    } else if (gameState === "close") {
+        Db.setTableData("", tableData.id, null);
     }
     return;
 });
