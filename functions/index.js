@@ -56,16 +56,14 @@ listenTableChanged("tables", snapshot => {
                 {gameState: state.phase.auction},
                 {timeStamp: new Date().getTime()},
             );
-            
             Db.setTableDataById(newTable);
             // todo: should set to a button
-        } else if (readyCount === 1) {
-            
+        } else {
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
-                Players.addAvatar,
-                2000,
+                Players.join,
+                10000,
             );
         }
     } else if (gameState === state.phase.auction) {
@@ -86,7 +84,6 @@ listenTableChanged("tables", snapshot => {
             initTimer(tableIdList[tableData.id], tableData, Game.deal, 6000);
         }
     } else if (gameState === state.phase.gameover) {
-        
         initTimer(tableIdList[tableData.id], tableData, Tables.close, 10000);
     } else if (gameState === "close") {
         Db.setTableData("", tableData.id, null);

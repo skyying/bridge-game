@@ -3,4 +3,5 @@ exports.phase = {
     auction: "auction",
     playing: "playing",
     gameover: "gameover",
+    close: "close",
 };
