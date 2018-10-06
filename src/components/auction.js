@@ -20,7 +20,6 @@ export default class Auction extends React.Component {
       this,
     );
   }
-
   validateUserTurnAndsetTrump(index) {
     // check if already current user's turn to give his bid
     let {game, currentUser, players} = this.props;
@@ -41,11 +40,12 @@ export default class Auction extends React.Component {
     }
   }
   updateBid(trump, opt = null) {
+
     let newBid,
       isFinishAuction = false,
       declarer = this.props.game.bid.declarer;
 
-    if (trump >= 0 && trump !== null) {
+    if (trump > -1 && trump !== null) {
       let bid = {
         trick: this.state.currentTrick,
         trump: trump
@@ -71,15 +71,12 @@ export default class Auction extends React.Component {
 
       // is game start
 
-      if (result.length >= 4) {
+      if (result.length > 3) {
         let isAllPass = result
           .slice(result.length - 3, result.length)
           .every(res => res.opt === "Pass");
-        let isGreaterThanFour = result.length >= 4;
         let hasValidTrump = result.some(bid => bid.trick >= 0);
-
-        isFinishAuction =
-                    isAllPass && isGreaterThanFour && hasValidTrump;
+        isFinishAuction = isAllPass && hasValidTrump;
       }
 
       // update bid
@@ -89,6 +86,7 @@ export default class Auction extends React.Component {
     }
 
     let deal = this.props.game.deal;
+
     if (isFinishAuction) {
       deal = (declarer + 1) % 4;
     } else {
@@ -107,7 +105,6 @@ export default class Auction extends React.Component {
       tableId: this.props.tableId,
       game: newGame
     });
-
     this.setState({visibility: false, current: null});
   }
   render() {

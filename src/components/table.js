@@ -1,6 +1,7 @@
 import React from "react";
 import Game from "./game.js";
 import {getRandomInt, getObjSortKey, getRandomKey} from "../helper/helper.js";
+import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 export default class Table extends React.Component {
   constructor(props) {
@@ -16,6 +17,9 @@ export default class Table extends React.Component {
         return tables[key];
       })
       .filter(table => table.linkId === +linkId);
+    if (targetTable.gameState === "close") {
+      return <Redirect to="/lobby" />;
+    }
     return (
       <div>
         <Game

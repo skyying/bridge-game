@@ -15,14 +15,6 @@ export default class TableList extends React.Component {
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.createTable = this.createTable.bind(this);
   }
-  componentDidMount() {
-    // should refactor this, write a promise for timeOut;
-    setTimeout(() => {
-      if (!this.props.tables) {
-        this.createTable();
-      }
-    }, 1500);
-  }
   createTable(tableRef) {
     let tableNum;
     if (this.props.tables) {
@@ -47,6 +39,9 @@ export default class TableList extends React.Component {
   }
   render() {
     let {tables} = this.props;
+
+    // let openTables = tables.filter(table => table.gameState !== "close");
+
     let keys = getObjSortKey(tables);
     if (!tables || !keys) {
       return <div>loading table data...</div>;

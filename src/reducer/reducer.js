@@ -42,34 +42,19 @@ export const dispatchToDatabase = (type, action) => {
   switch (type) {
     case "CREATE_TABLE": {
       let timeStamp = new Date().getTime();
-      if (action.tableNum > 0) {
-        let players = PLAYERS.slice(0);
-        players[0] = action.currentUser;
-        let tableKey = app.getNewChildKey("tables");
-        let newTable = {
-          timeStamp: action.tableRef || timeStamp,
-          gameState: 0,
-          id: tableKey,
-          linkId: action.tableRef || timeStamp,
-          game: DEFAULT_GAME,
-          players: players,
-          ready: [false, false, false, false]
-        };
-        app.setNodeByPath(`tables/${tableKey}`, newTable);
-      } else {
-        // first table is create by system
-        let tableKey = app.getNewChildKey("tables");
-        let newTable = {
-          timeStamp: action.tableRef || timeStamp,
-          gameState: "join",
-          id: tableKey,
-          linkId: action.tableRef || new Date().getTime(),
-          game: DEFAULT_GAME,
-          players: PLAYERS,
-          ready: [false, false, false, false]
-        };
-        app.setNodeByPath(`tables/${tableKey}`, newTable);
-      }
+      let players = PLAYERS.slice(0);
+      players[0] = action.currentUser;
+      let tableKey = app.getNewChildKey("tables");
+      let newTable = {
+        timeStamp: action.tableRef || timeStamp,
+        gameState: 0,
+        id: tableKey,
+        linkId: action.tableRef || timeStamp,
+        game: DEFAULT_GAME,
+        players: players,
+        ready: [false, false, false, false]
+      };
+      app.setNodeByPath(`tables/${tableKey}`, newTable);
       break;
     }
     case "CREATE_NEW_GAME": {
@@ -81,9 +66,12 @@ export const dispatchToDatabase = (type, action) => {
       } else {
         record = [game];
       }
+      // reset table
       tableData.record = record;
       tableData.game = Object.assign({}, DEFAULT_GAME);
       tableData.ready = [false, false, false, false];
+      tableData.timeStamp = new Date().getTime();
+      tableData.gameState = GAME_STATE.join;
       app.updateTableDataByID(tableId, tableData);
       break;
     }
