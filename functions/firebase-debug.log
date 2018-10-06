@@ -1,0 +1,32 @@
+[debug] [2018-10-06T08:41:17.363Z] ----------------------------------------------------------------------
+[debug] [2018-10-06T08:41:17.367Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve --only functions
+[debug] [2018-10-06T08:41:17.368Z] CLI Version:   5.0.1
+[debug] [2018-10-06T08:41:17.368Z] Platform:      darwin
+[debug] [2018-10-06T08:41:17.368Z] Node Version:  v9.1.0
+[debug] [2018-10-06T08:41:17.371Z] Time:          Sat Oct 06 2018 16:41:17 GMT+0800 (CST)
+[debug] [2018-10-06T08:41:17.371Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-06T08:41:17.386Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-06T08:41:17.386Z] > authorizing via signed-in user
+[debug] [2018-10-06T08:41:17.386Z] [iam] checking project wowbridge88 for permissions ["firebase.projects.get"]
+[debug] [2018-10-06T08:41:17.388Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-06T08:41:17.389Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-10-06T08:41:17.588Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T08:41:17.614Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/wowbridge88:testIamPermissions  
+
+[debug] [2018-10-06T08:41:18.605Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T08:41:18.606Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/wowbridge88  
+ 
+[debug] [2018-10-06T08:41:19.577Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/liuchienwen/Bridge'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-10-06T08:41:20.105Z] Fetching environment
+[debug] [2018-10-06T08:41:20.107Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/862342003288:getServerAppConfig  
+ 
+[debug] [2018-10-06T08:41:20.856Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T08:41:20.856Z] Starting @google-cloud/functions-emulator
+[debug] [2018-10-06T08:41:21.931Z] Parsing function triggers
+[info] ✔  functions: helloWorld: http://localhost:5000/wowbridge88/us-central1/helloWorld

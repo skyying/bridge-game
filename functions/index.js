@@ -81,7 +81,7 @@ listenTableChanged("tables", snapshot => {
         }
     } else if (gameState === state.phase.playing) {
         if (tableData.game.order < 51) {
-            initTimer(tableIdList[tableData.id], tableData, Game.deal, 3000);
+            initTimer(tableIdList[tableData.id], tableData, Game.deal, 10000);
         }
     }
     return;
