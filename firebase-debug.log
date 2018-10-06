@@ -1,0 +1,27 @@
+[debug] [2018-10-05T15:56:24.755Z] ----------------------------------------------------------------------
+[debug] [2018-10-05T15:56:24.757Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve --only functions
+[debug] [2018-10-05T15:56:24.757Z] CLI Version:   4.2.1
+[debug] [2018-10-05T15:56:24.757Z] Platform:      darwin
+[debug] [2018-10-05T15:56:24.757Z] Node Version:  v9.1.0
+[debug] [2018-10-05T15:56:24.758Z] Time:          Fri Oct 05 2018 23:56:24 GMT+0800 (CST)
+[debug] [2018-10-05T15:56:24.758Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-05T15:56:24.770Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-05T15:56:24.770Z] > authorizing via signed-in user
+[debug] [2018-10-05T15:56:24.772Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-05T15:56:24.772Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-10-05T15:56:24.981Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-05T15:56:25.007Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/wowbridge88  
+ 
+[debug] [2018-10-05T15:56:25.925Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-05T15:56:25.927Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/wowbridge88  
+ 
+[debug] [2018-10-05T15:56:27.368Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/liuchienwen/Bridge'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-10-05T15:56:28.239Z] Fetching environment
+[debug] [2018-10-05T15:56:28.242Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/862342003288:getServerAppConfig  
+ 

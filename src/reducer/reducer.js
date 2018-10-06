@@ -83,7 +83,8 @@ export const dispatchToDatabase = (type, action) => {
       }
       tableData.record = record;
       tableData.game = Object.assign({}, DEFAULT_GAME);
-      app.updateTableDataByID(`${tableId}`, tableData);
+      tableData.ready = [false, false, false, false];
+      app.updateTableDataByID(tableId, tableData);
       break;
     }
     case "READY_A_PLAYER": {
@@ -133,12 +134,12 @@ export const dispatchToDatabase = (type, action) => {
         game.isGameOver = true;
       }
       app.updateTableDataByID(`${tableId}/game/`, game);
-      app.updateTableDataByID(`${tableId}/ready/`, [
-        false,
-        false,
-        false,
-        false
-      ]);
+      // app.updateTableDataByID(`${tableId}/ready/`, [
+      //   false,
+      //   false,
+      //   false,
+      //   false
+      // ]);
       break;
     }
     case "UPDATE_CURRENT_TRICK": {

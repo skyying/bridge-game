@@ -226,6 +226,7 @@ export default class Game extends React.Component {
         hand = hand
           .sort((a, b) => a.value - b.value)
           .filter(card => card.trick === 0);
+
         if (index === 1) {
           hand = hand.sort((a, b) => b.value - a.value);
         }

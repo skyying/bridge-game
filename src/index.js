@@ -64,7 +64,8 @@ class App extends React.Component {
               <div>
                 <Route
                   path="/table/:id"
-                  render={props => (
+                  // component
+                  render={ props => (
                     <Table
                       currentUser={this.state.currentUser}
                       tables={this.state.tables}
