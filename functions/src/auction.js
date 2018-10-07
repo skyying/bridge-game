@@ -21,6 +21,5 @@ exports.isFinish = function(table) {
     let isAllPass = result
         .slice(result.length - 3, result.length)
         .every(res => res.opt === "Pass");
-    let hasValidTrump = game.bid.trump > 0;
-    return isAllPass && hasValidTrump;
+    return isAllPass && game.bid.trump >= 0;
 };
