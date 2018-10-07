@@ -3,6 +3,13 @@ import Game from "./game.js";
 import {getRandomInt, getObjSortKey, getRandomKey} from "../helper/helper.js";
 import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
+import Sidebar from "./sidebar/sidebar.js";
+import "../style/table.scss";
+import "../style/sidebar.scss";
+import "../style/record-item.scss";
+import "../style/record.scss";
+import "../style/dot.scss";
+
 export default class Table extends React.Component {
   constructor(props) {
     super(props);
@@ -21,12 +28,13 @@ export default class Table extends React.Component {
       return <Redirect to="/lobby" />;
     }
     return (
-      <div>
+      <div className="table">
         <Game
           currentUser={currentUser}
           tableId={targetTable.key}
           table={targetTable}
         />
+        <Sidebar table={targetTable} />
       </div>
     );
   }

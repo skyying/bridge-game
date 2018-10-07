@@ -33,10 +33,12 @@ export const Card = ({value, evt = null, flipUp, name = null}) => {
                   ? "red value"
                   : "black value"
               }>
-                <div> {value} </div>
               {CARD_RANK[value % CARD_NUM.HAND]}
             </div>
-            {SUIT_SHAPE[kind](0.24)}
+            {SUIT_SHAPE[kind](0.235)}
+            <div className="large-shape">
+              {SUIT_SHAPE[kind](0.5)}
+            </div>
           </div>
         </div>
       </div>

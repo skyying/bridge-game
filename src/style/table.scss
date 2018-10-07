@@ -1,0 +1,15 @@
+.table {
+  display: flex;
+  width: 100%;
+  flex-direction:row ;
+  .game{
+    width: 70%;
+    min-width: 600px;
+  }
+
+  .sidebar {
+    min-width: 200px;
+    width: 30%;
+  }
+
+}

@@ -31,6 +31,13 @@ $card-black:#222222;
   .black{
     color: $card-black;
   }
+  .large-shape{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-27%);
+  }
+
 }
 
 .flip-down{

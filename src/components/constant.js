@@ -40,3 +40,5 @@ export const GAME_STATE = {
   playing: "playing",
   gameover: "gameover"
 };
+
+export const TAB_OPTION = ["Chat", "Result"];

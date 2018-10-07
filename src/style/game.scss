@@ -4,6 +4,8 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
 }
 
 
+$card-margin-hor: 40px;
+$card-margin-ver: 68px;
 
 .game {
   background-image:$gameBg;
@@ -96,7 +98,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
       $elements: 13;
       @for $i from 0 to $elements {
         &:nth-child(#{$i + 1}) {
-          left: calc(#{$i} * 50px);
+          left: calc(#{$i} * #{$card-margin-hor});
         }
       }
     }
@@ -109,7 +111,7 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
       $elements: 13;
       @for $i from 0 to $elements {
         &:nth-child(#{$i + 1}) {
-          left: calc(#{$i} * 50px);
+          left: calc(#{$i} * #{$card-margin-hor});
         }
       }
     }
@@ -132,13 +134,13 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     $elements: 4;
     @for $i from 0 to $elements {
       .l#{$i}{
-        top: calc(#{$i} * 80px);
+        top: calc(#{$i} * #{$card-margin-ver});
       }
     }
     $item: 13;
     @for $j from 0 to $item{
-      $w: calc(#{$j}*50px);
-      $z: calc( 50 - #{$j}*2);
+      $w: calc(#{$j} * #{$card-margin-hor});
+      $z: calc( 40 - #{$j}*2);
       .item-#{$j}{
         right: $w;
         z-index:  $z;
@@ -162,13 +164,13 @@ $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
     $elements: 4;
     @for $i from 0 to $elements {
       .l#{$i}{
-        top: calc(#{$i} * 80px);
+        top: calc(#{$i} * #{$card-margin-ver});
       }
     }
     $item: 13;
     @for $j from 0 to $item{
       .item-#{$j}{
-        left: calc(#{$j} * 50px);
+        left: calc(#{$j} * 40px);
       }
     }
   }

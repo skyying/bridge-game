@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {EMPTY_SEAT} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
-import "../style/readylist.scss";
+import "../style/ready-list.scss";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);

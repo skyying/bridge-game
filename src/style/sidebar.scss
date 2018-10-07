@@ -1,0 +1,18 @@
+
+.sidebar {
+  padding: 20px; 
+  background-color: #F7F5F0;
+  .tabs {
+    display: grid;
+    grid-template: 1fr / 70px 70px 1fr;
+    width: 100%;
+    justify-items: start;
+    > div {
+      cursor: pointer;
+    }
+    .current{
+      border-bottom: 2px solid #5C5E70;
+    }
+  }
+
+}

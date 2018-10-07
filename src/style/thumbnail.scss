@@ -1,0 +1,27 @@
+$thumbnailBg: #D2ADB0;
+
+.thumbnail{
+  color: #fff;
+  background-color: $thumbnailBg;
+  overflow: hidden;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #fff;
+}   
+
+.thumbnail-group{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
+  .thumbnail {
+    &:nth-child(1){
+      transform: translateX(20%);
+    }
+    &:nth-child(2){
+      transform: translateX(-20%);
+    }
+  }
+}
+

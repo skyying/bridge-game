@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import "../style/trickscore.scss";
+import "../style/trick-score.scss";
+import {teamScore} from "./socre.js";
 
 export default class TrickScore extends React.Component {
   constructor(props) {
@@ -13,18 +14,7 @@ export default class TrickScore extends React.Component {
     if (!table || !table.game.cards) {
       return null;
     }
-    let scoreTeamOne = 0,
-      scoreTeamTwo = 0;
-
-    // which team players belong: [ one, two, one ,two]
-    game.cards.map((card, index) => {
-      let winningScore = card.isWin ? 1 : 0;
-      if ((index % 4) % 2 === 0) {
-        scoreTeamOne += winningScore;
-      } else {
-        scoreTeamTwo += winningScore;
-      }
-    });
+    let score = teamScore(game.cards);
     let [player1, player2, player3, player4] = players;
     let innerStyle = this.props.innerStyle;
     let resizeRatio = this.props.ratio || 0.15;
@@ -64,7 +54,7 @@ export default class TrickScore extends React.Component {
                   <span>{player3[0]}</span>
                 </div>
               </div>
-              <div className="score">{scoreTeamOne}</div>
+              <div className="score">{score.teamA}</div>
             </div>
             <div className="group">
               <div
@@ -83,7 +73,7 @@ export default class TrickScore extends React.Component {
                   <span>{player4[0]}</span>
                 </div>
               </div>
-              <div className="score">{scoreTeamTwo}</div>
+              <div className="score">{score.teamB}</div>
             </div>
           </div>
           {this.props.children}

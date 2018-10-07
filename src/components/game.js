@@ -344,8 +344,8 @@ export default class Game extends React.Component {
                     direction[index] === "north" || direction[index] === "south"
                       ? {
                         left:
-                                  (this.state.windowWidth -
-                                      (50 * totalCardsInHand + 50)) /
+                                  (this.state.windowWidth - (this.state.windowWidth * 0.3)
+                                      - (40 * totalCardsInHand + 40)) /
                                   2
                       }
                       : null;
@@ -462,8 +462,8 @@ export default class Game extends React.Component {
             table={this.props.table}
           />
         </div>
-        <div className="sidebar" />
       </div>
     );
   }
 }
+

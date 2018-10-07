@@ -1,0 +1,19 @@
+.record-list{
+  .record-header{
+    display: grid;
+    width: 100%;
+    justify-items: center;
+    background: transparent;
+    grid-template: 1fr / 1fr 2fr 2fr 2fr ;
+    padding: 0 20px;
+    transform: translateY(36%);
+    > div{
+      &:nth-child(1){
+        width: 1em;
+      }
+      &:nth-child(2){
+        width: 50px;
+      }
+    }
+  }
+}
