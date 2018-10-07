@@ -6,7 +6,7 @@ const CONST = require("./constant.js");
 exports.addAvatar = table => {
     let {players} = table;
     let avatar = [1, 2, 3];
-    let index = 1;
+    let index = 0;
     let avaters = players.map(player => {
         return player === CONST.EMPTY_SEAT ? `C${avatar[index++]}` : player;
     });

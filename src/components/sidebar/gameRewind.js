@@ -29,6 +29,7 @@ export default class GameRewind extends React.Component {
         {fourHands}
         <RewindAuction players={this.props.players} bid={bid} />
         <RewindResult players={this.props.players} cards={cards} />
+        <div />
       </div>
     );
   }

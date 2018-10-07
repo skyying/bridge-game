@@ -12,55 +12,28 @@ import {dispatchToDatabase} from "../reducer/reducer.js";
 export default class TableList extends React.Component {
   constructor(props) {
     super(props);
-    this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.createTable = this.createTable.bind(this);
   }
   createTable(tableRef) {
-    let tableNum;
-    if (this.props.tables) {
-      tableNum = Object.keys(this.props.tables).length;
-    } else {
-      tableNum = 0;
-    }
     dispatchToDatabase("CREATE_TABLE", {
-      tableNum: tableNum,
       tableRef: tableRef,
       currentUser: this.props.currentUser
     });
   }
-  addPlayerToTable(tableId) {
-    let tables = this.props.tables;
-    if (!tables) return;
-    dispatchToDatabase("ADD_PLAYER_TO_TABLE", {
-      table: tables[tableId],
-      tableId: tableId,
-      currentUser: this.props.currentUser
-    });
-  }
   render() {
-    let {tables} = this.props;
-
-    // let openTables = tables.filter(table => table.gameState !== "close");
-
-    let keys = getObjSortKey(tables);
-    if (!tables || !keys) {
-      return <div>loading table data...</div>;
+    if (!this.props.tableList) {
+      return <div>loading...</div>;
     }
-    let tablesLink = keys.map((key, index) => {
-      let linkId = tables[key]["linkId"];
+
+    let tableLinks = Object.keys(this.props.tableList).map((key, index) => {
       return (
-        <Link
-          key={getRandomKey()}
-          onClick={() => this.addPlayerToTable(key)}
-          to={`/table/${linkId}`}>
-                    第 {index} 桌
+        <Link key={key} to={`/table/${key}`}>
+                    第{index + 1}桌
         </Link>
       );
     });
-
-    // as a ref of tableId
+    // onClick={() => this.addPlayerToTable(key)}
     let tableRef = new Date().getTime();
-
     return (
       <div>
         <Link
@@ -68,7 +41,7 @@ export default class TableList extends React.Component {
           to={`/table/${tableRef}`}>
                     create table
         </Link>
-        {tablesLink}
+        {tableLinks}
       </div>
     );
   }

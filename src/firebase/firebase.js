@@ -6,11 +6,23 @@ let firebaseApp = firebase.initializeApp(config);
 export const app = {
   db: firebaseApp.database(),
   auth: firebaseApp.auth(),
+  getNodeByPathOnce: (path, action) => {
+    return firebaseApp
+      .database()
+      .ref(path)
+      .on("value", action);
+  },
   getNodeByPath: (path, action) => {
     return firebaseApp
       .database()
       .ref(path)
       .on("value", action);
+  },
+  listenPathChildren: (path, type, action) => {
+    return firebaseApp
+      .database()
+      .ref(path)
+      .on(type, action);
   },
   setNodeByPath: (path, data) => {
     return firebaseApp
@@ -36,5 +48,11 @@ export const app = {
       .database()
       .ref("tables/" + path)
       .set(game);
+  },
+  setTableListData: (id, data) => {
+    firebaseApp
+      .database()
+      .ref(`tableList/${id}/`)
+      .set(data);
   }
 };

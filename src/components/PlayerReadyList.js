@@ -11,14 +11,12 @@ export default class PlayerReadyList extends React.Component {
     this.setReadyState = this.setReadyState.bind(this);
   }
   setReadyState(playerIndex) {
-    let {currentUser, table, tableId} = this.props;
+    let {currentUser, table} = this.props;
     if (!table) return;
     let {game} = table;
     let players = table.players.slice(0);
-
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
-      tableId: tableId,
       table: table
     });
   }

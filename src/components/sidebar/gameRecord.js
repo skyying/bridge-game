@@ -19,6 +19,9 @@ export default class GameRecord extends React.Component {
   render() {
     let resultNum = 4;
     let {record} = this.props;
+    if(!record){
+      return <div className="record-empty">No available game records</div>
+    }
     let recordList, dots, dotsNum;
     if (record) {
       if (record.length < resultNum) {
@@ -62,20 +65,22 @@ export default class GameRecord extends React.Component {
 
     return (
       <div className="record-list">
-        <div className="record-header">
-          <div />
-          <div />
-          <ThumbailGroup
-            teamOrder={0}
-            players={this.props.players}
-            size={32}
-          />
-          <ThumbailGroup
-            teamOrder={1}
-            players={this.props.players}
-            size={32}
-          />
-        </div>
+        {this.props.record && (
+          <div className="record-header">
+            <div/>
+            <div/>
+            <ThumbailGroup
+              teamOrder={0}
+              players={this.props.players}
+              size={32}
+            />
+            <ThumbailGroup
+              teamOrder={1}
+              players={this.props.players}
+              size={32}
+            />
+          </div>
+        )}
         {recordList}
         <div className="dots-holder">
           <div className="dots-holder-inner">{dots}</div>

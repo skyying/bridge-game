@@ -44,6 +44,7 @@ class App extends React.Component {
     dispatch("STOP_LOADING", {isLoad: true});
   }
   render() {
+    console.log(this.state);
     if (!this.state.isLoad) {
       return <Loading />;
     }
@@ -66,8 +67,9 @@ class App extends React.Component {
                   path="/table/:id"
                   render={props => (
                     <Table
-                      currentUser={this.state.currentUser}
                       tables={this.state.tables}
+                      tableList={this.state.tableList}
+                      currentUser={this.state.currentUser}
                       {...props}
                     />
                   )}
@@ -77,8 +79,9 @@ class App extends React.Component {
                   path="/lobby"
                   render={() => (
                     <Lobby
+                      tables={this.state.tables || null}
                       currentUser={this.state.currentUser}
-                      tables={this.state.tables}
+                      tableList={this.state.tableList}
                     />
                   )}
                 />

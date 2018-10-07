@@ -102,7 +102,7 @@ export default class Game extends React.Component {
   }
 
   deal(value) {
-    let {table, tableId} = this.props;
+    let {table} = this.props;
     let {game} = this.props.table;
     if (!game) {
       return;
@@ -115,7 +115,6 @@ export default class Game extends React.Component {
       Object.assign(
         {},
         {
-          tableId: tableId,
           table: table,
           value: value,
           time: new Date().getTime(),
@@ -137,7 +136,6 @@ export default class Game extends React.Component {
       dispatchToDatabase(
         "UPDATE_WINNER_CARD",
         Object.assign({}, this.props, {
-          tableId: tableId,
           table: table,
           winnerCard: card,
           order: order,
@@ -156,7 +154,6 @@ export default class Game extends React.Component {
     // todo bid
     dispatchToDatabase("ADD_NEW_DECK_TO_TABLE", {
       table: this.props.table,
-      tableId: this.props.tableId,
       cards: cards
     });
   }
@@ -174,7 +171,7 @@ export default class Game extends React.Component {
     );
   }
   render() {
-    let {table, currentUser, tableId} = this.props;
+    let {table, currentUser} = this.props;
     let {game, players, ready} = table;
     let {cards, isGameOver} = game;
 
@@ -408,7 +405,6 @@ export default class Game extends React.Component {
               currentUser={currentUser}
               windowWidth={this.state.windowWidth}
               widnowHeight={this.state.windowHeight}
-              tableId={tableId}
               table={table}
             />
           </div>
@@ -424,7 +420,6 @@ export default class Game extends React.Component {
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
             table={this.props.table}
-            tableId={this.props.tableId}
           />
         )}
         {isFinishAuction && (
@@ -440,8 +435,8 @@ export default class Game extends React.Component {
             <Auction
               isFinishAuction={isFinishAuction}
               endAuction={this.endAuction}
-              tableId={tableId}
               game={game}
+              table={table}
               currentUser={currentUser}
               players={players}
             />

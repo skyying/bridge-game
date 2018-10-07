@@ -11,13 +11,12 @@ export default class ScoreBoard extends React.Component {
     this.recordGame = this.recordGame.bind(this);
   }
   recordGame() {
-    let {table, tableId} = this.props;
+    let {table} = this.props;
     let {game} = table;
     if (!table || game.order !== 51) {
       return;
     }
     dispatchToDatabase("CREATE_NEW_GAME", {
-      tableId: tableId,
       table: table
     });
   }

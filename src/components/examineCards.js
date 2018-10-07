@@ -101,6 +101,7 @@ export const shuffleCards = () => {
 };
 
 export const mapToFourHands = cards => {
+  if (!cards) return;
   return [0, 0, 0, 0]
     .map((userIndex, index) => {
       return cards.filter((card, i) => i % 4 === index);
@@ -109,7 +110,7 @@ export const mapToFourHands = cards => {
 };
 
 export const fourHands = cards => {
-  mapToFourHands.map(hand =>
+  return mapToFourHands(cards).map(hand =>
     hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0)),
   );
 };

@@ -27,7 +27,7 @@ export default class Sidebar extends React.Component {
         {opt}
       </div>
     ));
-    let currentRecord =
+    let currentRecord = this.state.currentRecord &&
             this.state.currentRecord >= 0 &&
             this.props.table.record[this.state.currentRecord];
     return (

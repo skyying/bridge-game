@@ -12,12 +12,14 @@ exports.init = () => {
 
 exports.getAll = (newTable, tableIdList) => {
     console.log("tables", tableIdList);
+    let list = Object.assign({}, tableIdList);
     let tableId = newTable.id;
-    tableIdList[tableId] = {
+    list[tableId] = {
         id: tableId,
         timer: null,
         timeStamp: newTable.timeStamp,
     };
+    return list;
 };
 
 exports.update = (oldTableList, newTableList) => {
@@ -31,6 +33,7 @@ exports.update = (oldTableList, newTableList) => {
 
 exports.create = () => {
     let tableKey = Db.getNewChildKey("tables");
+    console.log("tableKey", tableKey);
     let tableRef = new Date().getTime();
     let newTable = {
         timeStamp: tableRef,
@@ -42,6 +45,7 @@ exports.create = () => {
         ready: [false, false, false, false],
     };
     Db.setTableDataById(newTable);
+    Db.setTableListData(newTable.linkId, newTable.id);
 };
 exports.close = table => {
     console.log("should print this, in Tables.close");
@@ -52,4 +56,5 @@ exports.close = table => {
         {timeStamp: new Date().getTime()},
     );
     Db.setTableDataById(updateTable);
+    Db.setTableListData(updateTable.linkId, null);
 };

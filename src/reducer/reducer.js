@@ -24,6 +24,16 @@ export const appReducer = (state, action) => {
       // tables is an array, query table by index
       return Object.assign({}, state, {tables: action.tables});
     }
+    case "UPDATE_TABLE_DATA": {
+      let tables = state.tables;
+      let updatedTables = Object.assign({}, tables);
+      updatedTables[action.table.id] = action.table;
+      return Object.assign({}, state, {tables: updatedTables});
+    }
+    case "FETCH_TABLE_LIST": {
+      // tables is an array, query table by index
+      return Object.assign({}, state, {tableList: action.tableList});
+    }
     default:
       return state;
   }
@@ -33,7 +43,8 @@ export const store = createStore(
   appReducer,
   {
     currentUser: null,
-    isLoad: false
+    isLoad: false,
+    tables: {}
   },
   applyMiddleware(thunk),
 );
@@ -45,20 +56,22 @@ export const dispatchToDatabase = (type, action) => {
       let players = PLAYERS.slice(0);
       players[0] = action.currentUser;
       let tableKey = app.getNewChildKey("tables");
+      let linkId = action.tableRef || timeStamp;
       let newTable = {
-        timeStamp: action.tableRef || timeStamp,
-        gameState: 0,
+        timeStamp: linkId,
+        gameState: GAME_STATE.join,
         id: tableKey,
-        linkId: action.tableRef || timeStamp,
+        linkId: linkId,
         game: DEFAULT_GAME,
         players: players,
         ready: [false, false, false, false]
       };
       app.setNodeByPath(`tables/${tableKey}`, newTable);
+      app.setTableListData(linkId, tableKey);
       break;
     }
     case "CREATE_NEW_GAME": {
-      let {table, tableId} = action;
+      let {table} = action;
       let tableData = Object.assign({}, table);
       let {record, game} = tableData;
       if (record) {
@@ -72,38 +85,34 @@ export const dispatchToDatabase = (type, action) => {
       tableData.ready = [false, false, false, false];
       tableData.timeStamp = new Date().getTime();
       tableData.gameState = GAME_STATE.join;
-      app.updateTableDataByID(tableId, tableData);
+      app.updateTableDataByID(tableData.id, tableData);
       break;
     }
     case "READY_A_PLAYER": {
-      // if all four player are ready,
-      // start a new game automatically;
-      let {table, playerIndex, tableId} = action;
-      let path = `tables/${tableId}/ready/${playerIndex}`;
+      let {table, playerIndex} = action;
+      let path = `tables/${table.id}/ready/${playerIndex}`;
       app.setNodeByPath(path, true);
-
       // updateTimer
       app.updateTableGameDataByPath(
-        `${tableId}/timeStamp/`,
+        `${table.id}/timeStamp/`,
         new Date().getTime(),
       );
-
       break;
     }
     case "ADD_NEW_DECK_TO_TABLE": {
       // todo, use high order function to wrap this
       // create a game
-      let {cards, table, tableId} = action;
+      let {cards, table} = action;
       let newGame = Object.assign({}, table.game, {
         cards: action.cards
       });
 
-      app.updateTableDataByID(`${tableId}/game/`, newGame);
+      app.updateTableDataByID(`${table.id}/game/`, newGame);
       break;
     }
     case "UPDATE_WINNER_CARD": {
       // todo, use high order function to wrap this
-      let {tableId, table} = action;
+      let {table} = action;
       let game = Object.assign({}, table.game);
 
       let cards = game.cards;
@@ -121,21 +130,15 @@ export const dispatchToDatabase = (type, action) => {
       if (action.order === 51) {
         game.isGameOver = true;
       }
-      app.updateTableDataByID(`${tableId}/game/`, game);
-      // app.updateTableDataByID(`${tableId}/ready/`, [
-      //   false,
-      //   false,
-      //   false,
-      //   false
-      // ]);
+      app.updateTableDataByID(`${table.id}/game/`, game);
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
       // update this is how many trick players have been draw
 
-      let {table, tableId, order, deal} = action;
+      let {table, order, deal} = action;
       let {game} = table;
-      app.updateTableGameDataByPath(`${tableId}/game/order/`, order);
+      app.updateTableGameDataByPath(`${table.id}/game/order/`, order);
 
       let cards = game.cards;
 
@@ -147,9 +150,9 @@ export const dispatchToDatabase = (type, action) => {
       currentCard.order = order;
 
       // update deal order, who can draw card next
-      app.updateTableGameDataByPath(`${tableId}/game/deal/`, deal);
+      app.updateTableGameDataByPath(`${table.id}/game/deal/`, deal);
       app.updateTableGameDataByPath(
-        `${tableId}/timeStamp/`,
+        `${table.id}/timeStamp/`,
         new Date().getTime(),
       );
 
@@ -163,33 +166,33 @@ export const dispatchToDatabase = (type, action) => {
         currentCard.player = (deal + 4 - 1) % 4;
 
         app.updateTableGameDataByPath(
-          `${action.tableId}/game/cards/${targetCardInex}`,
+          `${table.id}/game/cards/${targetCardInex}`,
           currentCard,
         );
       }
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {
-      let {table, currentUser, tableId} = action;
-      let players = table.players.slice(0);
-      let emptySeatIndex = players.findIndex(seat => seat === EMPTY_SEAT);
-      if (emptySeatIndex >= 0) {
-        players[emptySeatIndex] = currentUser;
-
-        // let currentTableObj = getObj(action.id, currentTable);
-        app.setNodeByPath(`tables/${tableId}/players/`, players);
-      }
+      let {currentUser, id, emptySeatIndex} = action;
+      app.setNodeByPath(
+        `tables/${id}/players/${emptySeatIndex}`,
+        currentUser,
+      );
+      app.updateTableGameDataByPath(
+        `${id}/timeStamp/`,
+        new Date().getTime(),
+      );
       break;
     }
     case "UPDATE_AUCTION": {
       // in order to detect if some user isn't online anymore
       // record current to database when a current user is deal
       app.updateTableGameDataByPath(
-        `${action.tableId}/game/`,
+        `${action.table.id}/game/`,
         action.game,
       );
       app.updateTableGameDataByPath(
-        `${action.tableId}/timeStamp/`,
+        `${action.table.id}/timeStamp/`,
         new Date().getTime(),
       );
       break;
@@ -199,6 +202,10 @@ export const dispatchToDatabase = (type, action) => {
   }
 };
 
-app.getNodeByPath("tables", value => {
-  return dispatch("FETCH_TABLE_DATA", {tables: value.val()});
+// app.getNodeByPathOnce("tables", value => {
+//   return dispatch("FETCH_TABLE_DATA", {tables: value.val()});
+// });
+
+app.getNodeByPath("tableList", value => {
+  return dispatch("FETCH_TABLE_LIST", {tableList: value.val()});
 });

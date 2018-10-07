@@ -40,7 +40,6 @@ export default class Auction extends React.Component {
     }
   }
   updateBid(trump, opt = null) {
-
     let newBid,
       isFinishAuction = false,
       declarer = this.props.game.bid.declarer;
@@ -101,14 +100,13 @@ export default class Auction extends React.Component {
     );
 
     dispatchToDatabase("UPDATE_AUCTION", {
-      isFinishAuction: isFinishAuction,
-      tableId: this.props.tableId,
+      table: this.props.table,
       game: newGame
     });
     this.setState({visibility: false, current: null});
   }
   render() {
-    let {game, tableId, players} = this.props;
+    let {game, players} = this.props;
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser;
 

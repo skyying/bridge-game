@@ -18,9 +18,11 @@ export default class Lobby extends React.Component {
   render() {
     return (
       <div>
-            this is lobby table list
-            <TableList currentUser={this.props.currentUser} 
-              tables={this.props.tables} />
+                this is lobby table list
+        <TableList
+          currentUser={this.props.currentUser}
+          tableList={this.props.tableList}
+        />
       </div>
     );
   }

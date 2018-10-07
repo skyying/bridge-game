@@ -23,7 +23,8 @@ const listenTableChanged = Db.listenPathDataChange("child_changed");
 
 // if new table is added, update table list
 listenNewTableAdded("tables", snapshot => {
-    Tables.getAll(snapshot.val(), tableIdList);
+    tableIdList = Tables.getAll(snapshot.val(), tableIdList);
+    console.log("in added", tableIdList);
 });
 // if table is removed, update current table list
 listenTableRemoved("tables", snapshot => {
@@ -35,12 +36,15 @@ listenTableRemoved("tables", snapshot => {
         } else {
             delete tableIdList[removeKey];
         }
+        console.log("in removed", tableIdList);
     });
 });
 
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
+    console.log("tableIdList in tables changew", tableIdList);
     let tableData = snapshot.val();
+    console.log("in table change,  tableData", tableData);
     console.log("gameState-----", tableData.gameState);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
@@ -57,8 +61,9 @@ listenTableChanged("tables", snapshot => {
                 {timeStamp: new Date().getTime()},
             );
             Db.setTableDataById(newTable);
-            // todo: should set to a button
+            console.log("in player.join, all ready");
         } else {
+            console.log("in player.join");
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
@@ -74,7 +79,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Auction.update,
-                4000,
+                6000,
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
