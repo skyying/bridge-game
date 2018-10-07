@@ -9,7 +9,15 @@
 
   .sidebar {
     min-width: 200px;
-    width: 30%;
+    width: 34%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .table{
+    .sidebar{
+      width: 40%;
+    }
   }
 
 }

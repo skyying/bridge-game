@@ -1,0 +1,109 @@
+.rewind{
+  position: relative;
+  width: 100%;
+  height: calc(100% - 60px - 44%);
+
+  .hand {
+    display: flex;
+  }
+  .card-value{
+    margin-left: 5px;
+    display: flex;
+    > div {
+      margin-right: 1px;
+    }
+  }
+  .hand-wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+  .rewind-player{
+    position: absolute;
+    min-width: 130px;
+    max-width: 150px;
+    width: 100%;
+    display: flex;
+    background-color: #FCFBF8;
+    border-radius: 5px;
+    border: 1px solid #E3E3E3;
+    padding: 10px;
+    align-items: center;
+    > div {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      &:first-child{
+        min-width: 30px;
+        width: 30%;
+      }
+      &:last-child{
+        min-width: 50px;
+        width: 70%;
+      }
+    }
+  }
+  .south {
+    bottom: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .north {
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .east{
+    top: 50%;
+    left: 0%;
+    transform: translateY(-50%);
+  }
+  .west{
+    top: 50%;
+    right: 0%;
+    transform: translateY(-50%);
+  }
+
+  .rewind-auction, .rewind-result{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    justify-content: center;
+    width: 100px;
+    border: 1px solid #D3D3D3;
+    padding: 10px;
+    border-radius: 3px;
+    h3{
+      font-size: 14px;
+      text-align: center;
+    }
+    > div{
+      padding: 5px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .rewind-auction{
+    right: 0%;
+    top: 0;
+  }
+  .rewind-result{
+    bottom: 0;
+    left: 0;
+    span{
+      font-size: 12px;
+    }
+    > div {
+      > div{
+        width: 50%;
+      }
+      &:nth-child(3){
+        transform: translateX(16%);
+      }
+      &:nth-child(2){
+        transform: translateX(16%);
+      }
+    }
+  }
+}
+

@@ -6,7 +6,13 @@ import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
 import Trick from "./trick.js";
-import {CARD_NUM, EMPTY_SEAT, NO_TRUMP, DEFAULT_GAME} from "./constant.js";
+import {
+  CARD_NUM,
+  DIRECTION,
+  EMPTY_SEAT,
+  NO_TRUMP,
+  DEFAULT_GAME
+} from "./constant.js";
 import TrickScore from "./trickScore.js";
 import ScoreBoard from "./scoreBoard.js";
 import Auction from "./auction.js";
@@ -178,7 +184,6 @@ export default class Game extends React.Component {
     let isDummyMode = isFinishAuction && true;
 
     // class name for each hand
-    let direction = ["south", "west", "north", "east"];
     let hands;
     let {cardsByPlayer, offsetPlayers, offsetIndex} =
             getOffsetDatabyCurrentUser(players, game, currentUser) || {};
@@ -341,11 +346,12 @@ export default class Game extends React.Component {
         ).length;
 
         let horCardStyle =
-                    direction[index] === "north" || direction[index] === "south"
+                    DIRECTION[index] === "north" || DIRECTION[index] === "south"
                       ? {
                         left:
-                                  (this.state.windowWidth - (this.state.windowWidth * 0.3)
-                                      - (40 * totalCardsInHand + 40)) /
+                                  (this.state.windowWidth -
+                                      this.state.windowWidth * 0.3 -
+                                      (40 * totalCardsInHand + 40)) /
                                   2
                       }
                       : null;
@@ -359,7 +365,7 @@ export default class Game extends React.Component {
         };
 
         let verCardStyle =
-                    direction[index] === "west" || direction[index] === "east"
+                    DIRECTION[index] === "west" || DIRECTION[index] === "east"
                       ? {
                         top:
                                   (this.state.windowHeight -
@@ -370,7 +376,7 @@ export default class Game extends React.Component {
 
         return (
           <div
-            className={direction[index]}
+            className={DIRECTION[index]}
             style={horCardStyle || verCardStyle}
             key={getRandomKey()}>
             <div className="hand-inner">
@@ -466,4 +472,3 @@ export default class Game extends React.Component {
     );
   }
 }
-

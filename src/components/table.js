@@ -9,6 +9,7 @@ import "../style/sidebar.scss";
 import "../style/record-item.scss";
 import "../style/record.scss";
 import "../style/dot.scss";
+import "../style/rewind.scss";
 
 export default class Table extends React.Component {
   constructor(props) {

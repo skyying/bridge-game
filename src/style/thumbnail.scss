@@ -7,7 +7,7 @@ $thumbnailBg: #D2ADB0;
   display:flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #fff;
+  border: none;
 }   
 
 .thumbnail-group{
@@ -16,6 +16,7 @@ $thumbnailBg: #D2ADB0;
   justify-content: center;
   flex-direction: row;
   .thumbnail {
+    border: 1px solid #fff;
     &:nth-child(1){
       transform: translateX(20%);
     }

@@ -38,6 +38,8 @@ export default class GameRecord extends React.Component {
         <RecordItem
           key={`record-item-${index}`}
           index={index}
+          changeRecord={this.props.changeRecord}
+          current={this.props.currentRecord === index}
           record={recordItem}
         />
       ));

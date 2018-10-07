@@ -100,15 +100,18 @@ export const shuffleCards = () => {
   return cards;
 };
 
-const showCards = cards => {
+export const mapToFourHands = cards => {
   return [0, 0, 0, 0]
     .map((userIndex, index) => {
       return cards.filter((card, i) => i % 4 === index);
     })
-    .slice(0)
-    .map(hand =>
-      hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0)),
-    );
+    .slice(0);
+};
+
+export const fourHands = cards => {
+  mapToFourHands.map(hand =>
+    hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0)),
+  );
 };
 
 const getRandomCards = () => {
@@ -126,7 +129,7 @@ const getRandomCards = () => {
 };
 
 const validateShuffle = cards => {
-  return showCards(cards).every(
+  return fourHands(cards).every(
     hand => hand.reduce((sum, value) => value + sum, 0) >= 7,
   );
 };

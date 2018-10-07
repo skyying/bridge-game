@@ -42,3 +42,5 @@ export const GAME_STATE = {
 };
 
 export const TAB_OPTION = ["Chat", "Result"];
+
+export const DIRECTION = ["south", "west", "north", "east"];

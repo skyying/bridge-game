@@ -8,13 +8,24 @@ export default class RecordItem extends React.Component {
     super(props);
   }
   render() {
-    let {index, record} = this.props;
+    let {index, record, current} = this.props;
+    console.log("current", current);
     if (!record) {
-      return <div className="record-item" ><div className="empty"></div></div>;
+      return (
+        <div className="record-item">
+          <div className="empty" />
+        </div>
+      );
     }
     let score = teamScore(record.cards);
     return (
-      <div className="record-item active">
+      <div
+        onClick={() => this.props.changeRecord(index)}
+        className={
+          current
+            ? "record-item active current"
+            : "record-item active"
+        }>
         <div>{index + 1}</div>
         <div className="bid">
           <span>{record.bid.trick + 1}</span>
