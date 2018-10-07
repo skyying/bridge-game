@@ -17,12 +17,26 @@ export default class Table extends React.Component {
   constructor(props) {
     super(props);
     this.linkId = this.props.match.params.id;
-
     let tableKey = this.props.tableList[this.linkId];
     app.getNodeByPath(`tables/${tableKey}`, value => {
-      return dispatch("UPDATE_TABLE_DATA", {table: value.val()});
+      return dispatch("UPDATE_TABLE_DATA", {
+        table: value.val(),
+        id: tableKey
+      });
     });
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
+    console.log("in table constructor");
+  }
+  componentDidMount() {
+    this.linkId = this.props.match.params.id;
+    let tableKey = this.props.tableList[this.linkId];
+    console.log("comp did mount, table");
+    app.getNodeByPath(`tables/${tableKey}`, value => {
+      return dispatch("UPDATE_TABLE_DATA", {
+        table: value.val(),
+        id: tableKey
+      });
+    });
   }
   addPlayerToTable(table) {
     let {players} = table;
@@ -37,7 +51,7 @@ export default class Table extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    console.log("should udpate");
+    console.log("in componentDidUpdate , comp table");
     let linkId = this.props.match.params.id;
     let tableKey = this.props.tableList[linkId];
     if (this.props.tables !== prevProps.tables) {
@@ -58,10 +72,7 @@ export default class Table extends React.Component {
     }
     return (
       <div className="table">
-        <Game
-          currentUser={currentUser}
-          table={targetTable}
-        />
+        <Game currentUser={currentUser} table={targetTable} />
         <Sidebar table={targetTable} />
       </div>
     );

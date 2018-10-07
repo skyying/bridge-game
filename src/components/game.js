@@ -342,20 +342,24 @@ export default class Game extends React.Component {
           suit => suit.length !== 0,
         ).length;
 
+        // handle resize
+        let sidebarWidth = this.state.windowWidth >= 1200 ? 480 : 400;
+        let horCardOffset = 40;
         let horCardStyle =
                     DIRECTION[index] === "north" || DIRECTION[index] === "south"
                       ? {
                         left:
                                   (this.state.windowWidth -
-                                      this.state.windowWidth * 0.3 -
-                                      (40 * totalCardsInHand + 40)) /
+                                      sidebarWidth -
+                                      (horCardOffset * totalCardsInHand +
+                                          horCardOffset)) /
                                   2
                       }
                       : null;
 
         const getHandHeight = suitNum => {
           let cardh = 125,
-            shift = 80;
+            shift = 70;
           return (
             suitNum * cardh - (cardh - shift) * (suitNum - 1) + 10
           );

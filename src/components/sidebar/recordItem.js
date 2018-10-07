@@ -9,7 +9,6 @@ export default class RecordItem extends React.Component {
   }
   render() {
     let {index, record, current} = this.props;
-    console.log("current", current);
     if (!record) {
       return (
         <div className="record-item">

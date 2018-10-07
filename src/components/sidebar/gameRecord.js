@@ -19,8 +19,10 @@ export default class GameRecord extends React.Component {
   render() {
     let resultNum = 4;
     let {record} = this.props;
-    if(!record){
-      return <div className="record-empty">No available game records</div>
+    if (!record) {
+      return (
+        <div className="record-empty">No available game records</div>
+      );
     }
     let recordList, dots, dotsNum;
     if (record) {
@@ -28,16 +30,17 @@ export default class GameRecord extends React.Component {
         record = record
           .concat([null, null, null, null])
           .slice(0, resultNum + 1);
+      } else {
+        let start = this.state.page * 5;
+        let end = start + 5 > record.length ? record.length : start + 5;
+        record =
+                    end === start + 5
+                      ? record.slice(start, end)
+                      : record
+                        .slice(start, end)
+                        .concat(...[null, null, null, null]);
       }
-      let start = this.state.page * 5;
-      let end = start + 5 > record.length ? record.length : start + 5;
-      let currentpageRecord =
-                end === start + 5
-                  ? record.slice(start, end)
-                  : record
-                    .slice(start, end)
-                    .concat(...[null, null, null, null]);
-      recordList = currentpageRecord.map((recordItem, index) => (
+      recordList = record.map((recordItem, index) => (
         <RecordItem
           key={`record-item-${index}`}
           index={index}
@@ -67,8 +70,8 @@ export default class GameRecord extends React.Component {
       <div className="record-list">
         {this.props.record && (
           <div className="record-header">
-            <div/>
-            <div/>
+            <div />
+            <div />
             <ThumbailGroup
               teamOrder={0}
               players={this.props.players}

@@ -3,21 +3,24 @@
   width: 100%;
   flex-direction:row ;
   .game{
-    width: 70%;
+    width: calc(100% - 480px);
     min-width: 600px;
   }
 
   .sidebar {
     min-width: 200px;
-    max-width: 500px;
+    max-width: 480px;
     width: 100%;
   }
 }
 
 @media screen and (max-width: 1200px) {
   .table{
+    .game{
+      width: calc(100% - 400px);
+    }
     .sidebar{
-      max-width: 480px;
+      max-width: 400px;
       width: 100%;
     }
   }

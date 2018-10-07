@@ -25,9 +25,12 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: action.tables});
     }
     case "UPDATE_TABLE_DATA": {
+      console.log("in reducer udpate_table_data");
+      console.log("action", action);
+      let {id, table} = action;
       let tables = state.tables;
       let updatedTables = Object.assign({}, tables);
-      updatedTables[action.table.id] = action.table;
+      updatedTables[id] = table;
       return Object.assign({}, state, {tables: updatedTables});
     }
     case "FETCH_TABLE_LIST": {
