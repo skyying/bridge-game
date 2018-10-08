@@ -45,7 +45,9 @@ exports.create = () => {
         ready: [false, false, false, false],
     };
     Db.setTableDataById(newTable);
-    Db.setTableListData(newTable.linkId, newTable.id);
+    Db.setTableListData(newTable.linkId, {
+        id: newTable.id,
+    });
 };
 exports.close = table => {
     console.log("should print this, in Tables.close");

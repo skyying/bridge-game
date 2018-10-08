@@ -27,9 +27,12 @@ export default class Sidebar extends React.Component {
         {opt}
       </div>
     ));
-    let currentRecord =
-            this.state.currentRecord >= 0 &&
-            this.props.table.record[this.state.currentRecord];
+    let currentRecord = null;
+    if (this.props.table.record) {
+      currentRecord =
+                this.state.currentRecord >= 0 &&
+                this.props.table.record[this.state.currentRecord];
+    }
     return (
       <div className="sidebar">
         <div className="tabs">{options}</div>
@@ -41,7 +44,7 @@ export default class Sidebar extends React.Component {
         />
         <GameRewind
           players={this.props.table.players}
-          record={currentRecord || null}
+          record={currentRecord}
         />
       </div>
     );

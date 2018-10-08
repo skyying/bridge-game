@@ -3,6 +3,7 @@ const CardsSet = require("./cards.js");
 const Db = require("./db.js");
 
 exports.deal = function(table) {
+
     let updateGame = Object.assign({}, table.game);
     let bestGuess = module.exports.guess(table);
     delete bestGuess.diff;
@@ -47,6 +48,7 @@ exports.deal = function(table) {
     );
     console.log("Best Guess:", bestGuess);
     Db.setTableDataById(updateTable);
+    console.log("in game.deal---end");
 };
 
 exports.guess = function(table) {

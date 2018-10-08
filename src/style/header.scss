@@ -1,4 +1,5 @@
 $headerBg: #1ABEB9;
+$headerBg: #4844A3;
 $textColor: #fff;
 
 header {
@@ -10,7 +11,7 @@ header {
   align-items: center;
   justify-content: space-between;
   color: $textColor;
-  
+
   h1{
     font-size: 20px;
     font-weight: 100;
@@ -30,4 +31,7 @@ header {
   a {
     color: $textColor;
   }
+}
+.tableHeader {
+  background-color: $headerBg;
 }

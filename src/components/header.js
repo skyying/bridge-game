@@ -11,11 +11,19 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
   }
+  // componentWillMount() {
+  //   this.unlisten = this.props.history.listen((location, action) => {
+  //     console.log("on route change");
+  //   });
+  // }
+  // componentWillUnmount() {
+  //   this.unlisten();
+  // }
   render() {
     return (
-      <header>
+      <header ref="header">
         <div>
-          <Link to="/">
+          <Link to="/lobby">
             <img src={logoImg} />
             <h1>Bridge Together</h1>
           </Link>

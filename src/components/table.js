@@ -17,7 +17,7 @@ export default class Table extends React.Component {
   constructor(props) {
     super(props);
     this.linkId = this.props.match.params.id;
-    let tableKey = this.props.tableList[this.linkId];
+    let tableKey = this.props.tableList[this.linkId].id;
     app.getNodeByPath(`tables/${tableKey}`, value => {
       return dispatch("UPDATE_TABLE_DATA", {
         table: value.val(),
@@ -29,7 +29,7 @@ export default class Table extends React.Component {
   }
   componentDidMount() {
     this.linkId = this.props.match.params.id;
-    let tableKey = this.props.tableList[this.linkId];
+    let tableKey = this.props.tableList[this.linkId].id;
     console.log("comp did mount, table");
     app.getNodeByPath(`tables/${tableKey}`, value => {
       return dispatch("UPDATE_TABLE_DATA", {
@@ -45,7 +45,7 @@ export default class Table extends React.Component {
     if (emptySeatIndex >= 0 && !hasJoin) {
       dispatchToDatabase("ADD_PLAYER_TO_TABLE", {
         currentUser: this.props.currentUser,
-        id: table.id,
+        table: table,
         emptySeatIndex: emptySeatIndex
       });
     }
@@ -53,7 +53,7 @@ export default class Table extends React.Component {
   componentDidUpdate(prevProps) {
     console.log("in componentDidUpdate , comp table");
     let linkId = this.props.match.params.id;
-    let tableKey = this.props.tableList[linkId];
+    let tableKey = this.props.tableList[linkId].id;
     if (this.props.tables !== prevProps.tables) {
       this.addPlayerToTable(this.props.tables[tableKey]);
     }
@@ -65,8 +65,8 @@ export default class Table extends React.Component {
     let {tables, currentUser} = this.props;
     if (!tables) return null;
     let linkId = this.props.match.params.id;
-    let tableKey = this.props.tableList[linkId];
-    let targetTable = this.props.tables[tableKey];
+    let tableKey = this.props.tableList[linkId].id;
+    let targetTable = tables[tableKey];
     if (targetTable.gameState === "close") {
       return <Redirect to="/lobby" />;
     }

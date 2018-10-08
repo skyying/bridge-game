@@ -44,10 +44,10 @@ listenTableRemoved("tables", snapshot => {
 listenTableChanged("tables", snapshot => {
     console.log("tableIdList in tables changew", tableIdList);
     let tableData = snapshot.val();
-    console.log("in table change,  tableData", tableData);
     console.log("gameState-----", tableData.gameState);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
+        console.log("time stamp is different, time stamp updated");
         tableIdList[id].timeStamp = timeStamp;
     }
     if (gameState === state.phase.join) {
@@ -75,21 +75,37 @@ listenTableChanged("tables", snapshot => {
         // if still in acution, set timer
         let isFinishAuction = Auction.isFinish(tableData);
         if (!isFinishAuction) {
+            // set timer
+            let timerInterval = 7000;
+            let players = tableData.players;
+            if (!players[tableData.game.deal].includes("C")) {
+                timerInterval = 30000;
+            }
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
                 Auction.update,
-                6000,
+                timerInterval,
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
     } else if (gameState === state.phase.playing) {
-        if (tableData.game.order < 51) {
-            initTimer(tableIdList[tableData.id], tableData, Game.deal, 6000);
+        let timerSec = 7000;
+        if (tableData.game.order <= 51) {
+            let players = tableData.players;
+            if (!players[tableData.game.deal].includes("C")) {
+                timerSec = 15000;
+            }
+            initTimer(
+                tableIdList[tableData.id],
+                tableData,
+                Game.deal,
+                timerSec,
+            );
         }
     } else if (gameState === state.phase.gameover) {
-        initTimer(tableIdList[tableData.id], tableData, Tables.close, 10000);
+        initTimer(tableIdList[tableData.id], tableData, Tables.close, 15000);
     } else if (gameState === "close") {
         Db.setTableData("", tableData.id, null);
     }

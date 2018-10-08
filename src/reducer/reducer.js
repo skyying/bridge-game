@@ -25,8 +25,6 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: action.tables});
     }
     case "UPDATE_TABLE_DATA": {
-      console.log("in reducer udpate_table_data");
-      console.log("action", action);
       let {id, table} = action;
       let tables = state.tables;
       let updatedTables = Object.assign({}, tables);
@@ -70,7 +68,9 @@ export const dispatchToDatabase = (type, action) => {
         ready: [false, false, false, false]
       };
       app.setNodeByPath(`tables/${tableKey}`, newTable);
-      app.setTableListData(linkId, tableKey);
+      app.setTableListData(linkId, {
+        id: tableKey
+      });
       break;
     }
     case "CREATE_NEW_GAME": {
@@ -176,7 +176,8 @@ export const dispatchToDatabase = (type, action) => {
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {
-      let {currentUser, id, emptySeatIndex} = action;
+      let {currentUser, table, emptySeatIndex} = action;
+      let {linkId, id, players} = table;
       app.setNodeByPath(
         `tables/${id}/players/${emptySeatIndex}`,
         currentUser,
@@ -185,6 +186,11 @@ export const dispatchToDatabase = (type, action) => {
         `${id}/timeStamp/`,
         new Date().getTime(),
       );
+
+      // if anyone join this table, update data to table list
+      let updatePlayers = players.slice(0);
+      updatePlayers[emptySeatIndex] = currentUser;
+      app.setNodeByPath(`tableList/${linkId}/players`, updatePlayers);
       break;
     }
     case "UPDATE_AUCTION": {

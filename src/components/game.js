@@ -395,9 +395,7 @@ export default class Game extends React.Component {
       });
     } // end of cards
 
-    console.log("table ready in render", table.ready);
     let isAllReady = table.ready.every(player => player === true);
-    console.log("isAllReady", isAllReady);
 
     // dom elements
     if (isGameOver) {
