@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Heart, Spade, Diamond, Club} from "./shape/shape.js";
 import {CARD_NUM, CARD_RANK, SUIT_SHAPE} from "./constant.js";
 import "../style/reset.scss";
 import "../style/card.scss";

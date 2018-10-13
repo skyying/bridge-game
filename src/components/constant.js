@@ -12,10 +12,10 @@ export const NO_TRUMP = 4;
 export const BID_NUM = [1, 2, 3, 4, 5, 6, 7];
 
 export const SUIT_SHAPE = {
-  0: scale => <Club scale={scale} />,
-  1: scale => <Diamond scale={scale} />,
-  2: scale => <Heart scale={scale} />,
-  3: scale => <Spade scale={scale} />,
+  0: (scale, fill) => <Club scale={scale} fill={fill} />,
+  1: (scale, fill) => <Diamond scale={scale} fill={fill} />,
+  2: (scale, fill) => <Heart scale={scale} fill={fill} />,
+  3: (scale, fill) => <Spade scale={scale} fill={fill} />,
   4: scale => <div>NT</div>
 };
 
@@ -44,3 +44,26 @@ export const GAME_STATE = {
 export const TAB_OPTION = ["Chat", "Result"];
 
 export const DIRECTION = ["south", "west", "north", "east"];
+
+export const Emoji = [
+  "🤔",
+  "🤣",
+  "🤩",
+  "😝",
+  "😍",
+  "😵",
+  "🙄",
+  "🤭",
+  "😱",
+  "🤷",
+  "👍",
+  "👎",
+  "👯",
+  "👀",
+  "🐷",
+  "🎉",
+  "🎃",
+  "🍺",
+  "🔥",
+  "🛁"
+];
