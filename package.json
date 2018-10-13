@@ -28,6 +28,7 @@
         "optimize-css-assets-webpack-plugin": "^4.0.3",
         "purify-css": "^1.2.5",
         "purifycss-webpack": "^0.7.0",
+        "randomcolor": "^0.5.3",
         "style-loader": "^0.21.0",
         "svg-url-loader": "^2.3.2",
         "uglifyjs-webpack-plugin": "^1.2.7",
