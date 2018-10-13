@@ -24,6 +24,9 @@ export const appReducer = (state, action) => {
       // tables is an array, query table by index
       return Object.assign({}, state, {tables: action.tables});
     }
+    case "UPDATE_CHAT_ROOM": {
+      return Object.assign({}, state, {chatroom: action.chatroom});
+    }
     case "UPDATE_TABLE_DATA": {
       let {id, table} = action;
       let tables = state.tables;
@@ -47,7 +50,7 @@ export const store = createStore(
     isLoad: false,
     tables: {}
   },
-  applyMiddleware(thunk),
+  applyMiddleware(thunk)
 );
 
 export const dispatchToDatabase = (type, action) => {
@@ -73,6 +76,7 @@ export const dispatchToDatabase = (type, action) => {
       });
       break;
     }
+
     case "CREATE_NEW_GAME": {
       let {table} = action;
       let tableData = Object.assign({}, table);
@@ -98,7 +102,7 @@ export const dispatchToDatabase = (type, action) => {
       // updateTimer
       app.updateTableGameDataByPath(
         `${table.id}/timeStamp/`,
-        new Date().getTime(),
+        new Date().getTime()
       );
       break;
     }
@@ -107,10 +111,12 @@ export const dispatchToDatabase = (type, action) => {
       // create a game
       let {cards, table} = action;
       let newGame = Object.assign({}, table.game, {
-        cards: action.cards
+        cards: cards
       });
 
+      console.log("cards", cards);
       app.updateTableDataByID(`${table.id}/game/`, newGame);
+      console.log("should update cards");
       break;
     }
     case "UPDATE_WINNER_CARD": {
@@ -123,7 +129,7 @@ export const dispatchToDatabase = (type, action) => {
 
       // update which player will draw first
       let targetCardIndex = cards.findIndex(
-        card => card.value === action.winnerCard.value,
+        card => card.value === action.winnerCard.value
       );
       let winner = action.winnerCard;
       winner.isWin = true;
@@ -146,7 +152,7 @@ export const dispatchToDatabase = (type, action) => {
       let cards = game.cards;
 
       let targetCardInex = cards.findIndex(
-        card => card.value === action.value,
+        card => card.value === action.value
       );
 
       let currentCard = cards[targetCardInex];
@@ -156,7 +162,7 @@ export const dispatchToDatabase = (type, action) => {
       app.updateTableGameDataByPath(`${table.id}/game/deal/`, deal);
       app.updateTableGameDataByPath(
         `${table.id}/timeStamp/`,
-        new Date().getTime(),
+        new Date().getTime()
       );
 
       // this card has been draw in nth trick
@@ -170,21 +176,24 @@ export const dispatchToDatabase = (type, action) => {
 
         app.updateTableGameDataByPath(
           `${table.id}/game/cards/${targetCardInex}`,
-          currentCard,
+          currentCard
         );
       }
       break;
     }
     case "ADD_PLAYER_TO_TABLE": {
+      console.log("in add_player to table reducer");
       let {currentUser, table, emptySeatIndex} = action;
       let {linkId, id, players} = table;
+      console.log("shouldn't be null", linkId, id, players);
+
       app.setNodeByPath(
         `tables/${id}/players/${emptySeatIndex}`,
-        currentUser,
+        currentUser
       );
       app.updateTableGameDataByPath(
         `${id}/timeStamp/`,
-        new Date().getTime(),
+        new Date().getTime()
       );
 
       // if anyone join this table, update data to table list
@@ -198,13 +207,24 @@ export const dispatchToDatabase = (type, action) => {
       // record current to database when a current user is deal
       app.updateTableGameDataByPath(
         `${action.table.id}/game/`,
-        action.game,
+        action.game
       );
       app.updateTableGameDataByPath(
         `${action.table.id}/timeStamp/`,
-        new Date().getTime(),
+        new Date().getTime()
       );
       break;
+    }
+    case "SEND_MESSAGE_TO_CHATROOM": {
+      let {message, currentUser, table} = action;
+      let time = new Date().getTime();
+      let newMessage = {};
+      newMessage.content = action.message;
+      newMessage.user = currentUser;
+      app.setNodeByPath(
+        `chatroom/${table.id}/message/${time}/`,
+        newMessage
+      );
     }
     default:
       return null;

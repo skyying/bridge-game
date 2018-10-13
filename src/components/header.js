@@ -11,17 +11,10 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
   }
-  // componentWillMount() {
-  //   this.unlisten = this.props.history.listen((location, action) => {
-  //     console.log("on route change");
-  //   });
-  // }
-  // componentWillUnmount() {
-  //   this.unlisten();
-  // }
   render() {
     return (
-      <header ref="header">
+      <header className={this.props.path.includes("table") ? 
+        "table-header" : ""} >
         <div>
           <Link to="/lobby">
             <img src={logoImg} />

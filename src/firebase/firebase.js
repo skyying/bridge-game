@@ -18,11 +18,23 @@ export const app = {
       .ref(path)
       .on("value", action);
   },
-  listenPathChildren: (path, type, action) => {
+  pushDataByPath: (path, data) => {
     return firebaseApp
       .database()
       .ref(path)
-      .on(type, action);
+      .push(data);
+  },
+  cancelListenDataChange: (path, action) => {
+    return firebaseApp
+      .database()
+      .ref(path)
+      .off("value", action);
+  },
+  listenPathChildren: (path, action) => {
+    return firebaseApp
+      .database()
+      .ref(path)
+      .off("value");
   },
   setNodeByPath: (path, data) => {
     return firebaseApp

@@ -16,21 +16,20 @@ export default class OpenTables extends React.Component {
     this.createTable = this.createTable.bind(this);
   }
   createTable(tableRef) {
+    console.log("should do");
     dispatchToDatabase("CREATE_TABLE", {
       tableRef: tableRef,
       currentUser: this.props.currentUser
     });
   }
-
   render() {
     let tableList = this.props.tableList;
-
     if (!tableList) {
       return (
         <div>
           <h3>Open table</h3>
           <div> loading... </div>
-          <button>Open a new table</button>
+          <button onClick={()=> {this.createTable(new Date().getTime())}}>Open a new table</button>
         </div>
       );
     }

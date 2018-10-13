@@ -60,15 +60,19 @@ export default class Game extends React.Component {
     window.removeEventListener("resize", this.handleResize);
   }
   componentDidUpdate(prevProps) {
+    console.log("in componentDidUpdate");
     let newTable = this.props.table;
+    console.log("newTable", newTable);
+    console.log("oldTable", oldTable);
     let oldTable = prevProps.table;
 
     if (
       !newTable.ready.every(
-        (player, index) => player === oldTable.ready[index],
+        (player, index) => player === oldTable.ready[index]
       )
     ) {
       if (newTable.ready.every(player => player === true)) {
+        console.log("should shuffle");
         this.suffleCardsWhenReady();
       }
     }
@@ -79,6 +83,7 @@ export default class Game extends React.Component {
     if (players) {
       let isFourSeatsFull = players.every(seat => seat !== EMPTY_SEAT);
       if (isFourSeatsFull && !game.cards) {
+        console.log(" should shuffle, in suffleCardsWhenReady" );
         this.shuffle();
       }
     }

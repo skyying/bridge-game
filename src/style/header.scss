@@ -1,4 +1,4 @@
-$headerBg: #1ABEB9;
+$tableBg: #1ABEB9;
 $headerBg: #4844A3;
 $textColor: #fff;
 
@@ -32,6 +32,7 @@ header {
     color: $textColor;
   }
 }
-.tableHeader {
-  background-color: $headerBg;
+header.table-header {
+  background-color: $tableBg;
 }
+

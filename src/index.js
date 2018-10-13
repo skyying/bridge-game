@@ -14,7 +14,8 @@ import {
   Router,
   Route,
   Switch,
-  Link
+  Link,
+  withrouter
 } from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
 
@@ -44,6 +45,7 @@ class App extends React.Component {
     dispatch("STOP_LOADING", {isLoad: true});
   }
   render() {
+    let pathName = window.location.pathname;
     console.log(this.state);
     if (!this.state.isLoad) {
       return <Loading />;
@@ -52,7 +54,7 @@ class App extends React.Component {
       <div>
         <BrowserRouter>
           <div>
-            <Header user={this.state.currentUser} />
+            <Header path={pathName}  user={this.state.currentUser} />
             {!this.state.currentUser && (
               <Route
                 path="/"
@@ -67,6 +69,7 @@ class App extends React.Component {
                   path="/table/:id"
                   render={props => (
                     <Table
+                      chatroom={this.state.chatroom}
                       tables={this.state.tables}
                       tableList={this.state.tableList}
                       currentUser={this.state.currentUser}

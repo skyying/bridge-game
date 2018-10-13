@@ -15,6 +15,7 @@ export default class PlayerReadyList extends React.Component {
     if (!table) return;
     let {game} = table;
     let players = table.players.slice(0);
+    console.log("set ready state");
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
       table: table

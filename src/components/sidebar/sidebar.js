@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import GameRecord from "./gameRecord.js";
 import GameRewind from "./gameRewind.js";
 import {TAB_OPTION} from "../constant.js";
+import Chatroom from "../chatroom.js";
 
 export default class Sidebar extends React.Component {
   constructor(props) {
@@ -36,16 +37,27 @@ export default class Sidebar extends React.Component {
     return (
       <div className="sidebar">
         <div className="tabs">{options}</div>
-        <GameRecord
-          players={this.props.table.players}
-          record={this.props.table.record || null}
-          changeRecord={this.changeRecord}
-          currentRecord={this.state.currentRecord}
-        />
-        <GameRewind
-          players={this.props.table.players}
-          record={currentRecord}
-        />
+        <div>
+          <Chatroom
+            currentUser={this.props.currentUser}
+            chatroom={this.props.chatroom}
+            table={this.props.table}
+          />
+        </div>
+        {false && (
+          <div>
+            <GameRecord
+              players={this.props.table.players}
+              record={this.props.table.record || null}
+              changeRecord={this.changeRecord}
+              currentRecord={this.state.currentRecord}
+            />
+            <GameRewind
+              players={this.props.table.players}
+              record={currentRecord}
+            />
+          </div>
+        )}
       </div>
     );
   }
