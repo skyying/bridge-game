@@ -21,16 +21,16 @@ Db.init();
 Tables.init();
 
 const timeout = {
-    join: 10000,
+    join: 15000,
     auction: {
         human: 60000,
-        robot: 5000
+        robot: 3000
     },
     playing: {
         human: 60000,
-        robot: 5000
+        robot: 4000
     },
-    close: 30000
+    close: 15000
 };
 
 const robotName = "-robot";
@@ -43,7 +43,6 @@ const listenTableChanged = Db.listenPathDataChange("child_changed");
 // if new table is added, update table list
 listenNewTableAdded("tables", snapshot => {
     tableIdList = Tables.getAll(snapshot.val(), tableIdList);
-    console.log("in added", tableIdList);
 });
 // if table is removed, update current table list
 listenTableRemoved("tables", snapshot => {
@@ -55,22 +54,18 @@ listenTableRemoved("tables", snapshot => {
         } else {
             delete tableIdList[removeKey];
         }
-        console.log("in removed", tableIdList);
     });
 });
 
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
-    console.log("tableIdList in tables changew", tableIdList);
     let tableData = snapshot.val();
-    console.log("gameState-----", tableData.gameState);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
         tableIdList[id].timeStamp = timeStamp;
     }
     if (gameState === state.phase.join) {
         let isAllReady = ready.every(state => state === true);
-        let readyCount = ready.filter(state => state === true).length;
         if (isAllReady) {
             let newTable = Object.assign(
                 {},
@@ -79,9 +74,7 @@ listenTableChanged("tables", snapshot => {
                 {timeStamp: new Date().getTime()}
             );
             Db.setTableDataById(newTable);
-            console.log("in player.join, all ready");
         } else {
-            console.log("in player.join");
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
