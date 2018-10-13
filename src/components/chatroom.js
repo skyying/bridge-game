@@ -74,7 +74,10 @@ export default class Chatroom extends React.Component {
       );
       let msgMapList;
 
-      if (isCurrentUserAPlayer) {
+      if (
+        (isCurrentUserAPlayer && table.gameState === "auction") ||
+                table.gameState === "playing"
+      ) {
         msgMapList = Object.keys(chatroom.message)
           .sort((a, b) => +a - +b)
           .filter(key =>
