@@ -79,7 +79,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Players.join,
-                timeout.join.table
+                timeout.join
             );
         }
     } else if (gameState === state.phase.auction) {
