@@ -181,16 +181,27 @@ export const dispatchToDatabase = (type, action) => {
       }
       break;
     }
-    case "ADD_PLAYER_TO_TABLE": {
+    case "ADD_VIEWER_TO_TABLE": {
       console.log("in add_player to table reducer");
-      let {currentUser, table, emptySeatIndex} = action;
+      let {currentUser, table, color} = action;
+      let {linkId, id} = table;
+      app.setNodeByPath(`tables/${id}/viewers/${currentUser}`, color);
+      // app.updateTableGameDataByPath(
+      //   `${id}/timeStamp/`,
+      //   new Date().getTime()
+      // );
+      // if anyone join this table, update data to table list
+      break;
+    }
+    case "ADD_PLAYER_TO_TABLE": {
+      let {currentUser, table, emptySeatIndex, color} = action;
       let {linkId, id, players} = table;
-      console.log("shouldn't be null", linkId, id, players);
 
       app.setNodeByPath(
         `tables/${id}/players/${emptySeatIndex}`,
         currentUser
       );
+      app.setNodeByPath(`tables/${id}/viewers/${currentUser}`, color);
       app.updateTableGameDataByPath(
         `${id}/timeStamp/`,
         new Date().getTime()
