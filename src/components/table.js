@@ -61,9 +61,9 @@ export default class Table extends React.Component {
     let alreadyAPlayer = players.some(
       seat => seat === this.props.currentUser
     );
-    let alreadyAViewer = Boolean(
-      viewers && viewers[this.props.currentUser]
-    );
+    // let alreadyAViewer = Boolean(
+    //   viewers && viewers[this.props.currentUser]
+    // );
     if (emptySeatIndex > -1 && !alreadyAPlayer) {
       dispatchToDatabase("ADD_PLAYER_TO_TABLE", {
         currentUser: this.props.currentUser,
@@ -71,13 +71,14 @@ export default class Table extends React.Component {
         emptySeatIndex: emptySeatIndex,
         color: this.color
       });
-    } else if (!alreadyAViewer) {
-      dispatchToDatabase("ADD_VIEWER_TO_TABLE", {
-        currentUser: this.props.currentUser,
-        table: table,
-        color: this.color
-      });
     }
+    // } else if (!alreadyAViewer) {
+    //   dispatchToDatabase("ADD_VIEWER_TO_TABLE", {
+    //     currentUser: this.props.currentUser,
+    //     table: table,
+    //     color: this.color
+    //   });
+    // }
   }
   componentDidUpdate(prevProps) {
     console.log("in componentDidUpdate , comp table");
