@@ -10,6 +10,10 @@ const Tables = require("./src/tables.js");
 const Auction = require("./src/auction.js");
 const Players = require("./src/players.js");
 const state = require("./src/gameState.js");
+const FBASE = require("./config.js");
+
+process.env.GCLOUD_PROJECT = FBASE.projectId;
+process.env.FIREBASE_CONFIG = FBASE.config;
 
 let tableIdList = {};
 
@@ -58,7 +62,7 @@ listenTableChanged("tables", snapshot => {
                 {},
                 tableData,
                 {gameState: state.phase.auction},
-                {timeStamp: new Date().getTime()},
+                {timeStamp: new Date().getTime()}
             );
             Db.setTableDataById(newTable);
             console.log("in player.join, all ready");
@@ -68,7 +72,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Players.join,
-                10000,
+                10000
             );
         }
     } else if (gameState === state.phase.auction) {
@@ -85,7 +89,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Auction.update,
-                timerInterval,
+                timerInterval
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
@@ -101,7 +105,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Game.deal,
-                timerSec,
+                timerSec
             );
         }
     } else if (gameState === state.phase.gameover) {
@@ -122,7 +126,3 @@ const initTimer = (timer, table, callback, interval) => {
         callback(table);
     }, interval);
 };
-
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    response.send(test());
-});

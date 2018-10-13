@@ -1,7 +1,14 @@
 // const functions = require("firebase-functions");
 exports.admin = require("firebase-admin");
+var serviceAccount = require("../serviceAccount.json");
+var FBase = require("../config.js");
+
 exports.init = () => {
-    this.admin.initializeApp();
+    const myAdmin = this.admin;
+    myAdmin.initializeApp({
+        credential: myAdmin.credential.cert(serviceAccount),
+        databaseURL: FBase.databaseURL
+    });
 };
 
 exports.getAllDataOnce = (path, callback) => {

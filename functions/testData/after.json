@@ -1,0 +1,28 @@
+{
+  "tableList" : {
+    "1539230700470" : {
+      "id" : "-LOX5qlaQWGiNUuTClQS"
+    }
+  },
+  "tables" : {
+    "-LOX5qlaQWGiNUuTClQS" : {
+      "game" : {
+        "bid" : {
+          "isDb" : false,
+          "isRdb" : false,
+          "result": [{"opt": "Pass"}, {"trick": 2, "trump": 1}],
+          "trick" : 2,
+          "trump" : 1 
+        },
+        "deal" : 0,
+        "isGameOver" : false,
+        "order" : -1
+      },
+      "gameState" : "auction",
+      "id" : "-LOX5qlaQWGiNUuTClQS",
+      "linkId" : 1539230700470,
+      "players" : [ "1", "C-2", "C-3", "C-4"],
+      "ready" : [ true, true, true, true ]
+    }
+  }
+}

@@ -24,7 +24,7 @@ exports.addAvatar = table => {
     Db.setTableDataById(newTable);
     Db.setTableListData(table.linkId, {
         id: table.id,
-        players: avaters,
+        players: avaters
     });
 };
 

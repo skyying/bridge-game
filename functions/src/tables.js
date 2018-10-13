@@ -17,7 +17,7 @@ exports.getAll = (newTable, tableIdList) => {
     list[tableId] = {
         id: tableId,
         timer: null,
-        timeStamp: newTable.timeStamp,
+        timeStamp: newTable.timeStamp
     };
     return list;
 };
@@ -27,7 +27,7 @@ exports.update = (oldTableList, newTableList) => {
         return -1;
     }
     return Object.keys(oldTableList).filter(
-        tableId => newTableList[tableId] !== true,
+        tableId => newTableList[tableId] !== true
     )[0];
 };
 
@@ -42,11 +42,11 @@ exports.create = () => {
         linkId: tableRef,
         game: CONST.DEFAULT_GAME,
         players: CONST.PLAYERS,
-        ready: [false, false, false, false],
+        ready: [false, false, false, false]
     };
     Db.setTableDataById(newTable);
     Db.setTableListData(newTable.linkId, {
-        id: newTable.id,
+        id: newTable.id
     });
 };
 exports.close = table => {
@@ -55,7 +55,7 @@ exports.close = table => {
         {},
         table,
         {gameState: "close"},
-        {timeStamp: new Date().getTime()},
+        {timeStamp: new Date().getTime()}
     );
     Db.setTableDataById(updateTable);
     Db.setTableListData(updateTable.linkId, null);
