@@ -20,6 +20,21 @@ let tableIdList = {};
 Db.init();
 Tables.init();
 
+const timeout = {
+    join: 10000,
+    auction: {
+        human: 60000,
+        robot: 5000
+    },
+    playing: {
+        human: 60000,
+        robot: 5000
+    },
+    close: 30000
+};
+
+const robotName = "-robot";
+
 const listenNewTableAdded = Db.listenPathDataChange("child_added");
 const listenTableRemoved = Db.listenPathDataChange("child_removed");
 const listenTableChanged = Db.listenPathDataChange("child_changed");
@@ -51,7 +66,6 @@ listenTableChanged("tables", snapshot => {
     console.log("gameState-----", tableData.gameState);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
-        console.log("time stamp is different, time stamp updated");
         tableIdList[id].timeStamp = timeStamp;
     }
     if (gameState === state.phase.join) {
@@ -72,7 +86,7 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Players.join,
-                10000
+                timeout.join.table
             );
         }
     } else if (gameState === state.phase.auction) {
@@ -80,10 +94,10 @@ listenTableChanged("tables", snapshot => {
         let isFinishAuction = Auction.isFinish(tableData);
         if (!isFinishAuction) {
             // set timer
-            let timerInterval = 7000;
+            let timerInterval = timeout.auction.robot;
             let players = tableData.players;
-            if (!players[tableData.game.deal].includes("C")) {
-                timerInterval = 30000;
+            if (!players[tableData.game.deal].includes(robotName)) {
+                timerInterval = timeout.auction.human;
             }
             initTimer(
                 tableIdList[tableData.id],
@@ -95,12 +109,28 @@ listenTableChanged("tables", snapshot => {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
     } else if (gameState === state.phase.playing) {
-        let timerSec = 7000;
+        let timerSec = timeout.playing.robot;
         if (tableData.game.order <= 51) {
             let players = tableData.players;
-            if (!players[tableData.game.deal].includes("C")) {
-                timerSec = 15000;
+            let dummyIndex = (tableData.game.bid.declarer + 2) % 4;
+            let isDummyHandARobot = players[dummyIndex].includes(robotName);
+            let isDeclarerRobot = players[tableData.game.bid.declarer].includes(
+                robotName
+            );
+
+            // if a human player
+            if (!players[tableData.game.deal].includes(robotName)) {
+                timerSec = timeout.playing.human;
             }
+            // if robot is a dummyhand and control by human, and its dummy hands' turn
+            if (
+                isDummyHandARobot &&
+                !isDeclarerRobot &&
+                dummyIndex === tableData.game.deal
+            ) {
+                timerSec = timeout.playing.human;
+            }
+
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
@@ -109,7 +139,12 @@ listenTableChanged("tables", snapshot => {
             );
         }
     } else if (gameState === state.phase.gameover) {
-        initTimer(tableIdList[tableData.id], tableData, Tables.close, 15000);
+        initTimer(
+            tableIdList[tableData.id],
+            tableData,
+            Tables.close,
+            timeout.close
+        );
     } else if (gameState === "close") {
         Db.setTableData("", tableData.id, null);
     }
