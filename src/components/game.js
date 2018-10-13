@@ -60,10 +60,7 @@ export default class Game extends React.Component {
     window.removeEventListener("resize", this.handleResize);
   }
   componentDidUpdate(prevProps) {
-    console.log("in componentDidUpdate");
     let newTable = this.props.table;
-    console.log("newTable", newTable);
-    console.log("oldTable", oldTable);
     let oldTable = prevProps.table;
 
     if (
@@ -72,7 +69,6 @@ export default class Game extends React.Component {
       )
     ) {
       if (newTable.ready.every(player => player === true)) {
-        console.log("should shuffle");
         this.suffleCardsWhenReady();
       }
     }
@@ -83,7 +79,6 @@ export default class Game extends React.Component {
     if (players) {
       let isFourSeatsFull = players.every(seat => seat !== EMPTY_SEAT);
       if (isFourSeatsFull && !game.cards) {
-        console.log(" should shuffle, in suffleCardsWhenReady" );
         this.shuffle();
       }
     }
@@ -126,8 +121,8 @@ export default class Game extends React.Component {
           maxTrick: this.getNextMaxTrick(),
           order: order,
           deal: (game.deal + 1) % 4
-        },
-      ),
+        }
+      )
     );
 
     let winnerCard = getWinnerCard(game, value);
@@ -145,7 +140,7 @@ export default class Game extends React.Component {
           winnerCard: card,
           order: order,
           deal: card.player
-        }),
+        })
       );
     }
   }
@@ -193,24 +188,26 @@ export default class Game extends React.Component {
     // turn cards to 4 hands
     if (cards && cards.length === CARD_NUM.TOTAL) {
       let currentUserIndex = players.findIndex(
-        user => user === currentUser,
+        user => user === currentUser
       );
 
-      // create dom element by cards in user's hand
+      // if dummy mode, let it be dummy's index, esle let it be something larger
       let flipIndex = isDummyMode ? (game.bid.declarer + 2) % 4 : 6;
+      let isValidFlipIndex = flipIndex < 4;
 
-      if (flipIndex < 4) {
+      if (isValidFlipIndex) {
+        // udpate dummy hand's index in offset player list
         flipIndex = offsetPlayers.findIndex(
-          player => player === players[flipIndex],
+          player => player === players[flipIndex]
         );
       }
 
       let currentTurnPlayer = players[game.deal];
       let isCurrentUserPlayer = players.includes(currentUser);
 
+      // cardsByPlayer already offset by current login user's index
       hands = cardsByPlayer.map((hand, index) => {
         let playerHand = offsetPlayers[index];
-        // let playerHand = offsetPlayers[index];
         let playerHandIndex = index; // zero will alwasy be current login user
 
         // makesure dummy hand can view declarer's card
@@ -218,11 +215,12 @@ export default class Game extends React.Component {
           flipIndex = 2;
         }
 
+        // only show cards didn't played
         hand = hand
           .sort((a, b) => a.value - b.value)
           .filter(card => card.trick === 0);
 
-        if (index === 1) {
+        if (playerHandIndex === 1 && flipIndex !== 1) {
           hand = hand.sort((a, b) => b.value - a.value);
         }
 
@@ -230,12 +228,12 @@ export default class Game extends React.Component {
 
         // handle display issue for both weat/east players
         let handCopy = hand.map(userHand =>
-          Object.assign({}, userHand),
+          Object.assign({}, userHand)
         );
 
         let display = [[], [], [], []];
         handCopy.map(card =>
-          display[Math.floor(card.value / CARD_NUM.HAND)].push(card),
+          display[Math.floor(card.value / CARD_NUM.HAND)].push(card)
         );
 
         // handle flip down card, group them into n rows base on
@@ -244,9 +242,11 @@ export default class Game extends React.Component {
 
         // decide to flip down which players card
         // use playerHandIndex to decide , playerHandIndex 0 means current user
+        // if current user is not a player, show sorted cards and don't flip them
         if (
           playerHandIndex !== currentUserIndex &&
-                    playerHandIndex !== flipIndex
+                    playerHandIndex !== flipIndex &&
+                    isCurrentUserPlayer
         ) {
           let mapResult = mapFlipDownCards(display);
           if (mapResult) {
@@ -256,12 +256,11 @@ export default class Game extends React.Component {
 
         // handle sort isssue of west player, should sort
         // from big to small
-
         let firstCard = getFirstCard(game);
 
         let hasFollowSameSuit = hasSameSuitWithFirstCard(
           firstCard,
-          display.flat(),
+          display.flat()
         );
 
         let cardsInHand = display.map((each, index) => {
@@ -344,7 +343,7 @@ export default class Game extends React.Component {
           .map(suit => suit.length)
           .reduce((sum, len) => sum + len, 0);
         let totalSuitType = cardsInHand.filter(
-          suit => suit.length !== 0,
+          suit => suit.length !== 0
         ).length;
 
         // handle resize

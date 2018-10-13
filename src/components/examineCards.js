@@ -22,11 +22,13 @@ export const hasSameSuitWithFirstCard = (firstCard, cards) => {
   );
 };
 
+// get porker card detail information offset by current login user
 export const getOffsetDatabyCurrentUser = (players, game, currentUser) => {
   if (!game || !game.cards) return;
 
   let {cards} = game;
 
+  // default don't offset
   let cardsByPlayer = players
     .map((userIndex, index) => {
       return cards.filter((card, i) => i % players.length === index);
@@ -62,11 +64,13 @@ export const getOffsetDatabyCurrentUser = (players, game, currentUser) => {
 export const mapFlipDownCards = dislayList => {
   if (!dislayList) return;
   let flat = dislayList.flat();
-  let len = flat.length;
-  if (Math.floor(len / 3) < 1 && len > 1) {
-    let mid = Math.floor(len / 2);
-    return [flat.slice(0, mid), flat.slice(mid, len)];
-  } else if (Math.floor(len / 3) > 1) {
+  let cardsNumberOnHand = 8;
+  let totalLen = flat.length;
+  // if cards number is under n, split flipdown card into two row;
+  if (totalLen <= cardsNumberOnHand) {
+    let mid = Math.floor(totalLen / 2);
+    return [flat.slice(0, mid), flat.slice(mid, totalLen)];
+  } else {
     let threeRow = [[], [], []];
     flat.map((card, index) => threeRow[index % 3].push(card));
     return threeRow;
@@ -111,7 +115,7 @@ export const mapToFourHands = cards => {
 
 export const fourHands = cards => {
   return mapToFourHands(cards).map(hand =>
-    hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0)),
+    hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0))
   );
 };
 
@@ -131,6 +135,6 @@ const getRandomCards = () => {
 
 const validateShuffle = cards => {
   return fourHands(cards).every(
-    hand => hand.reduce((sum, value) => value + sum, 0) >= 7,
+    hand => hand.reduce((sum, value) => value + sum, 0) >= 7
   );
 };
