@@ -99,7 +99,6 @@ export const shuffleCards = () => {
   let cards = getRandomCards();
   while (!validateShuffle(cards)) {
     cards = getRandomCards();
-    console.log("shuffle cards");
   }
   return cards;
 };

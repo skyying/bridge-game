@@ -44,7 +44,7 @@ export default class ScoreBoard extends React.Component {
       lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
     };
     let resultWords = null;
-    let playerIndex = players.indexOf(currentUser);
+    let playerIndex = players.indexOf(currentUser.uid);
 
     let {declarer, trick} = game.bid;
     let targetTrick = 6 + trick;

@@ -25,9 +25,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = store.getState();
-    this.handleLogin = this.handleLogin.bind(this);
     this.update = this.update.bind(this);
     this.stopLoading = this.stopLoading.bind(this);
+    this.updateUserInfo = this.updateUserInfo.bind(this);
   }
   update() {
     this.setState(store.getState());
@@ -38,10 +38,13 @@ class App extends React.Component {
   componentDidMount() {
     this.unSubscribe = store.subscribe(this.update.bind(this));
     this.stopLoading();
-    // setTimeout(this.stopLoading, 10);
   }
-  handleLogin(name) {
-    dispatch("HANDLE_LOGIN", {name: name});
+  updateUserInfo(user, userInfo) {
+    dispatch("UPDATE_USER_INFO", {
+      user: user,
+      uid: user.uid,
+      userInfo: userInfo
+    });
   }
   stopLoading() {
     dispatch("STOP_LOADING", {isLoad: true});
@@ -51,59 +54,60 @@ class App extends React.Component {
     if (!this.state.isLoad) {
       return <Loading />;
     }
-    let currentUser = this.state.currentUSer;
-    currentUser = "abc";
-
+    // let currentUser = this.state.uid;
+    let currentUser = this.state.user;
     return (
       <div>
         <BrowserRouter>
           <div>
             <Header
+              isInTablePage={this.state.isInTablePage}
               isLogin={this.state.isLogin || false}
               path={pathName}
-              user={this.state.currentUser}
+              userInfo={this.state.userInfo}
+              currentUser={currentUser}
             />
-            {!currentUser && (
-              <div>
-                <Route
-                  path="/"
-                  render={props => (
-                    <Login login={this.handleLogin} />
-                  )}
-                />
-                <Route
-                  path="/signup"
-                  render={props => <SignUp {...props} />}
-                />
-              </div>
-            )}
-            {currentUser && (
-              <div>
-                <Route
-                  path="/table/:id"
-                  render={props => (
-                    <Table
-                      chatroom={this.state.chatroom}
-                      tables={this.state.tables}
-                      tableList={this.state.tableList}
-                      currentUser={currentUser}
-                      {...props}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/"
-                  render={() => (
-                    <Lobby
-                      tables={this.state.tables || null}
-                      currentUser={currentUser}
-                      tableList={this.state.tableList}
-                    />
-                  )}
-                />
-              </div>
-            )}
+            <div>
+              <Route
+                path="/login"
+                exact
+                render={props => <Login />}
+              />
+              <Route
+                exact
+                path="/signup"
+                render={props => (
+                  <SignUp
+                    updateUserInfo={this.updateUserInfo}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/table/:id"
+                render={props => (
+                  <Table
+                    chatroom={this.state.chatroom}
+                    tables={this.state.tables}
+                    tableList={this.state.tableList}
+                    currentUser={currentUser}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <Lobby
+                    tables={this.state.tables || null}
+                    currentUser={currentUser}
+                    tableList={this.state.tableList}
+                  />
+                )}
+              />
+            </div>
           </div>
         </BrowserRouter>
       </div>

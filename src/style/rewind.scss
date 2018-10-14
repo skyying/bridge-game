@@ -1,7 +1,9 @@
 .rewind{
   position: relative;
   width: 100%;
-  height: calc(100% - 60px - 44%);
+  padding: 0 30px;
+  min-height: 300px;
+  height: calc(100vh - 60px - 50vh);
 
   .hand {
     display: flex;
@@ -54,12 +56,12 @@
   }
   .east{
     top: 50%;
-    left: 0%;
+    left: 30px;
     transform: translateY(-50%);
   }
   .west{
     top: 50%;
-    right: 0%;
+    right: 30px;
     transform: translateY(-50%);
   }
 
@@ -84,12 +86,12 @@
     }
   }
   .rewind-auction{
-    right: 0%;
+    right: 30px;
     top: 0;
   }
   .rewind-result{
     bottom: 0;
-    left: 0;
+    left: 30px;
     span{
       font-size: 12px;
     }

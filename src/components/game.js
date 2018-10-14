@@ -183,12 +183,12 @@ export default class Game extends React.Component {
     // class name for each hand
     let hands;
     let {cardsByPlayer, offsetPlayers, offsetIndex} =
-            getOffsetDatabyCurrentUser(players, game, currentUser) || {};
+            getOffsetDatabyCurrentUser(players, game, currentUser.uid) || {};
 
     // turn cards to 4 hands
     if (cards && cards.length === CARD_NUM.TOTAL) {
       let currentUserIndex = players.findIndex(
-        user => user === currentUser
+        user => user === currentUser.uid
       );
 
       // if dummy mode, let it be dummy's index, esle let it be something larger
@@ -203,7 +203,7 @@ export default class Game extends React.Component {
       }
 
       let currentTurnPlayer = players[game.deal];
-      let isCurrentUserPlayer = players.includes(currentUser);
+      let isCurrentUserPlayer = players.includes(currentUser.uid);
 
       // cardsByPlayer already offset by current login user's index
       hands = cardsByPlayer.map((hand, index) => {
@@ -289,13 +289,13 @@ export default class Game extends React.Component {
                         dummyPlayer === currentTurnPlayer
           ) {
             if (
-              currentUser === declarerPlayer &&
+              currentUser.uid === declarerPlayer &&
                             playerHandIndex === 2
             ) {
               canBeClick = true;
             }
             if (
-              currentUser === dummyPlayer &&
+              currentUser.uid === dummyPlayer &&
                             playerHandIndex === currentUserIndex
             ) {
               canBeClick = false;
@@ -391,7 +391,12 @@ export default class Game extends React.Component {
                   currentTurnPlayer === playerHand &&
                                     isFinishAuction
                 }
-                name={playerHand}
+                name={
+                  (table.playerInfo[playerHand] &&
+                                        table.playerInfo[playerHand]
+                                          .displayName) ||
+                                    "Anonymous"
+                }
               />
             </div>
           </div>

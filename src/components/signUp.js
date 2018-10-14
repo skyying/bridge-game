@@ -1,22 +1,69 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import {app} from "../firebase/firebase.js";
 import "../style/signup.scss";
 import "../style/btn.scss";
 import "../style/checkbox.scss";
+import {Redirect} from "react-router-dom";
+import {dispatchToDatabase} from "../reducer/reducer.js";
+
+const error = {
+  "no-error": ""
+};
 
 export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: "",
+      name: "",
       email: "",
       password: "",
-      comfirm: "",
-      agreement: true
+      confirm: "",
+      agreement: false,
+      message: "",
+      redirect: false
     };
+    this.handleSignUp = this.handleSignUp.bind(this);
+  }
+  handleSignUp() {
+    let auth = app.auth;
+    let {email, password, name} = this.state;
+    if (!email || !password || !confirm) return;
+    let promise = auth.createUserWithEmailAndPassword(email, password);
+    promise
+      .then(user => {
+        this.props.updateUserInfo(user, {
+          name: name,
+          email: email
+        });
+        return auth.onAuthStateChanged(user => {
+          if (user) {
+            let userInfo = {
+              displayName: name,
+              email: email
+            };
+            user.updateProfile(userInfo);
+            app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+              if (!snapshot.val()) {
+                dispatchToDatabase("CREATE_USER", {
+                  uid: user.uid,
+                  userInfo: userInfo
+                });
+              }
+            });
+          } else {
+            console.log("no user uid");
+          }
+        });
+      })
+      .then(user => this.setState({redirect: true}))
+      .catch(error => this.setState({message: error.message}));
   }
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="singup-wrapper">
         <div className="signup">
@@ -27,9 +74,12 @@ export default class SignUp extends React.Component {
               placeholder="Your name"
               type="text"
               onChange={e => {
-                this.setState({user: e.currentTarget.value});
+                this.setState({
+                  name: e.currentTarget.value,
+                  message: ""
+                });
               }}
-              value={this.state.user}
+              value={this.state.name}
             />
           </div>
           <div>
@@ -39,7 +89,8 @@ export default class SignUp extends React.Component {
               type="password"
               onChange={e => {
                 this.setState({
-                  password: e.currentTarget.value
+                  password: e.currentTarget.value,
+                  message: ""
                 });
               }}
               value={this.state.password}
@@ -51,7 +102,10 @@ export default class SignUp extends React.Component {
               placeholder="Confirm new password"
               type="password"
               onChange={e => {
-                this.setState({confirm: e.currentTarget.value});
+                this.setState({
+                  confirm: e.currentTarget.value,
+                  message: ""
+                });
               }}
               value={this.state.confirm}
             />
@@ -59,10 +113,13 @@ export default class SignUp extends React.Component {
           <div>
             <h3>Email</h3>
             <input
-              type="text"
+              type="email"
               placeholder="Email address"
               onChange={e => {
-                this.setState({email: e.currentTarget.value});
+                this.setState({
+                  email: e.currentTarget.value,
+                  message: ""
+                });
               }}
               value={this.state.email}
             />
@@ -74,18 +131,37 @@ export default class SignUp extends React.Component {
                 className={
                   this.state.agreement ? "checked" : ""
                 }
+                onClick={() =>
+                  this.setState({
+                    agreement: !this.state.agreement
+                  })
+                }
               />
-              <span>
+              <span
+                onClick={() =>
+                  this.setState({
+                    agreement: !this.state.agreement
+                  })
+                }>
                                 I allow the use of collected data about my study
                                 behavior for research purposes. The data
-                                contains information from game playing and chat
-                                content. No individuals can be identified from
+                                contains information from game playing and chatting
+                                messages. No individuals can be identified from
                                 publications.
               </span>
             </label>
+            <div className="error-text error-text-panel">
+              {this.state.message}
+            </div>
             <div className="btn-group">
-              <button className="btn-style-round">Sign up</button>
-              <button className="btn-style-round fb-sign-btn">Facebook</button>
+              <button
+                onClick={this.handleSignUp}
+                className="btn-style-round">
+                                Sign up
+              </button>
+              <button className="btn-style-round fb-sign-btn">
+                                Facebook
+              </button>
             </div>
           </div>
         </div>

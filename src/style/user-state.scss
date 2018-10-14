@@ -1,0 +1,78 @@
+.user-state-panel{
+  position: relative;
+  width: 300px ;
+
+  .Login-state-btn{
+    padding: 10px 10px 10px 20px;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    transition: 0.2s all;
+    cursor: pointer;
+    &:hover{
+      background-color: #22213B;
+      cursor: pointer;
+      transition: 0.2s all;
+    }
+    span {
+      font-size: 0.7rem;
+      font-weight: 200;
+    }
+    > div {
+      &:last-child{
+        line-height: 1;
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .open-btn{
+    background-color: #22213B;
+    transition: 0.2s all;
+    cursor: pointer;
+    &:hover{
+      background-color: #6965C2;
+      cursor: pointer;
+      transition: 0.2s all;
+    }
+  }
+
+  h6{
+    font-size: 1rem;
+    max-width: 200px;
+    overflow: hidden;
+  }
+  .options{
+    width: 300px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 500;
+    display: none;
+  }
+  .open{
+    transform: translateY(100%);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px;
+    background-color: #22213B;
+    > a {
+      cursor: pointer;
+      display: block;
+      padding: 20px;
+      font-size: 1rem;
+      transition: all 0.2s;
+      color: #fff;
+      &:hover{
+        cursor: pointer;
+        transition: all 0.2s;
+        background-color: #6965C2;
+        color: #fff;
+      }
+    }
+  }
+
+}
+

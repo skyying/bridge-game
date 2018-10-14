@@ -36,7 +36,6 @@ export const Diamond = ({scale, fill = "#FF525D"}) => {
 };
 
 export const Club = ({scale, fill = "#222"}) => {
-  console.log("fill", fill);
   return (
     <SvgContainer scale={scale} ratio={0.98} fill={fill}>
       <path

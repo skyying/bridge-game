@@ -1,6 +1,6 @@
 import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
-import {app} from "../firebase/firebase.js";
+import {app, firebaseApp} from "../firebase/firebase.js";
 import {getObj} from "../helper/helper.js";
 import {
   GAME_STATE,
@@ -12,10 +12,30 @@ import {
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
 
+// const updateUserProfile = (user, data) => {
+//   if (!user) {
+//     return;
+//   }
+// };
 export const appReducer = (state, action) => {
   switch (action.type) {
-    case "HANDLE_LOGIN": {
-      return Object.assign({}, state, {currentUser: action.name});
+    // case "FETCH_PLAYER_INFO": {
+    //   let newPlayer = {};
+    //   newPlayer[action.uid] = action.playerInfo;
+    //   let players = Object.assign({}, state.players, newPlayer);
+    //   return Object.assign({}, state, {players: players});
+    // }
+    case "UPDATE_USER_INFO": {
+      return Object.assign({}, state, {
+        user: action.user,
+        uid: action.uid,
+        userInfo: action.userInfo
+      });
+    }
+    case "SET_CURRENT_HEADER": {
+      return Object.assign({}, state, {
+        isInTablePage: action.isInTablePage
+      });
     }
     case "STOP_LOADING": {
       return Object.assign({}, state, {isLoad: action.isLoad});
@@ -48,17 +68,30 @@ export const store = createStore(
   {
     currentUser: null,
     isLoad: false,
-    tables: {}
+    tables: {},
+    isInTablePage: false
   },
   applyMiddleware(thunk)
 );
 
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
+    case "CREATE_USER": {
+      app.setNodeByPath(`/users/${action.uid}`, action.userInfo);
+      break;
+    }
     case "CREATE_TABLE": {
+      let {currentUser} = action;
+      if (!action.currentUser.uid) {
+        console.log("user is not login");
+        return;
+      }
       let timeStamp = new Date().getTime();
       let players = PLAYERS.slice(0);
-      players[0] = action.currentUser;
+      let newPlayerInfo = {};
+      let uidKey = `${currentUser.uid}`;
+      newPlayerInfo[uidKey] = {displayName: currentUser.displayName};
+      players[0] = action.currentUser.uid;
       let tableKey = app.getNewChildKey("tables");
       let linkId = action.tableRef || timeStamp;
       let newTable = {
@@ -67,12 +100,32 @@ export const dispatchToDatabase = (type, action) => {
         id: tableKey,
         linkId: linkId,
         game: DEFAULT_GAME,
+        playerInfo: Object.assign(
+          {},
+          {
+            "C1-robot": {displayName: "C1-robot"},
+            "C2-robot": {displayName: "C2-robot"},
+            "C3-robot": {displayName: "C3-robot"},
+            "-1": {displayName: ""}
+          },
+          newPlayerInfo
+        ),
         players: players,
         ready: [false, false, false, false]
       };
       app.setNodeByPath(`tables/${tableKey}`, newTable);
       app.setTableListData(linkId, {
-        id: tableKey
+        id: tableKey,
+        playerInfo: Object.assign(
+          {},
+          {
+            "C1-robot": {displayName: "C1-robot"},
+            "C2-robot": {displayName: "C2-robot"},
+            "C3-robot": {displayName: "C3-robot"},
+            "-1": {displayName: ""}
+          },
+          newPlayerInfo
+        )
       });
       break;
     }
@@ -114,9 +167,7 @@ export const dispatchToDatabase = (type, action) => {
         cards: cards
       });
 
-      console.log("cards", cards);
       app.updateTableDataByID(`${table.id}/game/`, newGame);
-      console.log("should update cards");
       break;
     }
     case "UPDATE_WINNER_CARD": {
@@ -182,10 +233,9 @@ export const dispatchToDatabase = (type, action) => {
       break;
     }
     case "ADD_VIEWER_TO_TABLE": {
-      console.log("in add_player to table reducer");
       let {currentUser, table, color} = action;
       let {linkId, id} = table;
-      app.setNodeByPath(`tables/${id}/viewers/${currentUser}`, color);
+      app.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
       // app.updateTableGameDataByPath(
       //   `${id}/timeStamp/`,
       //   new Date().getTime()
@@ -199,18 +249,25 @@ export const dispatchToDatabase = (type, action) => {
 
       app.setNodeByPath(
         `tables/${id}/players/${emptySeatIndex}`,
-        currentUser
+        currentUser.uid
       );
-      app.setNodeByPath(`tables/${id}/viewers/${currentUser}`, color);
+      app.setNodeByPath(`tables/${id}/playerInfo/${currentUser.uid}`, {
+        displayName: currentUser.displayName
+      });
+      app.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
+      // if anyone join this table, update data to table list
+      let updatePlayers = players.slice(0);
+      updatePlayers[emptySeatIndex] = currentUser.uid;
+      app.setNodeByPath(`tableList/${linkId}/players`, updatePlayers);
+      app.setNodeByPath(
+        `tableList/${linkId}/playerInfo/${currentUser.uid}`,
+        {displayName: currentUser.displayName}
+      );
       app.updateTableGameDataByPath(
         `${id}/timeStamp/`,
         new Date().getTime()
       );
 
-      // if anyone join this table, update data to table list
-      let updatePlayers = players.slice(0);
-      updatePlayers[emptySeatIndex] = currentUser;
-      app.setNodeByPath(`tableList/${linkId}/players`, updatePlayers);
       break;
     }
     case "UPDATE_AUCTION": {
@@ -231,7 +288,8 @@ export const dispatchToDatabase = (type, action) => {
       let time = new Date().getTime();
       let newMessage = {};
       newMessage.content = action.message;
-      newMessage.user = currentUser;
+      newMessage.uid = currentUser.uid;
+      newMessage.displayName = currentUser.displayName;
       app.setNodeByPath(
         `chatroom/${table.id}/message/${time}/`,
         newMessage
@@ -248,4 +306,24 @@ export const dispatchToDatabase = (type, action) => {
 
 app.getNodeByPath("tableList", value => {
   return dispatch("FETCH_TABLE_LIST", {tableList: value.val()});
+});
+
+app.auth.onAuthStateChanged(user => {
+  if (user) {
+    app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+      let userInfo = snapshot.val();
+      dispatch("UPDATE_USER_INFO", {
+        user: user,
+        uid: user.uid,
+        userInfo: snapshot.val()
+      });
+    });
+    // }
+  } else {
+    return dispatch("UPDATE_USER_INFO", {
+      uid: null,
+      userInfo: null,
+      user: null
+    });
+  }
 });

@@ -15,7 +15,6 @@ export default class PlayerReadyList extends React.Component {
     if (!table) return;
     let {game} = table;
     let players = table.players.slice(0);
-    console.log("set ready state");
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
       table: table
@@ -23,7 +22,7 @@ export default class PlayerReadyList extends React.Component {
   }
   render() {
     let {table, currentUser} = this.props;
-    let {game, ready, players} = table;
+    let {game, ready, players, playerInfo} = table;
     if (!game) {
       return null;
     }
@@ -38,23 +37,28 @@ export default class PlayerReadyList extends React.Component {
       return null;
     }
     let playBtns = null;
-    let thumbnails = players.map((player, index) => (
-      <div
-        key={getRandomKey()}
-        className={
-          ready[index] === false ? "thumbnail" : "thumbnail ready"
-        }>
-        <span>{player[0]}</span>
-      </div>
-    ));
-
+    let thumbnails = players.map((player, index) => {
+      let playerName;
+      if (playerInfo[player]) {
+        playerName = playerInfo[player].displayName;
+      }
+      return (
+        <div
+          key={getRandomKey()}
+          className={
+            ready[index] === false ? "thumbnail" : "thumbnail ready"
+          }>
+          <span>{(playerName && playerName[0]) || ""}</span>
+        </div>
+      );
+    });
     let currentUserCanPlay;
-    if (players.includes(currentUser)) {
+    if (players.includes(currentUser.uid)) {
       currentUserCanPlay = players.some(
-        (player, index) => player === currentUser && !ready[index],
+        (player, index) => player === currentUser.uid && !ready[index]
       );
       playBtns = players.map((player, index) => {
-        if (player === currentUser && !ready[index]) {
+        if (player === currentUser.uid && !ready[index]) {
           return (
             <div key={getRandomKey()}>
               <button

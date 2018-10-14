@@ -31,6 +31,7 @@ export default class Table extends React.Component {
         chatroom: value.val()
       });
     });
+
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.color = randomColor("dark");
   }
@@ -59,11 +60,11 @@ export default class Table extends React.Component {
     let {players, viewers} = table;
     let emptySeatIndex = players.findIndex(seat => seat === EMPTY_SEAT);
     let alreadyAPlayer = players.some(
-      seat => seat === this.props.currentUser
+      seat => seat === this.props.currentUser.uid
     );
-    // let alreadyAViewer = Boolean(
-    //   viewers && viewers[this.props.currentUser]
-    // );
+    let alreadyAViewer = Boolean(
+      viewers && viewers[this.props.currentUser.uid]
+    );
     if (emptySeatIndex > -1 && !alreadyAPlayer) {
       dispatchToDatabase("ADD_PLAYER_TO_TABLE", {
         currentUser: this.props.currentUser,
@@ -71,21 +72,18 @@ export default class Table extends React.Component {
         emptySeatIndex: emptySeatIndex,
         color: this.color
       });
+    } else if (!alreadyAViewer) {
+      dispatchToDatabase("ADD_VIEWER_TO_TABLE", {
+        currentUser: this.props.currentUser,
+        table: table,
+        color: this.color
+      });
     }
-    // } else if (!alreadyAViewer) {
-    //   dispatchToDatabase("ADD_VIEWER_TO_TABLE", {
-    //     currentUser: this.props.currentUser,
-    //     table: table,
-    //     color: this.color
-    //   });
-    // }
   }
   componentDidUpdate(prevProps) {
-    console.log("in componentDidUpdate , comp table");
     let linkId = this.props.match.params.id;
     let tableKey = this.props.tableList[linkId].id;
     if (this.props.tables[tableKey] !== prevProps.tables[tableKey]) {
-      console.log("current table is updated");
       this.addPlayerToTable(this.props.tables[tableKey]);
     }
   }
@@ -96,15 +94,10 @@ export default class Table extends React.Component {
     let {tables, currentUser} = this.props;
     let linkId = this.props.match.params.id;
     let tableKey = this.props.tableList[linkId].id;
-    console.log("tables", tables);
-    console.log("tables[tableKey]", tables[tableKey]);
     if (!tables || !tables[tableKey]) {
       return null;
     }
-    console.log("linkId", linkId);
-    console.log("tableKey", tableKey);
     let targetTable = tables[tableKey];
-    console.log("targetTable", targetTable);
     if (targetTable.gameState && targetTable.gameState === "close") {
       return <Redirect to="/" />;
     }

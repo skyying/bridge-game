@@ -1,4 +1,5 @@
 .record-list{
+  padding: 10px 30px;
   .record-header{
     display: grid;
     width: 100%;
@@ -23,6 +24,6 @@
 }
 
 .record-empty{
-  padding: 20px;
+  padding: 30px;
   text-align: center;
 }

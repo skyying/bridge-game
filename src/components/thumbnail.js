@@ -5,7 +5,7 @@ import "../style/thumbnail.scss";
 
 export const Thumbnail = ({name = "", size = 30, src = false}) => {
   let img = src ? <img src={src} /> : <span>{name[0]}</span>;
-  
+
   return (
     <div
       className="thumbnail"

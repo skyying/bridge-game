@@ -1,7 +1,7 @@
 import firebase from "firebase";
 import {config} from "./config.js";
 
-let firebaseApp = firebase.initializeApp(config);
+export const firebaseApp = firebase.initializeApp(config);
 
 export const app = {
   db: firebaseApp.database(),
@@ -41,6 +41,12 @@ export const app = {
       .database()
       .ref(path)
       .set(data);
+  },
+  getDataByPathOnce: (path, action) => {
+    return firebaseApp
+      .database()
+      .ref(path)
+      .once("value", action);
   },
   getNewChildKey: node => {
     return firebaseApp

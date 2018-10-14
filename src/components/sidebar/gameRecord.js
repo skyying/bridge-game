@@ -17,7 +17,7 @@ export default class GameRecord extends React.Component {
     this.setState({page: page});
   }
   render() {
-    let resultNum = 4;
+    let resultNum = 3;
     let {record} = this.props;
     if (!record) {
       return (
@@ -26,19 +26,18 @@ export default class GameRecord extends React.Component {
     }
     let recordList, dots, dotsNum;
     if (record) {
-      if (record.length < resultNum) {
-        record = record
-          .concat([null, null, null, null])
-          .slice(0, resultNum + 1);
+      if (record.length <= resultNum) {
+        record = record.concat([null, null, null]).slice(0, resultNum);
       } else {
-        let start = this.state.page * 5;
-        let end = start + 5 > record.length ? record.length : start + 5;
+        let start = this.state.page * resultNum;
+        let end =
+                    start + resultNum >= record.length
+                      ? record.length
+                      : start + resultNum;
         record =
-                    end === start + 5
+                    end === start + resultNum
                       ? record.slice(start, end)
-                      : record
-                        .slice(start, end)
-                        .concat(...[null, null, null, null]);
+                      : record.slice(start, end);
       }
       recordList = record.map((recordItem, index) => (
         <RecordItem
@@ -50,7 +49,7 @@ export default class GameRecord extends React.Component {
         />
       ));
 
-      dotsNum = Math.ceil(record.length / 4);
+      dotsNum = Math.ceil(record.length / resultNum);
       dots =
                 dotsNum <= 1
                   ? null

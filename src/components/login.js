@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, store} from "../reducer/reducer.js";
+import {Redirect} from "react-router-dom";
+import {app} from "../firebase/firebase.js";
 import "../style/signup.scss";
 import "../style/btn.scss";
 import "../style/checkbox.scss";
@@ -13,44 +15,27 @@ export default class Login extends React.Component {
       name: "",
       email: "",
       password: "",
-      uid: ""
+      redirect: false
     };
     this.handleName = this.handleName.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+  handleLogin() {
+    let auth = app.auth;
+    let {email, password} = this.state;
+    if (!email || !password) return;
+    let promise = auth.signInWithEmailAndPassword(email, password);
+    promise
+      .then(user => this.setState({redirect: true}))
+      .catch(err => this.setState({error: err.message}));
   }
   handleName(e) {
     this.setState({name: e.target.value});
   }
   render() {
-    let login = (
-      <div>
-                login Component
-        <input
-          onChange={this.handleName}
-          type="text"
-          value={this.state.name}
-        />
-        <Link onClick={() => this.props.login(this.state.name)} to="/">
-                    login
-        </Link>
-        <br />
-        <Link onClick={() => this.props.login("1")} to="/">
-                    player 1
-        </Link>
-        <br />
-        <Link onClick={() => this.props.login("C-1")} to="/">
-                    player C-1
-        </Link>
-        <br />
-        <Link onClick={() => this.props.login("C-2")} to="/">
-                    player C-2
-        </Link>
-        <br />
-        <Link onClick={() => this.props.login("C-3")} to="/">
-                    player C-3
-        </Link>
-      </div>
-    );
-
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="singup-wrapper">
         <div className="signup login">
@@ -79,9 +64,14 @@ export default class Login extends React.Component {
               value={this.state.password}
             />
           </div>
+          <div className="error-text">{this.state.error || ""}</div>
           <div>
             <div className="btn-group">
-              <button className="btn-style-round">Login</button>
+              <button
+                onClick={this.handleLogin}
+                className="btn-style-round">
+                                Login
+              </button>
               <button className="btn-style-round fb-sign-btn">
                                 Facebook
               </button>

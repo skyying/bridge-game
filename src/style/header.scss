@@ -4,7 +4,7 @@ $textColor: #fff;
 
 header {
   background-color: $headerBg;
-  padding: 10px 30px;
+  padding: 10px 0px 10px 30px;
   height: 60px;
   display: flex;
   flex-direction: row;
@@ -30,6 +30,28 @@ header {
   }
   a {
     color: $textColor;
+  }
+  .register-btn-groups{
+    display: flex;
+    width: 150px;
+    align-items: center;
+    a {
+      display: block;
+      border-radius: 3px;
+      background-color: #5955AD;
+      padding: 10px 10px;
+      font-size: 0.9rem;
+      color: #fff;
+      transition: 0.3s all;
+      &:last-child{
+        margin-left: 10px;
+      }
+      &:hover{
+        transition: 0.3s all;
+        background-color: lighten(#5955AD, 10%);
+      }
+    }
+
   }
 }
 header.table-header {

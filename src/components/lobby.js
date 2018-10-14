@@ -9,6 +9,7 @@ import {
   Switch,
   Link
 } from "react-router-dom";
+import {EMPTY_SEAT} from "./constant.js";
 import OpenTables from "./openTables.js";
 import PlayingTables from "./playingTables.js";
 import "../style/lobby.scss";
@@ -20,6 +21,21 @@ export default class Lobby extends React.Component {
     super(props);
   }
   render() {
+    let open = 0,
+      playing = 0;
+    if (this.props.tableList) {
+      open = Object.keys(this.props.tableList).filter(key => {
+        if (
+          this.props.tableList[key] &&
+                    this.props.tableList[key].players
+        ) {
+          return this.props.tableList[key].players.some(
+            player => player === EMPTY_SEAT
+          );
+        }
+        return false;
+      }).length;
+    }
     return (
       <div className="lobby">
         <div className="lobby-title">
@@ -28,13 +44,11 @@ export default class Lobby extends React.Component {
         <div className="table-lists">
           <div className="table-list-wrapper">
             <h3>Open</h3>
-            <div className="table-num">
-              <span>3</span> <b>tables</b>
-            </div>
+            <div className="table-num" />
             <div className="table-list-inner">
               <img src={openImg} />
               <OpenTables
-                title={false}
+                title={"Join A Table To Play"}
                 isLoad={true}
                 openBtn={true}
                 currentUser={this.props.currentUser}
@@ -45,9 +59,7 @@ export default class Lobby extends React.Component {
           </div>
           <div className="table-list-wrapper">
             <h3>Playing</h3>
-            <div className="table-num">
-              <span>3</span> <b>tables</b>
-            </div>
+            <div className="table-num" />
             <div className="table-list-inner">
               <img src={playImg} />
               <PlayingTables
@@ -70,3 +82,4 @@ export default class Lobby extends React.Component {
 //   currentUser={this.props.currentUser}
 //   tableList={this.props.tableList}
 // />
+// <span>3</span> <b>tables</b>

@@ -39,7 +39,7 @@ $textColor: #fff;
       margin-left: 0.2rem;
     }
   }
-  input[type="text"], input[type="password"]{
+  input[type="text"], input[type="password"], input[type="email"]{
     border: 2px solid rgba(117, 114, 186, 1);
     display: block;
     font-size: 1.1rem;
@@ -57,4 +57,13 @@ $textColor: #fff;
       color: #888;
     }
   }
+}
+
+.error-text{
+  color: #F5A623;
+  font-size: 0.9rem;
+}
+
+.error-text-panel{
+  padding: 20px 0;
 }

@@ -49,7 +49,6 @@ export default class Chatroom extends React.Component {
   scrollToBottom() {
     this.msgEnd.scrollIntoView({behavior: "smooth"});
   }
-  getRandomColor() {}
   render() {
     if (this.msgEnd) {
       this.scrollToBottom();
@@ -70,7 +69,7 @@ export default class Chatroom extends React.Component {
       let end = Object.keys(chatroom.message).length;
       let chatStart = end - chatLen >= 0 ? end - chatLen : 0;
       let isCurrentUserAPlayer = players.some(
-        player => player === currentUser
+        player => player === currentUser.uid
       );
       let msgMapList;
 
@@ -80,9 +79,7 @@ export default class Chatroom extends React.Component {
       ) {
         msgMapList = Object.keys(chatroom.message)
           .sort((a, b) => +a - +b)
-          .filter(key =>
-            players.includes(chatroom.message[key].user)
-          );
+          .filter(key => players.includes(chatroom.message[key].uid));
       } else {
         msgMapList = Object.keys(chatroom.message)
           .sort((a, b) => +a - +b)
@@ -90,10 +87,10 @@ export default class Chatroom extends React.Component {
       }
 
       messageList = msgMapList.map((id, index) => {
-        let color = table.viewers[chatroom.message[id].user];
+        let color = table.viewers[chatroom.message[id].uid];
         let symbol = null;
         let playerIndex = players.findIndex(
-          player => player === chatroom.message[id].user
+          player => player === chatroom.message[id].uid
         );
         if (playerIndex > -1) {
           symbol = (
@@ -110,7 +107,7 @@ export default class Chatroom extends React.Component {
             <a>
               {symbol}
               <b style={{color: color}}>
-                {chatroom.message[id].user}{" "}
+                {chatroom.message[id].displayName}{" "}
                 <b className="comma">:</b>
               </b>
               {msg}

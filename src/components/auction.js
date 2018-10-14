@@ -17,7 +17,7 @@ export default class Auction extends React.Component {
     };
     this.updateBid = this.updateBid.bind(this);
     this.validateUserTurnAndsetTrump = this.validateUserTurnAndsetTrump.bind(
-      this,
+      this
     );
   }
   validateUserTurnAndsetTrump(index) {
@@ -28,7 +28,7 @@ export default class Auction extends React.Component {
       // if currentUser's Index is same as game deal, let him give bid
 
       let currentUserIndex = players.findIndex(
-        player => player === this.props.currentUser,
+        player => player === this.props.currentUser.uid
       );
       if (currentUserIndex === game.deal) {
         this.setState({
@@ -62,7 +62,7 @@ export default class Auction extends React.Component {
         this.props.game.bid,
         bid,
         {declarer: declarer},
-        {result: result},
+        {result: result}
       );
     } else {
       let result = this.props.game.bid.result || [];
@@ -96,7 +96,7 @@ export default class Auction extends React.Component {
       {},
       this.props.game,
       {bid: newBid},
-      {deal: deal},
+      {deal: deal}
     );
 
     dispatchToDatabase("UPDATE_AUCTION", {
@@ -108,7 +108,7 @@ export default class Auction extends React.Component {
   render() {
     let {game, players} = this.props;
     let isCurrentUser =
-            players && players[game.deal] === this.props.currentUser;
+            players && players[game.deal] === this.props.currentUser.uid;
 
     let value = game.bid.trick * 5 + game.bid.trump;
 
