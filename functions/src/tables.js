@@ -41,12 +41,24 @@ exports.create = () => {
         id: tableKey,
         linkId: tableRef,
         game: CONST.DEFAULT_GAME,
+        playerInfo: {
+            "C1-robot": {displayName: "C1-robot"},
+            "C2-robot": {displayName: "C2-robot"},
+            "C3-robot": {displayName: "C3-robot"},
+            "-1": {displayName: ""}
+        },
         players: CONST.PLAYERS,
         ready: [false, false, false, false]
     };
     Db.setTableDataById(newTable);
     Db.setTableListData(newTable.linkId, {
-        id: newTable.id
+        id: newTable.id,
+        playerInfo: {
+            "C1-robot": {displayName: "C1-robot"},
+            "C2-robot": {displayName: "C2-robot"},
+            "C3-robot": {displayName: "C3-robot"},
+            "-1": {displayName: ""}
+        }
     });
 };
 exports.close = table => {

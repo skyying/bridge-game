@@ -18,7 +18,7 @@ process.env.FIREBASE_CONFIG = FBASE.config;
 let tableIdList = {};
 
 Db.init();
-Tables.init();
+// Tables.init();
 
 const timeout = {
     join: 15000,
@@ -28,7 +28,7 @@ const timeout = {
     },
     playing: {
         human: 60000,
-        robot: 4000
+        robot: 3000
     },
     close: 15000
 };
@@ -50,7 +50,6 @@ listenTableRemoved("tables", snapshot => {
         let removeKey = Tables.update(tableIdList, tables.val());
         if (removeKey < 0) {
             tableIdList = {};
-            Tables.create();
         } else {
             delete tableIdList[removeKey];
         }
@@ -60,6 +59,7 @@ listenTableRemoved("tables", snapshot => {
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
     let tableData = snapshot.val();
+    console.log("tableData", tableData);
     let {ready, gameState, id, timeStamp} = tableData;
     if (timeStamp !== tableIdList[id].timeStamp) {
         tableIdList[id].timeStamp = timeStamp;
