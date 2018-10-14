@@ -27,7 +27,6 @@ import {
 } from "./examineCards.js";
 import {getWinnerCard} from "./getWinnerCard.js";
 import PlayerReadyList from "./playerReadyList.js";
-import Timer from "./timer.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -425,7 +424,6 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
-        <Timer time={game.time} />
         {!isAllReady && (
           <PlayerReadyList
             suffleCardsWhenReady={this.suffleCardsWhenReady}
