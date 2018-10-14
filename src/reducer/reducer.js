@@ -11,25 +11,18 @@ import {
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
-
-// const updateUserProfile = (user, data) => {
-//   if (!user) {
-//     return;
-//   }
-// };
 export const appReducer = (state, action) => {
   switch (action.type) {
-    // case "FETCH_PLAYER_INFO": {
-    //   let newPlayer = {};
-    //   newPlayer[action.uid] = action.playerInfo;
-    //   let players = Object.assign({}, state.players, newPlayer);
-    //   return Object.assign({}, state, {players: players});
-    // }
     case "UPDATE_USER_INFO": {
       return Object.assign({}, state, {
         user: action.user,
         uid: action.uid,
         userInfo: action.userInfo
+      });
+    }
+    case "UPDATE_USER_LIST": {
+      return Object.assign({}, state, {
+        userList: action.userList
       });
     }
     case "SET_CURRENT_HEADER": {
@@ -306,6 +299,10 @@ export const dispatchToDatabase = (type, action) => {
 
 app.getNodeByPath("tableList", value => {
   return dispatch("FETCH_TABLE_LIST", {tableList: value.val()});
+});
+
+app.getNodeByPath("users", value => {
+  return dispatch("UPDATE_USER_LIST", {userList: value.val()});
 });
 
 app.auth.onAuthStateChanged(user => {

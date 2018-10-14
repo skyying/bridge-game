@@ -54,18 +54,19 @@ class App extends React.Component {
     if (!this.state.isLoad) {
       return <Loading />;
     }
-    // let currentUser = this.state.uid;
     let currentUser = this.state.user;
     return (
       <div>
         <BrowserRouter>
           <div>
             <Header
+              userList={this.state.userList}
               isInTablePage={this.state.isInTablePage}
               isLogin={this.state.isLogin || false}
               path={pathName}
               userInfo={this.state.userInfo}
-              currentUser={currentUser}
+              uid={this.state.uid}
+              currentUser={this.state.user}
             />
             <div>
               <Route
@@ -91,7 +92,7 @@ class App extends React.Component {
                     chatroom={this.state.chatroom}
                     tables={this.state.tables}
                     tableList={this.state.tableList}
-                    currentUser={currentUser}
+                    currentUser={this.state.user}
                     {...props}
                   />
                 )}
@@ -102,7 +103,7 @@ class App extends React.Component {
                 render={() => (
                   <Lobby
                     tables={this.state.tables || null}
-                    currentUser={currentUser}
+                    currentUser={this.state.user}
                     tableList={this.state.tableList}
                   />
                 )}

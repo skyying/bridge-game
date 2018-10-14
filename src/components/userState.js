@@ -23,6 +23,18 @@ export default class UserState extends React.Component {
     this.setState({isOpen: false});
   }
   render() {
+    console.log("xxxxxxxxx");
+    // console.log(this.props.currentUser.uid);
+    let name;
+    if (
+      this.props.userList &&
+            this.props.userList[this.props.currentUser.uid]
+    ) {
+      name = this.props.userList[this.props.currentUser.uid].displayName;
+    }
+    if (!name) {
+      name === "";
+    }
     return (
       <div className="user-state-panel">
         <div
@@ -32,10 +44,7 @@ export default class UserState extends React.Component {
               : "Login-state-btn"
           }
           onClick={() => this.setState({isOpen: !this.state.isOpen})}>
-          <Thumbnail
-            size={40}
-            name={this.props.currentUser.displayName}
-          />
+          <Thumbnail size={40} name={name} />
           <div>
             <h6>{this.props.currentUser.displayName}</h6>
             <span>online</span>

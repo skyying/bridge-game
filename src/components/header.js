@@ -16,7 +16,13 @@ export default class Header extends React.Component {
     dispatch("SET_CURRENT_HEADER", {isInTablePage: false});
   }
   render() {
-    let userProfile = <UserState currentUser={this.props.currentUser} />;
+    let userProfile = (
+      <UserState
+        uid={this.props.uid}
+        currentUser={this.props.currentUser}
+        userList={this.props.userList}
+      />
+    );
     let rightTopCorner;
     let registerBtns = (
       <div className="register-btn-groups">
@@ -28,7 +34,7 @@ export default class Header extends React.Component {
         </Link>
       </div>
     );
-    rightTopCorner = this.props.currentUser ? userProfile : registerBtns;
+    rightTopCorner = this.props.uid ? userProfile : registerBtns;
     return (
       <header className={this.props.isInTablePage ? "table-header" : ""}>
         <div>
