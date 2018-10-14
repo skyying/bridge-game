@@ -16,7 +16,6 @@ export default class OpenTables extends React.Component {
     this.createTable = this.createTable.bind(this);
   }
   createTable(tableRef) {
-    console.log("should do");
     dispatchToDatabase("CREATE_TABLE", {
       tableRef: tableRef,
       currentUser: this.props.currentUser
@@ -29,7 +28,12 @@ export default class OpenTables extends React.Component {
         <div>
           <h3>Open table</h3>
           <div> loading... </div>
-          <button onClick={()=> {this.createTable(new Date().getTime())}}>Open a new table</button>
+          <button
+            onClick={() => {
+              this.createTable(new Date().getTime());
+            }}>
+                        Open a new table
+          </button>
         </div>
       );
     }
@@ -38,8 +42,9 @@ export default class OpenTables extends React.Component {
       key =>
         tableList[key].players
           ? tableList[key].players.some(seat => seat === EMPTY_SEAT)
-          : !tableList[key].players,
+          : !tableList[key].players
     );
+
     let tableLinks = filteredList.map((key, index) => {
       let players = this.props.tableList[key].players;
       let emptySeats = players

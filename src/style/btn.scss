@@ -12,3 +12,35 @@
     background-color: lighten(#4A90E2, 10%)
   }
 }
+
+.btn-group{
+  margin-top: 30px;
+  padding: 30px 0;
+}
+
+.btn-style-round{
+  font-size: 1.2rem;;
+  color: #fff;
+  max-width: 200px;
+  line-height: 2rem;
+  width: 100%;
+  opacity: 1;
+  display: block;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 3px;
+  padding: 1rem;
+  border-radius: 2rem;
+  background-color: rgba(50, 194, 162, 1);
+  transition: all 0.2s ease 0s;
+  margin: 0 auto;
+  letter-spacing: 1px;
+  outline: none !important;
+}
+.fb-sign-btn{
+  margin-left: 20px;
+  background-color: #4367B2;
+  max-width: 200px;
+  padding-left: 50px;
+  background-image: url("../images/facebook.svg");
+  background-position: 40px center;
+  background-repeat: no-repeat;
+}

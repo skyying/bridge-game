@@ -12,18 +12,29 @@ export default class Header extends React.Component {
     super(props);
   }
   render() {
+    let userProfile = <div> this.props.user </div>;
+    let rightTopCorner;
+    let registerBtns = (
+      <div>
+        <Link to="/signup"> Sign up </Link>
+        <Link to="/login"> Login </Link>
+      </div>
+    );
+    rightTopCorner = this.props.isLogin ? userProfile : registerBtns;
     return (
-      <header className={this.props.path.includes("table") ? 
-        "table-header" : ""} >
+      <header
+        className={
+          this.props.path.includes("table") ? "table-header" : ""
+        }>
         <div>
-          <Link to="/lobby">
+          <Link to="/">
             <img src={logoImg} />
             <h1>Bridge Together</h1>
           </Link>
         </div>
         <div>
           <img src={messageSvg} />
-          <div>{this.props.user || "Sign In / Sign Up"}</div>
+          <div>{rightTopCorner}</div>
         </div>
       </header>
     );

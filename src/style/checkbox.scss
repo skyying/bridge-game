@@ -1,0 +1,32 @@
+input[type="checkbox"]{
+  display: none;
+}
+
+.checkbox-lable{
+  font-size: 0.875rem;
+  position: relative;
+  span{
+    font-size: 0.875rem;
+    padding-left: 40px;
+    display: block;
+    line-height: 24px;
+  }
+  > div{
+    position: absolute;
+    left:0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background-size: 12px 12px;
+    border: 2px solid rgba(117, 114, 186, 1);
+    border-radius: 4px;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  .checked {
+    background-image: url("../images/checked.svg");
+    border: 2px solid rgba(50, 194, 162, 1);
+  }
+}
+
+

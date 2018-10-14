@@ -97,7 +97,7 @@ export default class Table extends React.Component {
     let linkId = this.props.match.params.id;
     let tableKey = this.props.tableList[linkId].id;
     console.log("tables", tables);
-    console.log("es[tableKey]", tables[tableKey]);
+    console.log("tables[tableKey]", tables[tableKey]);
     if (!tables || !tables[tableKey]) {
       return null;
     }
@@ -106,7 +106,7 @@ export default class Table extends React.Component {
     let targetTable = tables[tableKey];
     console.log("targetTable", targetTable);
     if (targetTable.gameState && targetTable.gameState === "close") {
-      return <Redirect to="/lobby" />;
+      return <Redirect to="/" />;
     }
     return (
       <div className="table">

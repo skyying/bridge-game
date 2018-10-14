@@ -8,12 +8,14 @@ import Table from "./components/table.js";
 import Header from "./components/header.js";
 import Lobby from "./components/lobby.js";
 import Loading from "./components/loading.js";
+import SignUp from "./components/signUp.js";
 import {
   IndexRoute,
   BrowserRouter,
   Router,
   Route,
   Switch,
+  Redirect,
   Link,
   withrouter
 } from "react-router-dom";
@@ -46,24 +48,36 @@ class App extends React.Component {
   }
   render() {
     let pathName = window.location.pathname;
-    console.log(this.state);
     if (!this.state.isLoad) {
       return <Loading />;
     }
+    let currentUser = this.state.currentUSer;
+    currentUser = "abc";
+
     return (
       <div>
         <BrowserRouter>
           <div>
-            <Header path={pathName}  user={this.state.currentUser} />
-            {!this.state.currentUser && (
-              <Route
-                path="/"
-                render={props => (
-                  <Login login={this.handleLogin} />
-                )}
-              />
+            <Header
+              isLogin={this.state.isLogin || false}
+              path={pathName}
+              user={this.state.currentUser}
+            />
+            {!currentUser && (
+              <div>
+                <Route
+                  path="/"
+                  render={props => (
+                    <Login login={this.handleLogin} />
+                  )}
+                />
+                <Route
+                  path="/signup"
+                  render={props => <SignUp {...props} />}
+                />
+              </div>
             )}
-            {this.state.currentUser && (
+            {currentUser && (
               <div>
                 <Route
                   path="/table/:id"
@@ -72,26 +86,21 @@ class App extends React.Component {
                       chatroom={this.state.chatroom}
                       tables={this.state.tables}
                       tableList={this.state.tableList}
-                      currentUser={this.state.currentUser}
+                      currentUser={currentUser}
                       {...props}
                     />
                   )}
                 />
                 <Route
                   exact
-                  path="/lobby"
+                  path="/"
                   render={() => (
                     <Lobby
                       tables={this.state.tables || null}
-                      currentUser={this.state.currentUser}
+                      currentUser={currentUser}
                       tableList={this.state.tableList}
                     />
                   )}
-                />
-                <Route
-                  exact
-                  path="/createTable"
-                  render={() => <CreateTable />}
                 />
               </div>
             )}
