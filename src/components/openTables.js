@@ -14,6 +14,7 @@ export default class OpenTables extends React.Component {
     super(props);
     this.createTable = this.createTable.bind(this);
     this.updateHeader = this.updateHeader.bind(this);
+    this.setCurrentTable = this.setCurrentTable.bind(this);
   }
   createTable(tableRef) {
     if (!this.props.currentUser) {
@@ -23,6 +24,13 @@ export default class OpenTables extends React.Component {
       tableRef: tableRef,
       currentUser: this.props.currentUser
     });
+    this.updateHeader();
+    this.setCurrentTable(tableRef);
+  }
+  setCurrentTable(id) {
+    if (this.props.currentUser) {
+      dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
+    }
     this.updateHeader();
   }
   updateHeader() {
@@ -65,7 +73,7 @@ export default class OpenTables extends React.Component {
             <div>
               <Link
                 className="btn-style-border"
-                onClick={this.updateHeader}
+                onClick={() => this.setCurrentTable(key)}
                 key={key}
                 to={
                   this.props.currentUser
@@ -105,13 +113,3 @@ export default class OpenTables extends React.Component {
     );
   }
 }
-
-// {!this.props.isLoad && (
-//   <div className="loading-table-list">
-//     <div className="table-list-item-group">loading... </div>
-//   </div>
-// )}
-
-// <div className="btn-group">
-// <button className="btn-style">Match me</button>
-// </div>

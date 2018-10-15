@@ -49,8 +49,8 @@ export default class Lobby extends React.Component {
               <img src={openImg} />
               <OpenTables
                 title={"Join A Table To Play"}
-                isLoad={true}
                 openBtn={true}
+                tables={this.props.tables}
                 currentUser={this.props.currentUser}
                 open={true}
                 tableList={this.props.tableList}
@@ -63,8 +63,8 @@ export default class Lobby extends React.Component {
             <div className="table-list-inner">
               <img src={playImg} />
               <PlayingTables
+                tables={this.props.tables}
                 title={false}
-                isLoad={true}
                 openBtn={true}
                 open={false}
                 currentUser={this.props.currentUser}

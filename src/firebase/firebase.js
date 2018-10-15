@@ -6,6 +6,15 @@ export const firebaseApp = firebase.initializeApp(config);
 export const app = {
   db: firebaseApp.database(),
   auth: firebaseApp.auth(),
+  onAuthChanged: callback => {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user) {
+        callback(user);
+      } else {
+        console.log("no one login");
+      }
+    });
+  },
   getNodeByPathOnce: (path, action) => {
     return firebaseApp
       .database()

@@ -1,0 +1,20 @@
+[debug] [2018-10-15T08:32:55.313Z] ----------------------------------------------------------------------
+[debug] [2018-10-15T08:32:55.315Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only hosting
+[debug] [2018-10-15T08:32:55.316Z] CLI Version:   5.0.1
+[debug] [2018-10-15T08:32:55.316Z] Platform:      darwin
+[debug] [2018-10-15T08:32:55.316Z] Node Version:  v9.1.0
+[debug] [2018-10-15T08:32:55.316Z] Time:          Mon Oct 15 2018 16:32:55 GMT+0800 (CST)
+[debug] [2018-10-15T08:32:55.316Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-15T08:32:55.327Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-15T08:32:55.327Z] > authorizing via signed-in user
+[debug] [2018-10-15T08:32:55.328Z] [iam] checking project wowbridge88 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2018-10-15T08:32:55.329Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-15T08:32:55.329Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-10-15T08:32:55.445Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-15T08:32:55.467Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/wowbridge88:testIamPermissions  
+
+[debug] [2018-10-15T08:32:56.378Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-15T08:32:56.379Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/wowbridge88  
+ 

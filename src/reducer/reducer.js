@@ -47,6 +47,12 @@ export const appReducer = (state, action) => {
       updatedTables[id] = table;
       return Object.assign({}, state, {tables: updatedTables});
     }
+    case "UPDATE_CURRENT_TABLE_ID": {
+      console.log("in update current table id, reducer");
+      return Object.assign({}, state, {
+        currentTableId: action.currentTableId
+      });
+    }
     case "FETCH_TABLE_LIST": {
       // tables is an array, query table by index
       return Object.assign({}, state, {tableList: action.tableList});
@@ -62,7 +68,8 @@ export const store = createStore(
     currentUser: null,
     isLoad: false,
     tables: {},
-    isInTablePage: false
+    isInTablePage: false,
+    currentTableId: null
   },
   applyMiddleware(thunk)
 );
@@ -280,6 +287,9 @@ export const dispatchToDatabase = (type, action) => {
       let {message, currentUser, table} = action;
       let time = new Date().getTime();
       let newMessage = {};
+      newMessage.isPlayer = table.players.some(
+        player => player === currentUser.uid
+      );
       newMessage.content = action.message;
       newMessage.uid = currentUser.uid;
       newMessage.displayName = currentUser.displayName;
@@ -304,6 +314,8 @@ app.getNodeByPath("tableList", value => {
 app.getNodeByPath("users", value => {
   return dispatch("UPDATE_USER_LIST", {userList: value.val()});
 });
+
+
 
 app.auth.onAuthStateChanged(user => {
   if (user) {

@@ -17,7 +17,8 @@ import {
   Switch,
   Redirect,
   Link,
-  withrouter
+  withrouter,
+  HashRouter
 } from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
 
@@ -50,6 +51,7 @@ class App extends React.Component {
     dispatch("STOP_LOADING", {isLoad: true});
   }
   render() {
+    console.log("in APP", this.state);
     let pathName = window.location.pathname;
     if (!this.state.isLoad) {
       return <Loading />;
@@ -57,7 +59,7 @@ class App extends React.Component {
     let currentUser = this.state.user;
     return (
       <div>
-        <BrowserRouter>
+        <HashRouter>
           <div>
             <Header
               userList={this.state.userList}
@@ -85,10 +87,12 @@ class App extends React.Component {
                 )}
               />
               <Route
-                exact
                 path="/table/:id"
                 render={props => (
                   <Table
+                    currentTableId={
+                      this.state.currentTableId
+                    }
                     chatroom={this.state.chatroom}
                     tables={this.state.tables}
                     tableList={this.state.tableList}
@@ -110,7 +114,7 @@ class App extends React.Component {
               />
             </div>
           </div>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     );
   }

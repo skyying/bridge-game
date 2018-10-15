@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
+import {Redirect} from "react-router-dom";
 import Trick from "./trick.js";
 import {
   CARD_NUM,
@@ -52,6 +53,7 @@ export default class Game extends React.Component {
     });
   }
   componentDidMount() {
+
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
   }
@@ -62,11 +64,14 @@ export default class Game extends React.Component {
     let newTable = this.props.table;
     let oldTable = prevProps.table;
 
+    // todo, refine logic, under some condition, state might not be update
+    // if ready state is change
     if (
       !newTable.ready.every(
         (player, index) => player === oldTable.ready[index]
       )
     ) {
+      // and are all ready
       if (newTable.ready.every(player => player === true)) {
         this.suffleCardsWhenReady();
       }
@@ -170,7 +175,11 @@ export default class Game extends React.Component {
     );
   }
   render() {
+    // if (!this.state.redirectToLogin) {
+    //   return <Redirect />;
+    // }
     let {table, currentUser} = this.props;
+
     let {game, players, ready} = table;
     let {cards, isGameOver} = game;
 

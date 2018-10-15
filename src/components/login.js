@@ -11,6 +11,12 @@ import "../style/checkbox.scss";
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
+    let _this = this;
+    app.onAuthChanged(user => {
+      if (user) {
+        _this.setState({redirect: true});
+      }
+    });
     this.state = {
       name: "",
       email: "",
@@ -29,6 +35,7 @@ export default class Login extends React.Component {
       .then(user => this.setState({redirect: true}))
       .catch(err => this.setState({error: err.message}));
   }
+
   handleName(e) {
     this.setState({name: e.target.value});
   }

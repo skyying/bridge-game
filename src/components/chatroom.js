@@ -50,10 +50,14 @@ export default class Chatroom extends React.Component {
     this.msgEnd.scrollIntoView({behavior: "smooth"});
   }
   render() {
+    console.log("chatroom", chatroom);
     if (this.msgEnd) {
       this.scrollToBottom();
     }
     let {currentUser, table, chatroom} = this.props;
+    if (!table || !currentUser) {
+      console.log("no current table data");
+    }
     let {players} = table;
     let messageList;
     let emojiList = this.emoji.map((emj, i) => (
@@ -64,26 +68,28 @@ export default class Chatroom extends React.Component {
         {emj}
       </span>
     ));
-    if (chatroom && chatroom.message) {
-      let chatLen = 30;
+
+    console.log("table.viewer", table.viewers);
+    if (chatroom && chatroom.message && table && table.viewers) {
+      // let chatLen = 30;
       let end = Object.keys(chatroom.message).length;
-      let chatStart = end - chatLen >= 0 ? end - chatLen : 0;
+      let chatStart = 0; //end - chatLen >= 0 ? end - chatLen : 0;
       let isCurrentUserAPlayer = players.some(
         player => player === currentUser.uid
       );
       let msgMapList;
-
-      if (
-        (isCurrentUserAPlayer && table.gameState === "auction") ||
-                table.gameState === "playing"
-      ) {
+      console.log(
+        "isCurrentUserAPlayer in chat room",
+        isCurrentUserAPlayer
+      );
+      if (isCurrentUserAPlayer) {
         msgMapList = Object.keys(chatroom.message)
           .sort((a, b) => +a - +b)
-          .filter(key => players.includes(chatroom.message[key].uid));
+          .filter(key => chatroom.message[key].isPlayer);
       } else {
-        msgMapList = Object.keys(chatroom.message)
-          .sort((a, b) => +a - +b)
-          .slice(chatStart, end);
+        msgMapList = Object.keys(chatroom.message).sort(
+          (a, b) => +a - +b
+        );
       }
 
       messageList = msgMapList.map((id, index) => {
