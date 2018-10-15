@@ -132,6 +132,7 @@ listenTableChanged("tables", snapshot => {
             );
         }
     } else if (gameState === state.phase.gameover) {
+        console.log("gameover");
         initTimer(
             tableIdList[tableData.id],
             tableData,
@@ -140,6 +141,7 @@ listenTableChanged("tables", snapshot => {
         );
     } else if (gameState === "close") {
         Db.setTableData("", tableData.id, null);
+        Db.setTableListData(tableData.linkId, null);
     }
     return;
 });

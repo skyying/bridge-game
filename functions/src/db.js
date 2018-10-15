@@ -39,7 +39,7 @@ exports.setTableData = (path, id, data) => {
 };
 
 exports.setTableListData = (id, data) => {
-    this.admin
+    return this.admin
         .database()
         .ref(`tableList/${id}/`)
         .set(data);
