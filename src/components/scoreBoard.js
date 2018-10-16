@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import TrickScore from "./trickScore.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
+import {RESULT} from "./constant.js";
 import "../style/btn.scss";
 
 export default class ScoreBoard extends React.Component {
@@ -28,44 +29,27 @@ export default class ScoreBoard extends React.Component {
     }
     let scoreTeamOne = 0,
       scoreTeamTwo = 0;
-
-    // which team players belong: [ one, two, one ,two]
+    let playerIndex = players.indexOf(currentUser.uid);
+    let playerTeamScore = 0,
+      opponentScore = 0;
     game.cards.map((card, index) => {
-      let winningScore = card.isWin ? 1 : 0;
-      if ((index % 4) % 2 === 0) {
-        scoreTeamOne += winningScore;
+      let winScore = card.isWin ? 1 : 0;
+      if (card.player % 2 === playerIndex % 2) {
+        playerTeamScore += winScore;
       } else {
-        scoreTeamTwo += winningScore;
+        opponentScore += winScore;
       }
     });
 
-    let result = {
-      win: "當溫拿的感覺原來如此, 94 送",
-      lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
-    };
     let resultWords = null;
-    let playerIndex = players.indexOf(currentUser.uid);
-
     let {declarer, trick} = game.bid;
     let targetTrick = 6 + trick;
-    let isDeclarerInTeamOne = declarer % 2 === 0;
+    let isPlayerInDeclarerTeam = playerIndex % 2 === declarer % 2;
 
-    // if user is curretn user
-    if (playerIndex >= 0) {
-      // if user is declearer
-      if (isDeclarerInTeamOne) {
-        if (playerIndex % 2 === 0 && scoreTeamOne >= targetTrick) {
-          resultWords = result.win;
-        } else {
-          resultWords = result.lose;
-        }
-      } else {
-        if (playerIndex % 2 !== 0 && scoreTeamTwo >= targetTrick) {
-          resultWords = result.win;
-        } else {
-          resultWords = result.lose;
-        }
-      }
+    if (isPlayerInDeclarerTeam && playerTeamScore >= targetTrick) {
+      resultWords = RESULT.win;
+    } else {
+      resultWords = RESULT.lose;
     }
 
     return (

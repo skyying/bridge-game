@@ -11,6 +11,14 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.updateHeader = this.updateHeader.bind(this);
+    let _this = this;
+    if (!this.props.currentUser) {
+      this.props.getUserAuthInfo().then(user => {
+        console.log("in fetched");
+        console.log(_this.props.currentUser);
+        _this.setState({isLoad: true});
+      });
+    }
   }
   updateHeader() {
     dispatch("SET_CURRENT_HEADER", {isInTablePage: false});

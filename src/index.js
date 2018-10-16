@@ -9,6 +9,7 @@ import Header from "./components/header.js";
 import Lobby from "./components/lobby.js";
 import Loading from "./components/loading.js";
 import SignUp from "./components/signUp.js";
+import {app} from "./firebase/firebase.js";
 import {
   IndexRoute,
   BrowserRouter,
@@ -29,6 +30,7 @@ class App extends React.Component {
     this.update = this.update.bind(this);
     this.stopLoading = this.stopLoading.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
+    this.getUserAuthInfo = this.getUserAuthInfo.bind(this);
   }
   update() {
     this.setState(store.getState());
@@ -47,6 +49,30 @@ class App extends React.Component {
       userInfo: userInfo
     });
   }
+  getUserAuthInfo() {
+    return new Promise((resolve, reject) => {
+      app.auth.onAuthStateChanged(user => {
+        if (user) {
+          app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+            let userInfo = snapshot.val();
+            resolve(userInfo);
+            dispatch("UPDATE_USER_INFO", {
+              user: user,
+              uid: user.uid,
+              userInfo: snapshot.val()
+            });
+          });
+        } else {
+          reject(true);
+          return dispatch("UPDATE_USER_INFO", {
+            uid: null,
+            userInfo: null,
+            user: null
+          });
+        }
+      });
+    });
+  }
   stopLoading() {
     dispatch("STOP_LOADING", {isLoad: true});
   }
@@ -62,8 +88,10 @@ class App extends React.Component {
         <HashRouter>
           <div>
             <Header
+              getUserAuthInfo={this.getUserAuthInfo}
               userList={this.state.userList}
               isInTablePage={this.state.isInTablePage}
+              updateUserInfo={this.updateUserInfo}
               isLogin={this.state.isLogin || false}
               path={pathName}
               userInfo={this.state.userInfo}
@@ -93,6 +121,8 @@ class App extends React.Component {
                     currentTableId={
                       this.state.currentTableId
                     }
+                    getUserAuthInfo={this.getUserAuthInfo}
+                    userInfo={this.state.userInfo}
                     chatroom={this.state.chatroom}
                     tables={this.state.tables}
                     tableList={this.state.tableList}

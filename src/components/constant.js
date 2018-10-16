@@ -6,6 +6,16 @@ export const CARD_NUM = {
   HAND: 13
 };
 
+export const TIMER = {
+  join: 15000,
+
+}
+
+export const RESULT = {
+  win: "當溫拿的感覺原來如此, 94 送",
+  lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
+};
+
 export const PLAYER_NUM = 4;
 export const EMPTY_SEAT = -1;
 export const NO_TRUMP = 4;

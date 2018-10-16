@@ -1,20 +1,50 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {EMPTY_SEAT} from "./constant.js";
+import {EMPTY_SEAT, TIMER} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import "../style/ready-list.scss";
+import {Thumbnail, WaitingThumbnail} from "./thumbnail.js";
+import {Progress} from "./progress.js";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);
+    this.timeInterval = 1000;
+    this.frequency = 10; // update frequency per sec;
+    // update how many persec to current progress
+    this.progressInterval = Math.floor(
+      TIMER.join / Math.floor(this.timeInterval / this.frequency)
+    );
+    this.state = {
+      progress: 0,
+      timesUp: false
+    };
+    this.duration = TIMER.join;
     this.setReadyState = this.setReadyState.bind(this);
+    this.countDownTimer = this.countDownTimer.bind(this);
+    this.timer = setInterval(
+      this.countDownTimer,
+      Math.floor(this.timeInterval / this.frequency)
+    );
+  }
+  countDownTimer() {
+    if (this.state.progress < TIMER.join) {
+      this.setState({
+        progress: this.state.progress + this.progressInterval
+      });
+    }
+    if (this.state.progress >= TIMER.join) {
+      clearInterval(this.timer);
+      this.setState({timesUp: true});
+    }
   }
   setReadyState(playerIndex) {
     let {currentUser, table} = this.props;
     if (!table) return;
     let {game} = table;
     let players = table.players.slice(0);
+
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
       table: table
@@ -23,10 +53,17 @@ export default class PlayerReadyList extends React.Component {
   render() {
     let {table, currentUser} = this.props;
     let {game, ready, players, playerInfo} = table;
+
     if (!game) {
       return null;
     }
+
     let {isGameOver, order} = game;
+    if (this.state.timesUp) {
+      // todo should close table
+      // return null;
+      console.log("times up");
+    }
 
     let isEmptySeat = players.some(seat => seat === EMPTY_SEAT);
     let isAllPlayerReady = ready.every(player => player === true);
@@ -37,22 +74,38 @@ export default class PlayerReadyList extends React.Component {
       return null;
     }
     let playBtns = null;
+
     let thumbnails = players.map((player, index) => {
       let playerName;
+      let size = 70;
       if (playerInfo[player]) {
         playerName = playerInfo[player].displayName;
       }
+      if (!playerName) {
+        return (
+          <WaitingThumbnail
+            stop={this.state.progress === 100}
+            key={`join-plyaer-${index}`}
+            size={size}
+          />
+        );
+      }
       return (
         <div
-          key={getRandomKey()}
-          className={
-            ready[index] === false ? "thumbnail" : "thumbnail ready"
-          }>
-          <span>{(playerName && playerName[0]) || ""}</span>
+          key={`join-player-${index}`}
+          className="player-ready-wrapper">
+          <Thumbnail
+            size={size}
+            disabled={!ready[index]}
+            name={playerName}
+          />
+          <span>{playerName}</span>
         </div>
       );
     });
+
     let currentUserCanPlay;
+
     if (players.includes(currentUser.uid)) {
       currentUserCanPlay = players.some(
         (player, index) => player === currentUser.uid && !ready[index]
@@ -70,10 +123,11 @@ export default class PlayerReadyList extends React.Component {
             </div>
           );
         } else {
-          return null;
+          return <div key={getRandomKey()} />;
         }
       });
     }
+    let currentVAl = this.state.progress / TIMER.join;
     return (
       <div className="player-ready-list">
         <div className="player-ready-list-inner">
@@ -81,9 +135,16 @@ export default class PlayerReadyList extends React.Component {
           {currentUserCanPlay && (
             <div className="btn-wrapper">{playBtns}</div>
           )}
-          <div className="notes">等待加入中...</div>
+          <div className="progress-panel">
+            <Progress
+              totalWidth={200}
+              currentWidth={currentVAl * 200}
+            />
+          </div>
         </div>
       </div>
     );
   }
 }
+
+// <div className="notes">等待加入中...</div>

@@ -33,6 +33,7 @@ export default class SignUp extends React.Component {
     let promise = auth.createUserWithEmailAndPassword(email, password);
     promise
       .then(user => {
+        let randomIcon = Math.floor(Math.random() * 20);
         this.props.updateUserInfo(user, {
           name: name,
           email: email
@@ -145,9 +146,9 @@ export default class SignUp extends React.Component {
                 }>
                                 I allow the use of collected data about my study
                                 behavior for research purposes. The data
-                                contains information from game playing and chatting
-                                messages. No individuals can be identified from
-                                publications.
+                                contains information from game playing and
+                                chatting messages. No individuals can be
+                                identified from publications.
               </span>
             </label>
             <div className="error-text error-text-panel">

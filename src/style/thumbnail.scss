@@ -1,14 +1,19 @@
-$thumbnailBg: #D2ADB0;
+$thumbnailBg: #eae7e0;
 
-.thumbnail{
+.thumbnail, .waiting-thumbnail{
   color: #fff;
   background-color: $thumbnailBg;
+  padding-top: 10px;
   overflow: hidden;
   display:flex;
   justify-content: center;
   align-items: center;
   border: none;
+  .disabled{
+    filter: grayscale(100%);
+  }
 }   
+
 
 .thumbnail-group{
   display: flex;
@@ -25,4 +30,5 @@ $thumbnailBg: #D2ADB0;
     }
   }
 }
+
 
