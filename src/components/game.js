@@ -53,7 +53,6 @@ export default class Game extends React.Component {
     });
   }
   componentDidMount() {
-
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
   }
@@ -179,6 +178,8 @@ export default class Game extends React.Component {
     //   return <Redirect />;
     // }
     let {table, currentUser} = this.props;
+
+    console.log("in game table", table);
 
     let {game, players, ready} = table;
     let {cards, isGameOver} = game;

@@ -20,6 +20,16 @@ export const appReducer = (state, action) => {
         userInfo: action.userInfo
       });
     }
+    case "UPDATE_OPEN_TABLE_LIST": {
+      // let {closeTables} = Object.assign({}, state);
+      // closeTables[action.id] = action.linkId;
+      // console.log("udpated --------- in open table list");
+      // return Object.assign({}, state, {
+      //   closeTables: closeTables
+      //
+      // });
+      return Object.assign({}, state);
+    }
     case "UPDATE_USER_LIST": {
       return Object.assign({}, state, {
         userList: action.userList
@@ -61,18 +71,6 @@ export const appReducer = (state, action) => {
       return state;
   }
 };
-
-export const store = createStore(
-  appReducer,
-  {
-    currentUser: null,
-    isLoad: false,
-    tables: {},
-    isInTablePage: false,
-    currentTableId: null
-  },
-  applyMiddleware(thunk)
-);
 
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
@@ -116,6 +114,7 @@ export const dispatchToDatabase = (type, action) => {
       app.setNodeByPath(`tables/${tableKey}`, newTable);
       app.setTableListData(linkId, {
         id: tableKey,
+        isOpen: true,
         playerInfo: Object.assign(
           {},
           {
@@ -159,6 +158,13 @@ export const dispatchToDatabase = (type, action) => {
       );
       break;
     }
+    case "UPDATE_TABLE_TIMESTAMP": {
+      app.setNodeByPath(
+        `tables/${action.id}/timeStamp/`,
+        new Date().getTime()
+      );
+      break;
+    }
     case "ADD_NEW_DECK_TO_TABLE": {
       // todo, use high order function to wrap this
       // create a game
@@ -166,7 +172,6 @@ export const dispatchToDatabase = (type, action) => {
       let newGame = Object.assign({}, table.game, {
         cards: cards
       });
-
       app.updateTableDataByID(`${table.id}/game/`, newGame);
       break;
     }
@@ -236,10 +241,10 @@ export const dispatchToDatabase = (type, action) => {
       let {currentUser, table, color} = action;
       let {linkId, id} = table;
       app.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
-      // app.updateTableGameDataByPath(
-      //   `${id}/timeStamp/`,
-      //   new Date().getTime()
-      // );
+      app.updateTableGameDataByPath(
+        `${id}/timeStamp/`,
+        new Date().getTime()
+      );
       // if anyone join this table, update data to table list
       break;
     }
@@ -315,7 +320,18 @@ app.getNodeByPath("users", value => {
   return dispatch("UPDATE_USER_LIST", {userList: value.val()});
 });
 
-
+export const store = createStore(
+  appReducer,
+  {
+    currentUser: null,
+    isLoad: false,
+    tables: {},
+    isInTablePage: false,
+    currentTableId: null,
+    closeTables: {}
+  },
+  applyMiddleware(thunk)
+);
 
 app.auth.onAuthStateChanged(user => {
   if (user) {

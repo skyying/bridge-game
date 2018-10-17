@@ -7,7 +7,7 @@ export const CARD_NUM = {
 };
 
 export const TIMER = {
-  join: 15000,
+  join: 25000,
 
 }
 
@@ -48,7 +48,8 @@ export const GAME_STATE = {
   join: "join",
   auction: "auction",
   playing: "playing",
-  gameover: "gameover"
+  gameover: "gameover",
+  close: "close"
 };
 
 export const TAB_OPTION = ["Chat", "Result"];

@@ -3,16 +3,24 @@ $thumbnailBg: #eae7e0;
 .thumbnail, .waiting-thumbnail{
   color: #fff;
   background-color: $thumbnailBg;
-  padding-top: 10px;
   overflow: hidden;
   display:flex;
   justify-content: center;
   align-items: center;
-  border: none;
   .disabled{
     filter: grayscale(100%);
   }
 }   
+
+
+.thumbnail-inner{
+  padding-top: 10px;
+}
+.thumbnail-outline{
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+}
 
 
 .thumbnail-group{
@@ -31,4 +39,19 @@ $thumbnailBg: #eae7e0;
   }
 }
 
+// .border-style{
+//   overflow: hidden;
+//   width: 100%;
+//   height: 100%;
+//   border-radius: 100%;
+// }
 
+.player {
+  // position: relative;
+  // .border-thumbnail {
+  //   border: 6px solid #ffffff; 
+  // }
+  // .player-thumbnail-wrapper{
+  // }
+
+}

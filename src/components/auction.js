@@ -4,6 +4,7 @@ import {SUIT_SHAPE, BID_NUM} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import {AuctionList} from "./auctionList.js";
+import {Thumbnail} from "./thumbnail.js";
 import "../style/auction.scss";
 
 export default class Auction extends React.Component {
@@ -107,6 +108,7 @@ export default class Auction extends React.Component {
   }
   render() {
     let {game, players} = this.props;
+    let {playerInfo} = this.props.table;
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser.uid;
 
@@ -188,18 +190,31 @@ export default class Auction extends React.Component {
       </button>
     );
 
-    let playerThumbnails = players.map((player, index) => (
-      <div
-        key={getRandomKey()}
-        className={
-          index === this.props.game.deal
-            ? "thumbnail current"
-            : "thumbnail"
-        }>
-        <span>{player[0]}</span>
-      </div>
-    ));
-    if (this.props.isFinishAuction) return null;
+    let playerThumbnails = players.map(
+      (player, index) => (
+        <div
+          key={`auction-thumbnail-${index}`}
+          className={
+            index === this.props.game.deal
+              ? "default-thumbnail current"
+              : "default-thumbnail"
+          }>
+          <div className="default-thumbnail-inner">
+            <div className="default-thumbnail-inner-outline-wrapper">
+            <div className="default-thumbnail-inner-outline">
+              <Thumbnail
+                size={53}
+                current={index === this.props.game.deal}
+                name={playerInfo[player].displayName}
+              />
+            </div>
+          </div>
+            <span>{playerInfo[player].displayName}</span>
+          </div>
+        </div>
+      )
+    );
+    if (this.props.isFinishAuction) {return null};
 
     return (
       <div className="auction-inner">

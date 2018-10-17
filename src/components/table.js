@@ -4,6 +4,7 @@ import {getRandomInt, getObjSortKey, getRandomKey} from "../helper/helper.js";
 import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import Sidebar from "./sidebar/sidebar.js";
+import {GAME_STATE} from "./constant.js";
 import {app} from "../firebase/firebase.js";
 import randomColor from "randomcolor";
 import {EMPTY_SEAT} from "./constant.js";
@@ -30,6 +31,10 @@ export default class Table extends React.Component {
             `tableList/${this.linkId}`,
             snapshot => {
               let tableKey = snapshot.val().id;
+              console.log("tableKey----------", tableKey);
+              dispatchToDatabase("UPDATE_TABLE_TIMESTAMP", {
+                id: tableKey
+              });
               app.getDataByPathOnce(
                 `tables/${tableKey}/`,
                 snapshot => {
@@ -61,6 +66,14 @@ export default class Table extends React.Component {
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.color = randomColor("dark");
+  }
+  closeTable(tableKey = this.tableKey, linkId = this.linkId) {
+    return new Promise((resolve, reject) => {
+      app.setNodeByPath(
+        `tables/${tableKey}/gameState/${GAME_STATE.close}`,
+        GAME_STATE.close
+      );
+    });
   }
   updateTableData(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
@@ -135,6 +148,7 @@ export default class Table extends React.Component {
     if (!this.state.isLoad) {
       return <div>loading</div>;
     }
+
     let {tables, currentUser} = this.props;
     let linkId = this.props.match.params.id;
     let tableKey = this.props.tableList[linkId].id;
@@ -142,12 +156,16 @@ export default class Table extends React.Component {
       return null;
     }
     let targetTable = tables[tableKey];
-    if (targetTable.gameState && targetTable.gameState === "close") {
+    if (
+      targetTable.gameState &&
+            targetTable.gameState === GAME_STATE.close
+    ) {
       return <Redirect to="/" />;
     }
     return (
       <div className="table">
         <Game
+
           currentUser={currentUser}
           currentTableId={this.props.currentTableId}
           table={targetTable}

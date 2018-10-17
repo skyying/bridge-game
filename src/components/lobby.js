@@ -19,23 +19,30 @@ import playImg from "../images/play.svg";
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   closeTable: {}
+    // };
+    // this.updateCloseTable = this.updateCloseTable.bind(this);
   }
   render() {
+    console.log("this.props.tableList", this.props.tableList);
     let open = 0,
       playing = 0;
-    if (this.props.tableList) {
-      open = Object.keys(this.props.tableList).filter(key => {
-        if (
-          this.props.tableList[key] &&
-                    this.props.tableList[key].players
-        ) {
-          return this.props.tableList[key].players.some(
-            player => player === EMPTY_SEAT
-          );
-        }
-        return false;
-      }).length;
-    }
+    // if (this.props.tableList) {
+      // open = Object.keys(this.props.tableList).filter(key => {
+      //   if (
+      //     this.props.tableList[key] &&
+      //               this.props.tableList[key].players &&
+      //               !this.props.closeTables[key]
+      //   ) {
+      //     return this.props.tableList[key].players.some(
+      //       player => player === EMPTY_SEAT
+      //     );
+      //   }
+      //   return false;
+      // }).length;
+    // }
+     // <h2>Welcome to Wow Bridge</h2>
     return (
       <div className="lobby">
         <div className="lobby-title">

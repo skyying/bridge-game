@@ -52,7 +52,14 @@ const Avatar = {
 };
 
 const avatarNum = Object.keys(Avatar).length;
-export const Thumbnail = ({name = "", size = 40, disabled = false}) => {
+export const Thumbnail = ({
+  name = "",
+  size = 40,
+  disabled = false,
+  offset = 16,
+  border = false,
+  styleName = null
+}) => {
   let shiftAvatar = avatarNum;
   if (name.length) {
     shiftAvatar =
@@ -63,17 +70,26 @@ export const Thumbnail = ({name = "", size = 40, disabled = false}) => {
   }
   return (
     <div
-      className="thumbnail disabled"
+      className={`thumbnail disabled ${styleName}`}
       style={{
         width: size,
         height: size,
         borderRadius: size
       }}>
-      <img
-        className={disabled ? "disabled" : ""}
-        width={size - 16}
-        src={Avatar[shiftAvatar]}
-      />
+      <div
+        className={
+          border
+            ? "thumbnail-inner thumbnail-outline"
+            : "thumbnail-inner"
+        }>
+        <div className="border-style">
+          <img
+            className={disabled ? "disabled" : ""}
+            width={size - offset}
+            src={Avatar[shiftAvatar]}
+          />
+        </div>
+      </div>
     </div>
   );
 };
@@ -90,7 +106,7 @@ export class WaitingThumbnail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posY: 0,
+      posY: Math.floor(Math.random() * 40),
       position: 0,
       stop: false,
       isGoingUp: true,
@@ -101,9 +117,9 @@ export class WaitingThumbnail extends React.Component {
   }
   changeImg() {
     let {posY} = this.state;
-    if (this.state.posY > 60) {
+    if (this.state.posY > 50) {
       this.setState({isGoingUp: false});
-    } else if (this.state.posY < -60) {
+    } else if (this.state.posY < -50) {
       this.setState({isGoingUp: true});
     }
     let dy;

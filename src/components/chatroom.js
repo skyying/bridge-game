@@ -69,7 +69,6 @@ export default class Chatroom extends React.Component {
       </span>
     ));
 
-    console.log("table.viewer", table.viewers);
     if (chatroom && chatroom.message && table && table.viewers) {
       // let chatLen = 30;
       let end = Object.keys(chatroom.message).length;
@@ -78,10 +77,6 @@ export default class Chatroom extends React.Component {
         player => player === currentUser.uid
       );
       let msgMapList;
-      console.log(
-        "isCurrentUserAPlayer in chat room",
-        isCurrentUserAPlayer
-      );
       if (isCurrentUserAPlayer) {
         msgMapList = Object.keys(chatroom.message)
           .sort((a, b) => +a - +b)

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {EMPTY_SEAT, TIMER} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
-import {dispatchToDatabase} from "../reducer/reducer.js";
+import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import "../style/ready-list.scss";
 import {Thumbnail, WaitingThumbnail} from "./thumbnail.js";
 import {Progress} from "./progress.js";
@@ -55,18 +55,14 @@ export default class PlayerReadyList extends React.Component {
     let {game, ready, players, playerInfo} = table;
 
     if (!game) {
-      return null;
+      return <div> no game data </div>;
     }
 
     let {isGameOver, order} = game;
-    if (this.state.timesUp) {
-      // todo should close table
-      // return null;
-      console.log("times up");
-    }
-
     let isEmptySeat = players.some(seat => seat === EMPTY_SEAT);
     let isAllPlayerReady = ready.every(player => player === true);
+
+    // if need to sho playerReadylist
     let showPlayerReadyList =
             (isEmptySeat && order < 0) || !isAllPlayerReady;
 
@@ -75,6 +71,9 @@ export default class PlayerReadyList extends React.Component {
     }
     let playBtns = null;
 
+    if (this.state.timesUp && !isAllPlayerReady) {
+      return <div> I am loading </div>;
+    }
     let thumbnails = players.map((player, index) => {
       let playerName;
       let size = 70;
@@ -84,7 +83,7 @@ export default class PlayerReadyList extends React.Component {
       if (!playerName) {
         return (
           <WaitingThumbnail
-            stop={this.state.progress === 100}
+            stop={this.state.progress >= TIMER.join}
             key={`join-plyaer-${index}`}
             size={size}
           />
@@ -113,9 +112,9 @@ export default class PlayerReadyList extends React.Component {
       playBtns = players.map((player, index) => {
         if (player === currentUser.uid && !ready[index]) {
           return (
-            <div key={getRandomKey()}>
+            <div key={`playBtn-${index}`}>
               <button
-                key={getRandomKey()}
+                style={{zIndex: 5}}
                 onClick={() => this.setReadyState(index)}
                 className="btn">
                                 加入牌局
@@ -123,7 +122,7 @@ export default class PlayerReadyList extends React.Component {
             </div>
           );
         } else {
-          return <div key={getRandomKey()} />;
+          return <div key={`playBtn-${index}`} />;
         }
       });
     }
@@ -138,7 +137,7 @@ export default class PlayerReadyList extends React.Component {
           <div className="progress-panel">
             <Progress
               totalWidth={200}
-              currentWidth={currentVAl * 200}
+              currentWidth={currentVAl * 200 - 10 < 0 ? currentVAl * 200 : currentVAl * 200 - 10 }
             />
           </div>
         </div>

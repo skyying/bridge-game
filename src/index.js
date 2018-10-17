@@ -31,6 +31,7 @@ class App extends React.Component {
     this.stopLoading = this.stopLoading.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
     this.getUserAuthInfo = this.getUserAuthInfo.bind(this);
+    // this.updateCloseTable = this.updateCloseTable.bind(this);
   }
   update() {
     this.setState(store.getState());
