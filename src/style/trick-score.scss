@@ -27,21 +27,6 @@
     flex-direction: row;
   }
   .thumbnail {
-    // &:nth-child(1){
-    //   margin-right: 0px;
-    // }
-    // &:nth-child(2){
-    //   margin-left: -10px;
-    // }
-    // background-color: #D2ADB0;
-    // width: 30px;
-    // height: 30px;
-    // border-radius: 30px;
-    // overflow: hidden;
-    // display:flex;
-    // justify-content: center;
-    // align-items: center;
-    // border: 1px solid #fff;
     span{
       color: #fff;
       font-size: 16px;
@@ -63,14 +48,19 @@
 }
 
 .game-over-board{
+  // position: relative;
+  .game-over-board-inner{
+    padding-bottom: 30px;
+  }
+  .group{
+    padding-bottom: 0;
+  }
   .trick-score{
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     overflow:hidden;
-
     .trick-score-inner{
-      padding: 30px;
       min-width: 300px;
       max-width: 500px;
       flex-direction: column;
@@ -81,14 +71,14 @@
     }
     .result{
       text-align: center;
-      padding: 10px 0;
-      font-size: 16px;
+      padding: 0px 0 10px;
+      font-size: 14px;
+      font-weight: 800;
       display: flex;
       flex-direction: column;
       justify-content: center;
       .words{
         width: 100%;
-        padding: 10px 0;
       }
     }
   }
@@ -103,4 +93,19 @@
 .btn-wrapper{
   display: flex;
   justify-content: center;
+}
+
+
+.win{
+  .trick-score-inner{
+      padding: 160px 30px 30px;
+    background:#ecebe3 no-repeat url("../images/win.svg") center 17%;
+  }
+}
+
+.lose{
+    .trick-score-inner{
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
 }

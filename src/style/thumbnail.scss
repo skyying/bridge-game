@@ -6,12 +6,31 @@ $thumbnailBg: #eae7e0;
   overflow: hidden;
   display:flex;
   justify-content: center;
+  position: relative;
   align-items: center;
   .disabled{
     filter: grayscale(100%);
   }
 }   
-
+.thumbnail-with-tag {
+  position: relative;
+  .tag{
+    z-index: 50;
+    background-color: #4a90e2;
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    left: 23%;
+    transform:translateX(50%) ;
+    padding: 2px;
+    display: block;
+    padding: 2px;
+    height: 1em;
+    width: 1em;
+    border: 3px solid #fff;
+    border-radius: 100%;
+  }
+}
 
 .thumbnail-inner{
   padding-top: 10px;
