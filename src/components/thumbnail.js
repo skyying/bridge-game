@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import "../style/thumbnail.scss";
+import {ROBOT_NAME} from "./constant.js";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import avatar0 from "../images/avatar/0.svg";
 import avatar1 from "../images/avatar/1.svg";
@@ -25,6 +26,7 @@ import avatar18 from "../images/avatar/18.svg";
 import avatar19 from "../images/avatar/19.svg";
 import avatar20 from "../images/avatar/20.svg";
 import avatar21 from "../images/avatar/21.svg";
+import robot from "../images/avatar/robot.svg";
 import avatarSlot from "../images/avatar/avatar_slot.svg";
 
 const Avatar = {
@@ -69,6 +71,10 @@ export const Thumbnail = ({
               .map(str => str.charCodeAt(str) || +str)
               .reduce((sum, num) => sum + num, 0) % avatarNum;
   }
+  let source = Avatar[shiftAvatar];
+  if (name.includes(ROBOT_NAME)) {
+    source = robot;
+  }
   return (
     <div
       className={`thumbnail disabled ${styleName}`}
@@ -87,7 +93,7 @@ export const Thumbnail = ({
           <img
             className={disabled ? "disabled" : ""}
             width={size - offset}
-            src={Avatar[shiftAvatar]}
+            src={source}
           />
         </div>
       </div>
@@ -135,8 +141,7 @@ export const ThumbailGroupWithTag = ({
   styleObj,
   teamOrder,
   styleOb,
-  offset,
-
+  offset
 }) => {
   let team = players.filter((player, index) => index % 2 === teamOrder);
   let members = team.map((player, index) => {
@@ -152,8 +157,11 @@ export const ThumbailGroupWithTag = ({
     } else {
       return (
         <Thumbnail
-        offset={offset}
-        key={`member-${index}`} name={player} size={size} />
+          offset={offset}
+          key={`member-${index}`}
+          name={player}
+          size={size}
+        />
       );
     }
   });

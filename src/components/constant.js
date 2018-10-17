@@ -10,6 +10,7 @@ export const TIMER = {
   join: 25000,
 
 }
+export const ROBOT_NAME = "-robot" ;
 
 export const RESULT = {
   win: "YOU WIN",
