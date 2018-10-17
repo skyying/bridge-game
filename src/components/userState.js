@@ -41,7 +41,7 @@ export default class UserState extends React.Component {
               : "Login-state-btn"
           }
           onClick={() => this.setState({isOpen: !this.state.isOpen})}>
-          <Thumbnail size={40} name={name} />
+          <Thumbnail size={40} offset={5} name={name} />
           <div>
             <h6>{this.props.currentUser.displayName}</h6>
             <span>online</span>

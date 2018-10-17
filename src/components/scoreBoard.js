@@ -45,15 +45,22 @@ export default class ScoreBoard extends React.Component {
     let {declarer, trick} = game.bid;
     let targetTrick = 6 + trick;
     let isPlayerInDeclarerTeam = playerIndex % 2 === declarer % 2;
+    let isCurrentUserAPlayer = playerIndex >= 0;
+    let isUserWin = false;
 
     if (isPlayerInDeclarerTeam && playerTeamScore >= targetTrick) {
       resultWords = RESULT.win;
-    } else {
+      isUserWin = true;
+    } else if (isCurrentUserAPlayer) {
       resultWords = RESULT.lose;
+    } else {
+      resultWords = "";
     }
-
     return (
-      <div className="game-over-board">
+      <div
+        className={
+          isUserWin ? "game-over-board win" : "game-over-board lose"
+        }>
         <TrickScore
           currentUser={this.props.currentUser}
           ratio={0.5}
@@ -61,13 +68,13 @@ export default class ScoreBoard extends React.Component {
           windowWidth={this.props.windowWidth}
           widnowHeight={this.props.windowHeight}
           table={this.props.table}>
-          <div>
+          <div className="game-over-board-inner">
             <div className="result">
               <div className="words">{resultWords}</div>
             </div>
             <div className="btn-wrapper">
               <button onClick={this.recordGame} className="btn">
-                                Start a new Game
+                                Play again ?
               </button>
             </div>
           </div>

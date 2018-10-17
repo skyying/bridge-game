@@ -9,8 +9,14 @@ exports.update = table => {
     }
     updatedTable.game.deal = (table.game.deal + 1) % 4;
     updatedTable.timeStamp = new Date().getTime();
+
+
+
     Db.setTableDataById(updatedTable);
 };
+
+
+
 
 exports.isFinish = function(table) {
     if (!table || !table.game.bid.result || table.game.bid.result.length < 4) {

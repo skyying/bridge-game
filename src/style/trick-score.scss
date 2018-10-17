@@ -27,21 +27,21 @@
     flex-direction: row;
   }
   .thumbnail {
-    &:nth-child(1){
-      margin-right: 0px;
-    }
-    &:nth-child(2){
-      margin-left: -10px;
-    }
-    background-color: #D2ADB0;
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
-    overflow: hidden;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #fff;
+    // &:nth-child(1){
+    //   margin-right: 0px;
+    // }
+    // &:nth-child(2){
+    //   margin-left: -10px;
+    // }
+    // background-color: #D2ADB0;
+    // width: 30px;
+    // height: 30px;
+    // border-radius: 30px;
+    // overflow: hidden;
+    // display:flex;
+    // justify-content: center;
+    // align-items: center;
+    // border: 1px solid #fff;
     span{
       color: #fff;
       font-size: 16px;

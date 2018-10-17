@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {getRandomKey} from "../helper/helper.js";
+import {Thumbnail, ThumbnailWithTag} from "./thumbnail.js";
 import {AuctionList} from "./auctionList.js";
 import "../style/auction.scss";
 
@@ -10,16 +11,38 @@ export class AuctionResult extends React.Component {
     super(props);
   }
   render() {
-    let {table, windowWidth, windowHeight} = this.props;
-    let {game, players} = table;
+
+    let {table, windowWidth, currentUser, windowHeight} = this.props;
+
+    let {game, playerInfo, players} = table;
     if (!game || !game.bid.result) {
       return null;
     }
-    let playerThumbnails = players.map((player, index) => (
-      <div key={getRandomKey()} className="thumbnail">
-        <span>{player[0]}</span>
-      </div>
-    ));
+    let playerThumbnails = players.map((player, index) => {
+      if (currentUser.uid === player) {
+        return (
+          <ThumbnailWithTag
+            key={`resultThumbnail-${index}`}
+            name={playerInfo[player].displayName}
+            size={30}
+            isCurrentUser={true}
+            offset={5}
+          />
+        );
+
+      } else {
+        return (
+          <Thumbnail
+            key={`resultThumbnail-${index}`}
+            name={playerInfo[player].displayName}
+            size={30}
+            isCurrentUser={true}
+            offset={5}
+          />
+        );
+      }
+    });
+
     return (
       <div
         className="auction-result"

@@ -70,5 +70,5 @@ exports.close = table => {
         {timeStamp: new Date().getTime()}
     );
     Db.setTableDataById(updateTable);
-    Db.setTableListData(updateTable.linkId, null);
+    // Db.setTableListData(updateTable.linkId, null);
 };

@@ -22,28 +22,9 @@
       justify-items: center;
       align-items: center;
       grid-template: 1fr / 1fr 1fr 1fr 1fr;
-      // .thumbnail{
-      //   margin-right: 10px;
-      //   background-color: #D2ADB0;
-      //   width: 30px;
-      //   height: 30px;
-      //   border-radius: 30px;
-      //   display: flex;
-      //   justify-content: center;
-      //   align-items: center;
-      //   overflow: hidden;
-
-      //   span{
-      //     color: #fff;
-      //     font-size: 16px;
-      //   }
-      // }
-      // div.current{
-      //   background-color: #FF525D;
-      //   color: #fff;
-      //   animation: breath 3s;
-      //   animation-iteration-count:infinite;
-      // }
+      .thumbnail {
+        border: 2px solid #e4e0d8;
+      }
     }
   }
 
@@ -69,7 +50,7 @@
   justify-items: center;
   grid-template: 1fr / 1fr 1fr 1fr 1fr;
   .bid-result {
-    font-size: 13px;
+    font-size: 11px;
     display: flex;
     > div {
       &:nth-child(1){
@@ -249,7 +230,6 @@
 
   .thumbnail-group .thumbnail:nth-child(1){
     transform: translateY(0);
-
   }
 }
 

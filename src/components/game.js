@@ -443,6 +443,7 @@ export default class Game extends React.Component {
         )}
         {isFinishAuction && (
           <AuctionResult
+              currentUser={currentUser}
             windowWidth={this.state.windowWidth}
             windowHeight={this.state.windowHeight}
             table={table}
@@ -470,6 +471,7 @@ export default class Game extends React.Component {
             isTrickFinish={isEndOfCurrentTrick}
           />
           <TrickScore
+            currentUser={currentUser}
             resizeRatio={0.15}
             innerStyle={{
               bottom: Math.ceil(this.state.windowWidth / 500) * 5,

@@ -58,6 +58,7 @@ export const Thumbnail = ({
   disabled = false,
   offset = 16,
   border = false,
+  isCurrentUser = false,
   styleName = null
 }) => {
   let shiftAvatar = avatarNum;
@@ -94,12 +95,73 @@ export const Thumbnail = ({
   );
 };
 
+export const ThumbnailWithTag = ({
+  name = "",
+  size = 40,
+  disabled = false,
+  offset = 16,
+  border = false,
+  isCurrentUser = false,
+  styleName = null
+}) => {
+  return (
+    <div className="thumbnail-with-tag">
+      <div className="tag" />
+      <Thumbnail
+        name={name}
+        size={size}
+        disabled={disabled}
+        offset={offset}
+        border={border}
+        isCurrentUser={isCurrentUser}
+        styleName={styleName}
+      />
+    </div>
+  );
+};
+
 export const ThumbailGroup = ({players, size, teamOrder}) => {
   let team = players.filter((player, index) => index % 2 === teamOrder);
   let members = team.map((player, index) => (
     <Thumbnail key={`member-${index}`} name={player} size={size} />
   ));
   return <div className="thumbnail-group">{members}</div>;
+};
+
+export const ThumbailGroupWithTag = ({
+  players,
+  currentUser,
+  size,
+  styleObj,
+  teamOrder,
+  styleOb,
+  offset,
+
+}) => {
+  let team = players.filter((player, index) => index % 2 === teamOrder);
+  let members = team.map((player, index) => {
+    if (player === currentUser.displayName) {
+      return (
+        <ThumbnailWithTag
+          key={`member-${index}`}
+          offset={offset}
+          name={player}
+          size={size}
+        />
+      );
+    } else {
+      return (
+        <Thumbnail
+        offset={offset}
+        key={`member-${index}`} name={player} size={size} />
+      );
+    }
+  });
+  return (
+    <div className="thumbnail-group" style={styleObj}>
+      {members}
+    </div>
+  );
 };
 
 export class WaitingThumbnail extends React.Component {

@@ -12,8 +12,8 @@ export const TIMER = {
 }
 
 export const RESULT = {
-  win: "當溫拿的感覺原來如此, 94 送",
-  lose: "魯蛇的世界有點複雜，魯魯如我輸惹"
+  win: "YOU WIN",
+  lose: "YOU LOSE"
 };
 
 export const PLAYER_NUM = 4;

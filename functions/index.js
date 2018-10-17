@@ -18,19 +18,18 @@ process.env.FIREBASE_CONFIG = FBASE.config;
 let tableIdList = {};
 
 Db.init();
-// Tables.init();
 
 const timeout = {
     join: 15000,
     auction: {
-        human: 60000,
+        human: 30000,
         robot: 3000
     },
     playing: {
-        human: 60000,
+        human: 30000,
         robot: 3000
     },
-    close: 15000
+    close: 10000
 };
 
 const robotName = "-robot";
@@ -58,9 +57,16 @@ listenTableRemoved("tables", snapshot => {
 
 // when table is change, handle TimeStamp
 listenTableChanged("tables", snapshot => {
+    if (!snapshot.val()) {
+        console.log("no any data");
+        return null;
+    }
     let tableData = snapshot.val();
-    console.log("tableData", tableData);
     let {ready, gameState, id, timeStamp} = tableData;
+    if (!timeStamp || !tableIdList[id]) {
+        console.log("no time stamp! ");
+        return null;
+    }
     if (timeStamp !== tableIdList[id].timeStamp) {
         tableIdList[id].timeStamp = timeStamp;
     }
@@ -74,6 +80,7 @@ listenTableChanged("tables", snapshot => {
                 {timeStamp: new Date().getTime()}
             );
             Db.setTableDataById(newTable);
+            Db.setTableListData(`tableList/${tableData.linkId}/isOpen`, false);
         } else {
             initTimer(
                 tableIdList[tableData.id],
@@ -123,7 +130,6 @@ listenTableChanged("tables", snapshot => {
             ) {
                 timerSec = timeout.playing.human;
             }
-
             initTimer(
                 tableIdList[tableData.id],
                 tableData,
@@ -132,7 +138,6 @@ listenTableChanged("tables", snapshot => {
             );
         }
     } else if (gameState === state.phase.gameover) {
-        console.log("gameover");
         initTimer(
             tableIdList[tableData.id],
             tableData,

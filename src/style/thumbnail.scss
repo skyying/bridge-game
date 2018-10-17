@@ -29,29 +29,10 @@ $thumbnailBg: #eae7e0;
   justify-content: center;
   flex-direction: row;
   .thumbnail {
-    border: 1px solid #fff;
-    &:nth-child(1){
-      transform: translateX(20%);
-    }
     &:nth-child(2){
-      transform: translateX(-20%);
+      transform: translateX(-10%);
     }
   }
 }
 
-// .border-style{
-//   overflow: hidden;
-//   width: 100%;
-//   height: 100%;
-//   border-radius: 100%;
-// }
 
-.player {
-  // position: relative;
-  // .border-thumbnail {
-  //   border: 6px solid #ffffff; 
-  // }
-  // .player-thumbnail-wrapper{
-  // }
-
-}
