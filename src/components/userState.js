@@ -48,9 +48,6 @@ export default class UserState extends React.Component {
           </div>
         </div>
         <div className={this.state.isOpen ? "options open" : "options"}>
-          <a>Rank</a>
-          <a>Win Rate</a>
-          <a>Profile</a>
           <Link onClick={this.handleSignOut} to="/">
                         Sign out
           </Link>

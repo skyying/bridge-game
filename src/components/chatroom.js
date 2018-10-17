@@ -50,7 +50,6 @@ export default class Chatroom extends React.Component {
     this.msgEnd.scrollIntoView({behavior: "smooth"});
   }
   render() {
-    console.log("chatroom", chatroom);
     if (this.msgEnd) {
       this.scrollToBottom();
     }
@@ -61,16 +60,15 @@ export default class Chatroom extends React.Component {
     let {players} = table;
     let messageList;
     let emojiList = this.emoji.map((emj, i) => (
-      <span
+      <a
         key={`emj-${i}`}
         className="emjbtn"
         onClick={() => this.addEmoji(emj)}>
         {emj}
-      </span>
+      </a>
     ));
 
     if (chatroom && chatroom.message && table && table.viewers) {
-      // let chatLen = 30;
       let end = Object.keys(chatroom.message).length;
       let chatStart = 0; //end - chatLen >= 0 ? end - chatLen : 0;
       let isCurrentUserAPlayer = players.some(
