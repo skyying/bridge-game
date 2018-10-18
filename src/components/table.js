@@ -8,6 +8,7 @@ import {GAME_STATE} from "./constant.js";
 import {app} from "../firebase/firebase.js";
 import randomColor from "randomcolor";
 import {EMPTY_SEAT} from "./constant.js";
+import Loading from "./loading.js";
 import "../style/table.scss";
 import "../style/sidebar.scss";
 import "../style/record-item.scss";
@@ -19,7 +20,8 @@ export default class Table extends React.Component {
   constructor(props) {
     super(props);
     this.updateTableData = this.updateTableData.bind(this);
-    this.linkId = this.props.match.params.id;
+    this.linkId =
+            this.props.match.params.id || window.location.hash.slice(8);
 
     if (!this.props.currentUser) {
       this.props
@@ -92,7 +94,6 @@ export default class Table extends React.Component {
       });
     });
   }
-
   componentDidMount() {
     // fetch data again
     let _this = this;
@@ -126,14 +127,14 @@ export default class Table extends React.Component {
   }
   componentDidUpdate(prevProps) {
     // if this is a different table
+    if (!this.props.tableList) return;
     if (this.props.currentTableId !== prevProps.currentTableId) {
       this.setState({isLoad: false});
       this.updateTableData().then(data => this.setState({isLoad: true}));
     }
 
     let {tableKey, linkId} = this;
-
-    if (this.props.tableList[linkId].id) {
+    if (this.props.tableList[this.linkId].id) {
       if (this.props.tables[tableKey] !== prevProps.tables[tableKey]) {
         this.addPlayerToTable(this.props.tables[tableKey]);
         dispatch("SET_CURRENT_HEADER", {isInTablePage: true});
@@ -146,7 +147,7 @@ export default class Table extends React.Component {
     }
 
     if (!this.state.isLoad) {
-      return <div>loading</div>;
+      return <Loading />;
     }
 
     let {tables, currentUser} = this.props;
@@ -165,7 +166,6 @@ export default class Table extends React.Component {
     return (
       <div className="table">
         <Game
-
           currentUser={currentUser}
           currentTableId={this.props.currentTableId}
           table={targetTable}

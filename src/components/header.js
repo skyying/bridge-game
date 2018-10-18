@@ -26,6 +26,7 @@ export default class Header extends React.Component {
   render() {
     let userProfile = (
       <UserState
+        updateHeader={this.updateHeader}
         uid={this.props.uid}
         currentUser={this.props.currentUser}
         userList={this.props.userList}

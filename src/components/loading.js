@@ -7,6 +7,10 @@ export default class Loading extends React.Component {
     super(props);
   }
   render() {
-    return <div>loading...</div>;
+    return (
+      <div className="main-loading">
+        <h2>Loading ...</h2>
+      </div>
+    );
   }
 }

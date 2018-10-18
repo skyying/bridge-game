@@ -10,34 +10,57 @@ import {Progress} from "./progress.js";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);
-    this.timeInterval = 1000;
+    this.timeInterval = 20000;
+    this.createTime = this.props.startTime;
     this.frequency = 10; // update frequency per sec;
     // update how many persec to current progress
-    this.progressInterval = Math.floor(
-      TIMER.join / Math.floor(this.timeInterval / this.frequency)
-    );
+    // this.progressInterval = Math.floor(
+    //   TIMER.join / Math.floor(this.timeInterval / this.frequency)
+    // );
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxx");
+    console.log("renew a constructor");
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxx");
+    // let timeStamp = new Date().getTime();
     this.state = {
-      progress: 0,
-      timesUp: false
+      progress: new Date().getTime() - this.createTime
     };
-    this.duration = TIMER.join;
+    // Math.floor(this.timeInterval / this.frequency)
+    // this.duration = TIMER.join;
     this.setReadyState = this.setReadyState.bind(this);
     this.countDownTimer = this.countDownTimer.bind(this);
-    this.timer = setInterval(
-      this.countDownTimer,
-      Math.floor(this.timeInterval / this.frequency)
-    );
+    this.checkReadyState = this.checkReadyState.bind(this);
+    this.timer = setInterval(this.countDownTimer, this.frequency);
+  }
+  componentDidMount() {
+    this.isMount = true;
+  }
+  componentWillUnmount() {
+    this.isMount = false;
   }
   countDownTimer() {
-    if (this.state.progress < TIMER.join) {
+    console.log("count down");
+    let createTime = this.createTime;
+    let progress = new Date().getTime() - this.createTime;
+    if (progress < this.timeInterval) {
       this.setState({
-        progress: this.state.progress + this.progressInterval
+        progress: progress
+      });
+    } else {
+      new Promise((resolve, reject) => {
+        clearInterval(this.timer);
+        resolve("cleard");
+        console.log(" in promise, this is ");
+      }).then(val => {
+        if (this.isMount && this.createTime !== createTime) {
+          this.setState({timesUp: true});
+        }
       });
     }
-    if (this.state.progress >= TIMER.join) {
-      clearInterval(this.timer);
-      this.setState({timesUp: true});
-    }
+  }
+  checkReadyState() {
+    let {table, currentUser} = this.props;
+    let {game, ready, players, playerInfo} = table;
+    return ready.every(player => player === false);
   }
   setReadyState(playerIndex) {
     let {currentUser, table} = this.props;
@@ -71,8 +94,11 @@ export default class PlayerReadyList extends React.Component {
     }
     let playBtns = null;
 
-    if (this.state.timesUp && !isAllPlayerReady) {
-      return <div> I am loading </div>;
+    if (this.state.timesUp && ready.some(player => player === true)) {
+      return <div>all player is ready, waiting for poker</div>;
+    }
+    if (this.state.timesUp && ready.every(player => player === false)) {
+      return <div> no one wants to play, redirect to lobby... </div>;
     }
     let thumbnails = players.map((player, index) => {
       let playerName;
@@ -126,7 +152,14 @@ export default class PlayerReadyList extends React.Component {
         }
       });
     }
-    let currentVAl = this.state.progress / TIMER.join;
+
+    let totalWidth = 200;
+    let unit = this.timeInterval / totalWidth;
+
+    let currentVal = Math.floor(
+      (this.state.progress / this.timeInterval) * 200
+    );
+
     return (
       <div className="player-ready-list">
         <div className="player-ready-list-inner">
@@ -135,10 +168,7 @@ export default class PlayerReadyList extends React.Component {
             <div className="btn-wrapper">{playBtns}</div>
           )}
           <div className="progress-panel">
-            <Progress
-              totalWidth={200}
-              currentWidth={currentVAl * 200 - 10 < 0 ? currentVAl * 200 : currentVAl * 200 - 10 }
-            />
+            <Progress totalWidth={200} currentWidth={currentVal} />
           </div>
         </div>
       </div>

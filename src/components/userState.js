@@ -18,6 +18,7 @@ export default class UserState extends React.Component {
   }
   handleSignOut() {
     this.closePanel();
+    this.props.updateHeader();
     app.auth.signOut();
   }
   closePanel() {

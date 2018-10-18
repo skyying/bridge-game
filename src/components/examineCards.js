@@ -64,7 +64,7 @@ export const getOffsetDatabyCurrentUser = (players, game, currentUser) => {
 export const mapFlipDownCards = dislayList => {
   if (!dislayList) return;
   let flat = dislayList.flat();
-  let cardsNumberOnHand = 8;
+  let cardsNumberOnHand = 5;
   let totalLen = flat.length;
   // if cards number is under n, split flipdown card into two row;
   if (totalLen <= cardsNumberOnHand) {
@@ -136,4 +136,18 @@ const validateShuffle = cards => {
   return fourHands(cards).every(
     hand => hand.reduce((sum, value) => value + sum, 0) >= 7
   );
+};
+
+export const getMaxCardNumPerSuit = cardsForPlayerHand => {
+  console.log("max card num");
+  return Math.max(...cardsForPlayerHand.map(suit => suit.length));
+};
+
+export const getHandPosByCardNum = (cardsForPlayerHand, cardSize, offset) => {
+  let maxCardNum = getMaxCardNumPerSuit(cardsForPlayerHand);
+  if (maxCardNum === 0) {
+    return 0;
+  }
+  console.log("maxCardNum", maxCardNum);
+  return (maxCardNum - 1) * offset + cardSize;
 };

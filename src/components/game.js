@@ -24,7 +24,8 @@ import {
   getOffsetDatabyCurrentUser,
   mapFlipDownCards,
   getFirstCard,
-  shuffleCards
+  shuffleCards,
+  getHandPosByCardNum
 } from "./examineCards.js";
 import {getWinnerCard} from "./getWinnerCard.js";
 import PlayerReadyList from "./playerReadyList.js";
@@ -34,7 +35,7 @@ export default class Game extends React.Component {
     super(props);
     let {game} = this.props.table;
     this.state = {
-      endAuction: game.order >= 0,
+      endAuction: game && game.order >= 0,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight
     };
@@ -88,6 +89,7 @@ export default class Game extends React.Component {
   }
   // so far, how many tricks have been played ?
   getNextMaxTrick() {
+    // if (!this.props.table || this.props.table.game) return;
     let {game} = this.props.table;
     if (!game) {
       return;
@@ -103,8 +105,8 @@ export default class Game extends React.Component {
   endAuction() {
     this.setState({endAuction: true});
   }
-
   deal(value) {
+    console.log("value", value);
     let {table} = this.props;
     let {game} = this.props.table;
     if (!game) {
@@ -167,6 +169,7 @@ export default class Game extends React.Component {
     if (!game || !result) {
       return false;
     }
+
     return (
       result.length >= 4 &&
             result.some(bid => bid.trick >= 0) &&
@@ -341,7 +344,7 @@ export default class Game extends React.Component {
                   ? this.deal
                   : null
               }
-              key={getRandomKey()}
+              key={`card-random-${i}`}
               value={card.value}
             />
           ));
@@ -358,6 +361,9 @@ export default class Game extends React.Component {
         // handle resize
         let sidebarWidth = this.state.windowWidth >= 1200 ? 480 : 400;
         let horCardOffset = 40;
+        let cardSize = 100;
+
+        // console.log("verHandPos", verHandPos);
         let horCardStyle =
                     DIRECTION[index] === "north" || DIRECTION[index] === "south"
                       ? {
@@ -378,21 +384,46 @@ export default class Game extends React.Component {
           );
         };
 
-        let verCardStyle =
+        // console.log("cardsInHand", cardsInHand);
+        let verTopPos =
                     DIRECTION[index] === "west" || DIRECTION[index] === "east"
-                      ? {
-                        top:
-                                  (this.state.windowHeight -
-                                      getHandHeight(totalSuitType)) /
-                                  2
-                      }
+                      ? (this.state.windowHeight -
+                              getHandHeight(totalSuitType)) /
+                          2
                       : null;
+
+        let verEdgePos;
+
+        // let verHandPos = getHandPosByCardNum(
+        //   cardsInHand,
+        //   cardSize,
+        //   horCardOffset,
+        //   this.state.windowWidth
+        // );
+
+        if (verTopPos && DIRECTION[index] === "west") {
+          verEdgePos = {top: verTopPos};
+        }
+        if (verTopPos && DIRECTION[index] === "east") {
+          verEdgePos = {top: verTopPos};
+        }
+        // console.log("verHandPos", verHandPos);
+        // let verEdgePos = () => {
+        //   if (verTopPos && DIRECTION[index] === "west") {
+        //     return Object.assign({}, verTopPos, {left: verHandPos});
+        //   } else if (verTopPos && DIRECTION[index] === "east") {
+        //     return Object.assign({}, verTopPos, {
+        //       right: verHandPos
+        //   }
+        // };
+
+        // console.log("verEdgePos", verEdgePos);
 
         return (
           <div
             className={DIRECTION[index]}
-            style={horCardStyle || verCardStyle}
-            key={getRandomKey()}>
+            style={horCardStyle || verEdgePos}
+            key={`player-hand-index-${index}`}>
             <div className="hand-inner">
               <div className="user-hand">{cardsInHand}</div>
               <Player
@@ -432,10 +463,16 @@ export default class Game extends React.Component {
       );
     }
 
+    let startTime = table.linkId;
+    if (!isAllReady && table.record) {
+      startTime = table.timeStamp;
+    }
+
     return (
       <div className="game">
         {!isAllReady && (
           <PlayerReadyList
+            startTime={startTime}
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
             table={this.props.table}
@@ -443,7 +480,7 @@ export default class Game extends React.Component {
         )}
         {isFinishAuction && (
           <AuctionResult
-              currentUser={currentUser}
+            currentUser={currentUser}
             windowWidth={this.state.windowWidth}
             windowHeight={this.state.windowHeight}
             table={table}

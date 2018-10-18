@@ -25,7 +25,6 @@ export default class Lobby extends React.Component {
     // this.updateCloseTable = this.updateCloseTable.bind(this);
   }
   render() {
-    console.log("this.props.tableList", this.props.tableList);
     let open = 0,
       playing = 0;
     // if (this.props.tableList) {

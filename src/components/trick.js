@@ -45,7 +45,7 @@ export default class Trick extends React.Component {
           if (userHand.trick === maxTrick) {
             return (
               <TrickCard
-                key={getRandomKey()}
+                key={`trick-card-index-${index}`}
                 value={userHand.value}
               />
             );
@@ -54,7 +54,7 @@ export default class Trick extends React.Component {
 
         let hasTrickCards =
                     trickCards.filter(
-                      card => card !== null && card !== undefined,
+                      card => card !== null && card !== undefined
                     ).length > 0;
         if (hasTrickCards) {
           return (
@@ -72,7 +72,7 @@ export default class Trick extends React.Component {
 
     if (currentTrick) {
       currentTrick = currentTrick.filter(
-        card => card !== null && card !== undefined,
+        card => card !== null && card !== undefined
       );
     }
 

@@ -17,8 +17,7 @@ export default class OpenTables extends React.Component {
     this.createTable = this.createTable.bind(this);
     this.updateHeader = this.updateHeader.bind(this);
     this.setCurrentTable = this.setCurrentTable.bind(this);
-    this.state = {
-    };
+    this.state = {};
   }
   createTable(tableRef) {
     if (!this.props.currentUser) {
@@ -49,7 +48,6 @@ export default class OpenTables extends React.Component {
     let tableList = this.props.tableList;
     // let closeTables = this.props.closeTables;
     let tableLinks;
-    console.log("tableList ------------", tableList);
 
     if (tableList) {
       let tableListKey = Object.keys(tableList);
@@ -97,12 +95,15 @@ export default class OpenTables extends React.Component {
     }
 
     let tableRef = new Date().getTime();
-    let openBtn = this.props.openBtn && (
+    let openBtn = this.props.currentUser &&
+            this.props.openBtn && (
       <Link
         className="btn-style-border"
         onClick={() => this.createTable(tableRef)}
-        to={this.props.currentUser ? `/table/${tableRef}` : "/login"}>
-                Open table
+        to={
+          this.props.currentUser ? `/table/${tableRef}` : "/login"
+        }>
+                    Open table
       </Link>
     );
 

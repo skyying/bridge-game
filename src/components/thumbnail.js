@@ -185,7 +185,14 @@ export class WaitingThumbnail extends React.Component {
     this.changeImg = this.changeImg.bind(this);
     this.timer = setInterval(this.changeImg, 20);
   }
+  componentDidMount() {
+    this.mount = true;
+  }
+  componentWillUnmount() {
+    this.mount = false;
+  }
   changeImg() {
+    if (!this.mount) return;
     let {posY} = this.state;
     if (this.state.posY > 50) {
       this.setState({isGoingUp: false});
@@ -198,9 +205,11 @@ export class WaitingThumbnail extends React.Component {
     } else if (this.state.isGoingUp === false) {
       dy = Math.floor(Math.random() * -3);
     }
+
     this.setState({posY: posY + dy});
   }
   componentDidUpdate(prevProps) {
+    if (!this.mount) return;
     if (this.props.stop !== prevProps.stop && this.props.stop === true) {
       this.setState({stop: true, posY: 40});
       clearInterval(this.timer);
