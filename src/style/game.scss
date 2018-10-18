@@ -76,13 +76,11 @@ $card-margin-ver: 68px;
       }
       .user-hand {
         position: relative;
-        // margin-top: 50px;
       }
     }
   }
   .hands > div {
     position: absolute;
-
   }
   .south{
     bottom: 20%;
@@ -118,7 +116,7 @@ $card-margin-ver: 68px;
 
   }
   .west {
-    left: 23%;
+    left: 15%;
     top: 25%;
 
     .hand-inner{
@@ -149,7 +147,7 @@ $card-margin-ver: 68px;
 
   }
   .east {
-    right: 20%;
+    right: 15%;
     top: 30%;
 
     .hand-inner{
@@ -276,57 +274,142 @@ $card-margin-ver: 68px;
   }
 }
 
+@keyframes fly-out{
+  0%{
+    opacity: 1;
 
+  }
+  100%{
+    opacity: 0;
+  }
+}
 
-// .game {
-//   .trick-area{
-//     .trick-area-inner{
-//       .trick-card-wrapper {
-//       }
-//       .east-card-fade-out{
-//         animation-iteration-count: 1;
-//         animation-timing-function: ease-in; 
-//       }
+// less than 1250
 
-//        $duration: 2s;
-//        $delay: 1s;
-//       .south-card{
-//         top: 50%;
-//         left: 50%;
-//         animation-name: fly-out;
-//         animation-duration: $duration; 
-//         animation-delay: $delay;
-//         opacity: 0;
-//       }
-//       .south-card-fade-out{
-//         animation-name: fly-out;
-//         animation-delay: $delay;
-//         animation-duration: $duration;  
-//         opacity: 0;
-//       }
-//       .north-card-fade-out{
-//         animation-name: fly-out;
-//         animation-delay: $delay; 
-//         animation-duration: $duration;   
-//         opacity: 0;
-//       }
-//       .west-card-fade-out{
-//         animation-name: fly-out;
-//         animation-delay: $delay; 
-//         animation-duration: $duration;   
-//         opacity: 0;
-//       }
+// @media screen and (max-width: 1300px) {
+//   .game{
+//     .west {
+//       left: 20px;
+//     }
+//     .east {
+//       right: 20px;
 //     }
 //   }
 // }
 
 
-// @keyframes fly-out {
-//   0%{
-//     opacity: 1;
+// .south, .north, .west, .east{
+//   transform: scale(0.8);
+// }
+
+// .trick-area{
+//   .trick-area-inner{
+//     .south-card, .north-card, .east-card,.west-card{
+//       transform: scale(0.8);
+//     }
 //   }
-//   100%{
-//     opacity: 0;
+// }
+
+// .south{
+//   bottom: 20%;
+//   left: 20%;
+//   .hand-inner{
+//     .player{
+//       transform: translate(-120%, 120%);
+//     }
+//   }
+//   .card-wrapper{
+//     position: absolute;
+//     top: 0px;
+//     $elements: 13;
+//     @for $i from 0 to $elements {
+//       &:nth-child(#{$i + 1}) {
+//         left: calc(#{$i} * #{$card-margin-hor});
+//       }
+//     }
+//   }
+// }
+// .north{
+//   top: 10%;
+//   .card-wrapper{
+//     position: absolute;
+//     top: 0px;
+//     $elements: 13;
+//     @for $i from 0 to $elements {
+//       &:nth-child(#{$i + 1}) {
+//         left: calc(#{$i} * #{$card-margin-hor});
+//       }
+//     }
 //   }
 
+// }
+// .west {
+//   left: 10%;
+//   top: 25%;
+
+//   .hand-inner{
+//     .player{
+//       transform: translate(0%, -120%);
+//     }
+//   }
+
+//   .card-wrapper{
+//     position: absolute;
+//   }
+
+//   $elements: 4;
+//   @for $i from 0 to $elements {
+//     .l#{$i}{
+//       top: calc(#{$i} * #{$card-margin-ver});
+//     }
+//   }
+//   $item: 13;
+//   @for $j from 0 to $item{
+//     $w: calc(#{$j} * #{$card-margin-hor});
+//     $z: calc( 40 - #{$j}*2);
+//     .item-#{$j}{
+//       right: $w;
+//       z-index:  $z;
+//     }
+//   }
+
+// }
+// .east {
+//   right: 10%;
+//   top: 30%;
+
+//   .hand-inner{
+//     .player{
+//       transform: translate(0%, -120%);
+//     }
+//   }
+
+//   .card-wrapper{
+//     position: absolute;
+//   }
+//   $elements: 4;
+//   @for $i from 0 to $elements {
+//     .l#{$i}{
+//       top: calc(#{$i} * #{$card-margin-ver});
+//     }
+//   }
+//   $item: 13;
+//   @for $j from 0 to $item{
+//     .item-#{$j}{
+//       left: calc(#{$j} * 40px);
+//     }
+//   }
+// }
+
+// .south-card{
+//   transform: translate(-50%, 0%)  scale(0.8);
+// }
+// .north-card{
+//   transform: translate(-50%, -100%) scale(0.8);
+// }
+// .east-card{
+//   transform: translate(50%, -50%) scale(0.8);
+// }
+// .west-card{
+//   transform: translate(-150%, -50%) scale(0.8);
 // }

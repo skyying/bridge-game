@@ -113,6 +113,7 @@
 }
 
 .playing-table{
+  font-size: 14px;
   display: grid;
   grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 2fr;
   .table-list-item {
@@ -123,8 +124,7 @@
       transition: all 0.5s;
       background-color: #F5F5F5;
     }
-
-    .btn-style-border{
+     > .btn-style-border{
       transition: all 0.5s;
       border: 1px solid #00B5AA;
       color:#00B5AA;
@@ -136,7 +136,6 @@
         border: 1px solid #00B5AA;
       }
     }
-
   }
 
   .table-list-item-group{
