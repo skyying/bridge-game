@@ -3,11 +3,15 @@ const CardsSet = require("./cards.js");
 const Db = require("./db.js");
 
 exports.deal = function(table) {
+    if (!table) {
+        console.log("no table data in GAME deal");
+        return null;
+    }
 
     let updateGame = Object.assign({}, table.game);
     let bestGuess = module.exports.guess(table);
     delete bestGuess.diff;
-    let order = +table.game.order + 1;
+    let order = Number(table.game.order) + 1;
 
     updateGame.order = order;
     bestGuess.player = table.game.deal;
@@ -15,7 +19,7 @@ exports.deal = function(table) {
     bestGuess.trick = module.exports.nextTrick(updateGame.cards.slice(0));
 
     let tagetIndex = table.game.cards.findIndex(
-        card => card.value === bestGuess.value,
+        card => card.value === bestGuess.value
     );
 
     updateGame.cards[tagetIndex] = bestGuess;
@@ -24,7 +28,7 @@ exports.deal = function(table) {
 
     let winnerCard = module.exports.getWinner(
         Object.assign({}, updateGame),
-        bestGuess.value,
+        bestGuess.value
     );
 
     if (order === 51) {
@@ -35,7 +39,7 @@ exports.deal = function(table) {
         winnerCard.isWin = true;
         updateGame.deal = winnerCard.player;
         let winningCardIndex = updateGame.cards.findIndex(
-            card => card.value === winnerCard.value,
+            card => card.value === winnerCard.value
         );
         updateGame.cards[winningCardIndex] = winnerCard;
     }
@@ -44,7 +48,7 @@ exports.deal = function(table) {
         table,
         {gameState: order === 51 ? "gameover" : "playing"},
         {game: updateGame},
-        {timeStamp: new Date().getTime()},
+        {timeStamp: new Date().getTime()}
     );
     console.log("Best Guess:", bestGuess);
     Db.setTableDataById(updateTable);
@@ -90,24 +94,24 @@ exports.guess = function(table) {
                 .filter(
                     card =>
                         Math.floor(card.value / 13) ===
-                        Math.floor(getFirstCard.value / 13),
+                        Math.floor(getFirstCard.value / 13)
                 )
                 .sort((cardA, cardB) => cardB.value - cardA.value)[0] ||
             null;
 
         isCurrentWinnerCardATrump = checkIfCardTrump(
             currentWinnerCard,
-            game.bid.trump,
+            game.bid.trump
         );
     }
 
     // cards are dealed by enemys
     let enemyCardsOnTrick = currentTrickCards.filter(
-        card => card.player % 2 !== game.deal % 2,
+        card => card.player % 2 !== game.deal % 2
     );
 
     let cardsForFirstDraw = currentHand.sort(
-        (cardA, cardB) => (cardB.value % 13) - (cardA.value % 13),
+        (cardA, cardB) => (cardB.value % 13) - (cardA.value % 13)
     );
 
     //  when no first cards, deal with first card
@@ -117,7 +121,7 @@ exports.guess = function(table) {
         // chech has which availiabe cards at the same rank;
         let sameRankCards = module.exports.followFirstCard(
             currentHand,
-            getFirstCard,
+            getFirstCard
         );
 
         if (sameRankCards.length === 1) {
@@ -146,8 +150,8 @@ exports.guess = function(table) {
                     .filter(card => card.value > currentWinnerCard.value)
                     .map(card =>
                         Object.assign({}, card, {
-                            diff: card.value - currentWinnerCard.value,
-                        }),
+                            diff: card.value - currentWinnerCard.value
+                        })
                     )
                     .sort((cardA, cardB) => cardA.diff - cardB.diff)[0];
                 return bestShot;
@@ -161,21 +165,21 @@ exports.guess = function(table) {
                     .filter(card => card.value > currentWinnerCard.value)
                     .map(card =>
                         Object.assign({}, card, {
-                            diff: card.value - currentWinnerCard.value,
-                        }),
+                            diff: card.value - currentWinnerCard.value
+                        })
                     )
                     .sort((cardA, cardB) => cardA.diff - cardB.diff);
                 if (
                     bestTrumpShot.length &&
                     currentHand.some(
-                        card => !checkIfCardTrump(card, game.bid.trump),
+                        card => !checkIfCardTrump(card, game.bid.trump)
                     )
                 ) {
                     return bestTrumpShot[0];
                 } else {
                     return currentHand.sort(
                         (cardA, cardB) =>
-                            (cardA.value % 13) - (cardB.value % 13),
+                            (cardA.value % 13) - (cardB.value % 13)
                     )[0];
                 }
             } else {
@@ -183,7 +187,7 @@ exports.guess = function(table) {
             }
         } else {
             return currentHand.sort(
-                (cardA, cardB) => (cardA.value % 13) - (cardB.value % 13),
+                (cardA, cardB) => (cardA.value % 13) - (cardB.value % 13)
             )[0];
         }
     }
@@ -196,8 +200,7 @@ exports.isCurrentCardTrump = function(card, trump) {
 
 exports.followFirstCard = function(currentHand, firstCard) {
     return currentHand.filter(
-        card =>
-            Math.floor(card.value / 13) === Math.floor(firstCard.value / 13),
+        card => Math.floor(card.value / 13) === Math.floor(firstCard.value / 13)
     );
 };
 
@@ -208,7 +211,7 @@ exports.sameTeam = function(card, deal) {
 exports.cardsByPlayer = function(players, cards) {
     return players.map((userIndex, index) => {
         return cards.filter(
-            (card, i) => i % players.length === index && card.trick === 0,
+            (card, i) => i % players.length === index && card.trick === 0
         );
     });
 };
@@ -277,7 +280,7 @@ exports.getWinner = function(game, cardValue) {
         .filter(
             card =>
                 (card.trick === maxTrick && card.trick > 0) ||
-                card.value === cardValue,
+                card.value === cardValue
         );
 
     let winnerCard,
@@ -286,7 +289,7 @@ exports.getWinner = function(game, cardValue) {
         // which card is first been played
         let first = Math.min(...cardsMatchCurrentTrick.map(card => card.order));
         let [firstHand] = cardsMatchCurrentTrick.filter(
-            card => card.order === first,
+            card => card.order === first
         );
         // trump matters most, else, decide by what first hand has draw
         if (trump !== CONST.NO_TRUMP) {
