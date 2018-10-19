@@ -20,7 +20,9 @@ export default class Chatroom extends React.Component {
     this.emoji = Emoji;
   }
   handleKeyPress(e) {
-    if (e.key === "Enter" && this.state.message.length) {
+    // && this.state.message.length
+    if (e.key === "Enter") {
+      console.log("has enter");
       this.sendMessage();
     }
   }
@@ -28,6 +30,7 @@ export default class Chatroom extends React.Component {
     this.scrollToBottom();
   }
   componentDidUpdate() {
+    console.log("did update");
     this.scrollToBottom();
   }
   addEmoji(emoji) {
@@ -42,17 +45,18 @@ export default class Chatroom extends React.Component {
     this.setState({
       message: ""
     });
+    // this.scrollToBottom();
   }
   handleChange(e) {
     this.setState({message: e.currentTarget.value});
   }
   scrollToBottom() {
-    this.msgEnd.scrollIntoView({behavior: "smooth"});
+    // fixed when typing, message won't scroll to bottom 
+    setTimeout(() => {
+      this.msgEnd.scrollIntoView({behavior: "smooth", block: "end"});
+    }, 10);
   }
   render() {
-    if (this.msgEnd) {
-      this.scrollToBottom();
-    }
     let {currentUser, table, chatroom} = this.props;
     if (!table || !currentUser) {
       console.log("no current table data");
@@ -120,6 +124,7 @@ export default class Chatroom extends React.Component {
       <div className="chatroom">
         <div className="msg-wrapper">
           {messageList}
+
           <div
             ref={el => {
               this.msgEnd = el;
@@ -138,9 +143,10 @@ export default class Chatroom extends React.Component {
             onKeyPress={this.handleKeyPress}
           />
           <div className="emoji">{emojiList}</div>
-          <button onClick={this.sendMessage}>Send</button>
+          <button onClick={this.sendMessage}>送出</button>
         </div>
       </div>
     );
   }
 }
+
