@@ -80,13 +80,13 @@ export default class OpenTables extends React.Component {
     }
     return (
       <div className="table-list">
-        <h4>Live</h4>
+        <h4>{this.props.title}</h4>
         <div className="table-list-header playing-table-header">
-          <div>No.</div>
-          <div>South</div>
-          <div>West</div>
-          <div>North</div>
-          <div>East</div>
+          <div>房號</div>
+          <div>南</div>
+          <div>西</div>
+          <div>北</div>
+          <div>東</div>
           <div />
         </div>
         <div className="table-list-item-group">{tableLinks}</div>

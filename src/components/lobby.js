@@ -19,29 +19,10 @@ import playImg from "../images/play.svg";
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   closeTable: {}
-    // };
-    // this.updateCloseTable = this.updateCloseTable.bind(this);
   }
   render() {
     let open = 0,
       playing = 0;
-    // if (this.props.tableList) {
-      // open = Object.keys(this.props.tableList).filter(key => {
-      //   if (
-      //     this.props.tableList[key] &&
-      //               this.props.tableList[key].players &&
-      //               !this.props.closeTables[key]
-      //   ) {
-      //     return this.props.tableList[key].players.some(
-      //       player => player === EMPTY_SEAT
-      //     );
-      //   }
-      //   return false;
-      // }).length;
-    // }
-     // <h2>Welcome to Wow Bridge</h2>
     return (
       <div className="lobby">
         <div className="lobby-title">
@@ -49,12 +30,11 @@ export default class Lobby extends React.Component {
         </div>
         <div className="table-lists">
           <div className="table-list-wrapper">
-            <h3>Open</h3>
             <div className="table-num" />
             <div className="table-list-inner">
               <img src={openImg} />
               <OpenTables
-                title={"Join A Table To Play"}
+                title={"開放中"}
                 openBtn={true}
                 tables={this.props.tables}
                 currentUser={this.props.currentUser}
@@ -64,13 +44,12 @@ export default class Lobby extends React.Component {
             </div>
           </div>
           <div className="table-list-wrapper">
-            <h3>Playing</h3>
             <div className="table-num" />
             <div className="table-list-inner">
               <img src={playImg} />
               <PlayingTables
                 tables={this.props.tables}
-                title={false}
+                title={"打牌中"}
                 openBtn={true}
                 open={false}
                 currentUser={this.props.currentUser}
@@ -84,8 +63,3 @@ export default class Lobby extends React.Component {
   }
 }
 
-// <TableList
-//   currentUser={this.props.currentUser}
-//   tableList={this.props.tableList}
-// />
-// <span>3</span> <b>tables</b>

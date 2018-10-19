@@ -68,11 +68,11 @@ export default class SignUp extends React.Component {
     return (
       <div className="singup-wrapper">
         <div className="signup">
-          <h2>Sign up</h2>
+          <h2>註冊</h2>
           <div>
-            <h3>User name</h3>
+            <h3>玩家名稱</h3>
             <input
-              placeholder="Your name"
+              placeholder="請輸入玩家名稱"
               type="text"
               onChange={e => {
                 this.setState({
@@ -84,9 +84,9 @@ export default class SignUp extends React.Component {
             />
           </div>
           <div>
-            <h3>Password</h3>
+            <h3>密碼</h3>
             <input
-              placeholder="New password"
+              placeholder="請輸入至少 6 位數"
               type="password"
               onChange={e => {
                 this.setState({
@@ -98,9 +98,9 @@ export default class SignUp extends React.Component {
             />
           </div>
           <div>
-            <h3>Confirm password</h3>
+            <h3>確認密碼</h3>
             <input
-              placeholder="Confirm new password"
+              placeholder="請輸入至少 6 位數"
               type="password"
               onChange={e => {
                 this.setState({
@@ -112,10 +112,10 @@ export default class SignUp extends React.Component {
             />
           </div>
           <div>
-            <h3>Email</h3>
+            <h3>電子信箱</h3>
             <input
               type="email"
-              placeholder="Email address"
+              placeholder="john@bridge.com"
               onChange={e => {
                 this.setState({
                   email: e.currentTarget.value,
@@ -126,31 +126,6 @@ export default class SignUp extends React.Component {
             />
           </div>
           <div>
-            <label className="checkbox-lable">
-              <input id="agreement" type="checkbox" />
-              <div
-                className={
-                  this.state.agreement ? "checked" : ""
-                }
-                onClick={() =>
-                  this.setState({
-                    agreement: !this.state.agreement
-                  })
-                }
-              />
-              <span
-                onClick={() =>
-                  this.setState({
-                    agreement: !this.state.agreement
-                  })
-                }>
-                                I allow the use of collected data about my study
-                                behavior for research purposes. The data
-                                contains information from game playing and
-                                chatting messages. No individuals can be
-                                identified from publications.
-              </span>
-            </label>
             <div className="error-text error-text-panel">
               {this.state.message}
             </div>
@@ -158,10 +133,7 @@ export default class SignUp extends React.Component {
               <button
                 onClick={this.handleSignUp}
                 className="btn-style-round">
-                                Sign up
-              </button>
-              <button className="btn-style-round fb-sign-btn">
-                                Facebook
+                      註冊
               </button>
             </div>
           </div>
@@ -170,3 +142,30 @@ export default class SignUp extends React.Component {
     );
   }
 }
+
+            // <label className="checkbox-lable">
+            //   <input id="agreement" type="checkbox" />
+            //   <div
+            //     className={
+            //       this.state.agreement ? "checked" : ""
+            //     }
+            //     onClick={() =>
+            //       this.setState({
+            //         agreement: !this.state.agreement
+            //       })
+            //     }
+            //   />
+            // </label>
+
+              // <span
+              //   onClick={() =>
+              //     this.setState({
+              //       agreement: !this.state.agreement
+              //     })
+              //   }>
+              //                   I allow the use of collected data about my study
+              //                   behavior for research purposes. The data
+              //                   contains information from game playing and
+              //                   chatting messages. No individuals can be
+              //                   identified from publications.
+              // </span>

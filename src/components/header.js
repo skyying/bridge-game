@@ -36,10 +36,10 @@ export default class Header extends React.Component {
     let registerBtns = (
       <div className="register-btn-groups">
         <Link onClick={this.updateHeader} to="/signup">
-                    Sign up
+          註冊
         </Link>
         <Link onClick={this.updateHeader} to="/login">
-                    Log in
+          登入
         </Link>
       </div>
     );
@@ -49,7 +49,7 @@ export default class Header extends React.Component {
         <div>
           <Link to="/" onClick={this.updateHeader}>
             <img src={logoImg} />
-            <h1>Bridge Together</h1>
+            <h1>Wow Bridge</h1>
           </Link>
         </div>
         <div>

@@ -46,9 +46,9 @@ export default class Login extends React.Component {
     return (
       <div className="singup-wrapper">
         <div className="signup login">
-          <h2>Login</h2>
+          <h2>登入</h2>
           <div>
-            <h3>Email</h3>
+            <h3>電子信箱</h3>
             <input
               type="text"
               placeholder="Email address"
@@ -59,7 +59,7 @@ export default class Login extends React.Component {
             />
           </div>
           <div>
-            <h3>Password</h3>
+            <h3>密碼</h3>
             <input
               placeholder="Enter password"
               type="password"
@@ -77,10 +77,7 @@ export default class Login extends React.Component {
               <button
                 onClick={this.handleLogin}
                 className="btn-style-round">
-                                Login
-              </button>
-              <button className="btn-style-round fb-sign-btn">
-                                Facebook
+                登入
               </button>
             </div>
           </div>

@@ -86,7 +86,7 @@ export default class OpenTables extends React.Component {
                     ? `/table/${key}`
                     : "/login"
                 }>
-                                Play
+                                加入
               </Link>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default class OpenTables extends React.Component {
         to={
           this.props.currentUser ? `/table/${tableRef}` : "/login"
         }>
-                    Open table
+        我要開桌
       </Link>
     );
 
@@ -111,9 +111,9 @@ export default class OpenTables extends React.Component {
       <div className="table-list">
         {this.props.title && <h4>{this.props.title}</h4>}
         <div className="table-list-header">
-          <div>No.</div>
-          <div>Owner</div>
-          <div>Available seat</div>
+          <div>房號</div>
+          <div>桌長</div>
+          <div>空位</div>
           <div className="open-table-section">{openBtn}</div>
         </div>
         <div className="table-list-item-group">{tableLinks}</div>
