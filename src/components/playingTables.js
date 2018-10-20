@@ -13,15 +13,7 @@ export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
     this.createTable = this.createTable.bind(this);
-    this.updateHeader = this.updateHeader.bind(this);
     this.setCurrentTable = this.setCurrentTable.bind(this);
-  }
-  updateHeader() {
-    let val = false;
-    if (this.props.currentUser) {
-      val = true;
-    }
-    dispatch("SET_CURRENT_HEADER", {isInTablePage: val});
   }
   createTable(tableRef) {
     dispatchToDatabase("CREATE_TABLE", {
@@ -30,7 +22,6 @@ export default class OpenTables extends React.Component {
     });
   }
   setCurrentTable(id) {
-    this.updateHeader();
     if (this.props.currentUser) {
       dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
     }
