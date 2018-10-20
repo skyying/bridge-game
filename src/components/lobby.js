@@ -34,7 +34,7 @@ export default class Lobby extends React.Component {
             <div className="table-list-inner">
               <img src={openImg} />
               <OpenTables
-                title={"開放中"}
+                title={"揪咖打牌"}
                 openBtn={true}
                 tables={this.props.tables}
                 currentUser={this.props.currentUser}
@@ -49,7 +49,7 @@ export default class Lobby extends React.Component {
               <img src={playImg} />
               <PlayingTables
                 tables={this.props.tables}
-                title={"打牌中"}
+                title={"熱門牌桌"}
                 openBtn={true}
                 open={false}
                 currentUser={this.props.currentUser}

@@ -3,7 +3,7 @@ import "../style/header.scss";
 import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import logoImg from "../images/logo.png";
+import logoImg from "../images/logo.svg";
 import {dispatch} from "../reducer/reducer.js";
 import UserState from "./userState.js";
 
