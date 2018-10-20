@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {Thumbnail} from "./thumbnail.js";
+import {ThumbnailWithTag} from "./thumbnail.js";
 import {app} from "../firebase/firebase.js";
 import {Link} from "react-router-dom";
 import {dispatch} from "../reducer/reducer.js";
@@ -34,19 +34,20 @@ export default class UserState extends React.Component {
               : "Login-state-btn"
           }
           onClick={() => this.setState({isOpen: !this.state.isOpen})}>
-          <Thumbnail
+          <ThumbnailWithTag
+            isCurrentUser={true}
             size={40}
             offset={5}
             name={(currentUser && currentUser.displayName) || ""}
           />
           <div>
             <h6>{currentUser.displayName}</h6>
-            <span>online</span>
+            <span>線上</span>
           </div>
         </div>
         <div className={this.state.isOpen ? "options open" : "options"}>
           <Link onClick={this.handleSignOut} to="/">
-                        Sign out
+                登出
           </Link>
         </div>
       </div>

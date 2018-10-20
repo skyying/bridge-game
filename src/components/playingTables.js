@@ -71,7 +71,7 @@ export default class OpenTables extends React.Component {
                     ? `/table/${key}`
                     : "/login"
                 }>
-                                View
+                 觀賞 
               </Link>
             </div>
           </div>

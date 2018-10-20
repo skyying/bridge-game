@@ -4,6 +4,15 @@ $tableBg: #1ABEB9;
 .user-state-panel{
   position: relative;
   width: 300px ;
+  .thumbnail-with-tag{
+    .tag{
+      left: 60%;
+      height: 10px;
+      background-color: #449aff;
+      width: 10px;
+      border-width: 0px;
+    }
+  }
 
   .Login-state-btn{
     padding: 10px 10px 10px 20px;
@@ -92,3 +101,5 @@ $tableBg: #1ABEB9;
     }
   }
 }
+
+
