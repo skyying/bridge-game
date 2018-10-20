@@ -7,10 +7,8 @@ import "../style/btn.scss";
 import "../style/checkbox.scss";
 import {Redirect} from "react-router-dom";
 import {dispatchToDatabase} from "../reducer/reducer.js";
+import Header from "./header.js";
 
-const error = {
-  "no-error": ""
-};
 
 export default class SignUp extends React.Component {
   constructor(props) {
@@ -65,76 +63,83 @@ export default class SignUp extends React.Component {
     if (this.state.redirect) {
       return <Redirect to="/" />;
     }
+
     return (
-      <div className="singup-wrapper">
-        <div className="signup">
-          <h2>註冊</h2>
-          <div>
-            <h3>玩家名稱</h3>
-            <input
-              placeholder="請輸入玩家名稱"
-              type="text"
-              onChange={e => {
-                this.setState({
-                  name: e.currentTarget.value,
-                  message: ""
-                });
-              }}
-              value={this.state.name}
-            />
-          </div>
-          <div>
-            <h3>密碼</h3>
-            <input
-              placeholder="請輸入至少 6 位數"
-              type="password"
-              onChange={e => {
-                this.setState({
-                  password: e.currentTarget.value,
-                  message: ""
-                });
-              }}
-              value={this.state.password}
-            />
-          </div>
-          <div>
-            <h3>確認密碼</h3>
-            <input
-              placeholder="請輸入至少 6 位數"
-              type="password"
-              onChange={e => {
-                this.setState({
-                  confirm: e.currentTarget.value,
-                  message: ""
-                });
-              }}
-              value={this.state.confirm}
-            />
-          </div>
-          <div>
-            <h3>電子信箱</h3>
-            <input
-              type="email"
-              placeholder="john@bridge.com"
-              onChange={e => {
-                this.setState({
-                  email: e.currentTarget.value,
-                  message: ""
-                });
-              }}
-              value={this.state.email}
-            />
-          </div>
-          <div>
-            <div className="error-text error-text-panel">
-              {this.state.message}
+      <div>
+        <Header
+          getUserAuthInfo={this.props.getUserAuthInfo}
+          currentUser={this.props.currentUser}
+        />
+        <div className="singup-wrapper">
+          <div className="signup">
+            <h2>註冊</h2>
+            <div>
+              <h3>玩家名稱</h3>
+              <input
+                placeholder="請輸入玩家名稱"
+                type="text"
+                onChange={e => {
+                  this.setState({
+                    name: e.currentTarget.value,
+                    message: ""
+                  });
+                }}
+                value={this.state.name}
+              />
             </div>
-            <div className="btn-group">
-              <button
-                onClick={this.handleSignUp}
-                className="btn-style-round">
-                      註冊
-              </button>
+            <div>
+              <h3>密碼</h3>
+              <input
+                placeholder="請輸入至少 6 位數"
+                type="password"
+                onChange={e => {
+                  this.setState({
+                    password: e.currentTarget.value,
+                    message: ""
+                  });
+                }}
+                value={this.state.password}
+              />
+            </div>
+            <div>
+              <h3>確認密碼</h3>
+              <input
+                placeholder="請輸入至少 6 位數"
+                type="password"
+                onChange={e => {
+                  this.setState({
+                    confirm: e.currentTarget.value,
+                    message: ""
+                  });
+                }}
+                value={this.state.confirm}
+              />
+            </div>
+            <div>
+              <h3>電子信箱</h3>
+              <input
+                type="email"
+                placeholder="john@bridge.com"
+                onChange={e => {
+                  this.setState({
+                    email: e.currentTarget.value,
+                    message: ""
+                  });
+                }}
+                value={this.state.email}
+              />
+            </div>
+            <div>
+              <div className="error-text error-text-panel">
+                {this.state.message}
+              </div>
+              <div className="btn-group">
+                <button
+                  onClick={this.handleSignUp}
+                  className="btn-style-round">
+                                    註冊
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -143,29 +148,29 @@ export default class SignUp extends React.Component {
   }
 }
 
-            // <label className="checkbox-lable">
-            //   <input id="agreement" type="checkbox" />
-            //   <div
-            //     className={
-            //       this.state.agreement ? "checked" : ""
-            //     }
-            //     onClick={() =>
-            //       this.setState({
-            //         agreement: !this.state.agreement
-            //       })
-            //     }
-            //   />
-            // </label>
+// <label className="checkbox-lable">
+//   <input id="agreement" type="checkbox" />
+//   <div
+//     className={
+//       this.state.agreement ? "checked" : ""
+//     }
+//     onClick={() =>
+//       this.setState({
+//         agreement: !this.state.agreement
+//       })
+//     }
+//   />
+// </label>
 
-              // <span
-              //   onClick={() =>
-              //     this.setState({
-              //       agreement: !this.state.agreement
-              //     })
-              //   }>
-              //                   I allow the use of collected data about my study
-              //                   behavior for research purposes. The data
-              //                   contains information from game playing and
-              //                   chatting messages. No individuals can be
-              //                   identified from publications.
-              // </span>
+// <span
+//   onClick={() =>
+//     this.setState({
+//       agreement: !this.state.agreement
+//     })
+//   }>
+//                   I allow the use of collected data about my study
+//                   behavior for research purposes. The data
+//                   contains information from game playing and
+//                   chatting messages. No individuals can be
+//                   identified from publications.
+// </span>

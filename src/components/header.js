@@ -10,44 +10,31 @@ import UserState from "./userState.js";
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.updateHeader = this.updateHeader.bind(this);
     let _this = this;
     if (!this.props.currentUser) {
       this.props.getUserAuthInfo().then(user => {
-        console.log("in fetched");
         console.log(_this.props.currentUser);
         _this.setState({isLoad: true});
       });
     }
   }
-  updateHeader() {
-    dispatch("SET_CURRENT_HEADER", {isInTablePage: false});
-  }
   render() {
-    let userProfile = (
-      <UserState
-        updateHeader={this.updateHeader}
-        uid={this.props.uid}
-        currentUser={this.props.currentUser}
-        userList={this.props.userList}
-      />
-    );
+    let userProfile = <UserState currentUser={this.props.currentUser} />;
     let rightTopCorner;
     let registerBtns = (
       <div className="register-btn-groups">
-        <Link onClick={this.updateHeader} to="/signup">
-          註冊
-        </Link>
-        <Link onClick={this.updateHeader} to="/login">
-          登入
-        </Link>
+        <Link to="/signup">註冊</Link>
+        <Link to="/login">登入</Link>
       </div>
     );
-    rightTopCorner = this.props.uid ? userProfile : registerBtns;
+    rightTopCorner =
+            this.props.currentUser && this.props.currentUser.uid
+              ? userProfile
+              : registerBtns;
     return (
-      <header className={this.props.isInTablePage ? "table-header" : ""}>
+      <header className={this.props.isTableColor ? "table-header" : ""}>
         <div>
-          <Link to="/" onClick={this.updateHeader}>
+          <Link to="/">
             <img src={logoImg} />
             <h1>Wow Bridge</h1>
           </Link>

@@ -1,6 +1,5 @@
 import React from "react";
 import Game from "./game.js";
-import {getRandomInt, getObjSortKey, getRandomKey} from "../helper/helper.js";
 import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import Sidebar from "./sidebar/sidebar.js";
@@ -8,6 +7,7 @@ import {GAME_STATE} from "./constant.js";
 import {app} from "../firebase/firebase.js";
 import randomColor from "randomcolor";
 import {EMPTY_SEAT} from "./constant.js";
+import Header from "./header.js";
 import Loading from "./loading.js";
 import "../style/table.scss";
 import "../style/sidebar.scss";
@@ -22,18 +22,17 @@ export default class Table extends React.Component {
     this.updateTableData = this.updateTableData.bind(this);
     this.linkId =
             this.props.match.params.id || window.location.hash.slice(8);
-
     if (!this.props.currentUser) {
       this.props
         .getUserAuthInfo()
         .then(user => {
-          console.log("user.displayName");
-          console.log(user.displayName);
           app.getDataByPathOnce(
             `tableList/${this.linkId}`,
             snapshot => {
+              if (!snapshot.val()) {
+                return null;
+              }
               let tableKey = snapshot.val().id;
-              console.log("tableKey----------", tableKey);
               dispatchToDatabase("UPDATE_TABLE_TIMESTAMP", {
                 id: tableKey
               });
@@ -68,15 +67,18 @@ export default class Table extends React.Component {
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.color = randomColor("dark");
+
   }
+
   closeTable(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
       app.setNodeByPath(
-        `tables/${tableKey}/gameState/${GAME_STATE.close}`,
-        GAME_STATE.close
+        `tables/${tableKey}/gameState/${GAME_STATE.gameover}`,
+        GAME_STATE.gameover
       );
     });
   }
+
   updateTableData(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
       app.getNodeByPath(`tables/${tableKey}`, value => {
@@ -96,10 +98,8 @@ export default class Table extends React.Component {
   }
   componentDidMount() {
     // fetch data again
-    let _this = this;
-    this.updateTableData().then(data => _this.setState({isLoad: true}));
+    this.updateTableData().then(data => this.setState({isLoad: true}));
   }
-
   addPlayerToTable(table) {
     if (!table) return;
     let {players, viewers} = table;
@@ -164,17 +164,24 @@ export default class Table extends React.Component {
       return <Redirect to="/" />;
     }
     return (
-      <div className="table">
-        <Game
-          currentUser={currentUser}
-          currentTableId={this.props.currentTableId}
-          table={targetTable}
+      <div>
+        <Header
+          isTableColor={true}
+          getUserAuthInfo={this.props.getUserAuthInfo}
+          currentUser={this.props.currentUser}
         />
-        <Sidebar
-          currentUser={currentUser}
-          chatroom={this.props.chatroom}
-          table={targetTable}
-        />
+        <div className="table">
+          <Game
+            currentUser={currentUser}
+            currentTableId={this.props.currentTableId}
+            table={targetTable}
+          />
+          <Sidebar
+            currentUser={currentUser}
+            chatroom={this.props.chatroom}
+            table={targetTable}
+          />
+        </div>
       </div>
     );
   }

@@ -1,26 +1,13 @@
 import "./style/main.scss";
 import React from "react";
 import ReactDOM from "react-dom";
-import Game from "./components/game.js";
 import Login from "./components/login.js";
-import CreateTable from "./components/createTable.js";
 import Table from "./components/table.js";
-import Header from "./components/header.js";
 import Lobby from "./components/lobby.js";
 import Loading from "./components/loading.js";
 import SignUp from "./components/signUp.js";
 import {app} from "./firebase/firebase.js";
-import {
-  IndexRoute,
-  BrowserRouter,
-  Router,
-  Route,
-  Switch,
-  Redirect,
-  Link,
-  withrouter,
-  HashRouter
-} from "react-router-dom";
+import {Route, HashRouter} from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
 
 class App extends React.Component {
@@ -31,7 +18,6 @@ class App extends React.Component {
     this.stopLoading = this.stopLoading.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
     this.getUserAuthInfo = this.getUserAuthInfo.bind(this);
-    // this.updateCloseTable = this.updateCloseTable.bind(this);
   }
   update() {
     this.setState(store.getState());
@@ -79,31 +65,23 @@ class App extends React.Component {
   }
   render() {
     console.log("in APP", this.state);
-    let pathName = window.location.pathname;
     if (!this.state.isLoad) {
       return <Loading />;
     }
-    let currentUser = this.state.user;
     return (
       <div>
         <HashRouter>
           <div>
-            <Header
-              getUserAuthInfo={this.getUserAuthInfo}
-              userList={this.state.userList}
-              isInTablePage={this.state.isInTablePage}
-              updateUserInfo={this.updateUserInfo}
-              isLogin={this.state.isLogin || false}
-              path={pathName}
-              userInfo={this.state.userInfo}
-              uid={this.state.uid}
-              currentUser={this.state.user}
-            />
             <div>
               <Route
                 path="/login"
                 exact
-                render={props => <Login />}
+                render={props => (
+                  <Login
+                    getUserAuthInfo={this.getUserAuthInfo}
+                    currentUser={this.state.user}
+                  />
+                )}
               />
               <Route
                 exact
@@ -111,6 +89,8 @@ class App extends React.Component {
                 render={props => (
                   <SignUp
                     updateUserInfo={this.updateUserInfo}
+                    getUserAuthInfo={this.getUserAuthInfo}
+                    currentUser={this.state.user}
                     {...props}
                   />
                 )}
@@ -137,6 +117,7 @@ class App extends React.Component {
                 path="/"
                 render={() => (
                   <Lobby
+                    getUserAuthInfo={this.getUserAuthInfo}
                     tables={this.state.tables || null}
                     currentUser={this.state.user}
                     tableList={this.state.tableList}

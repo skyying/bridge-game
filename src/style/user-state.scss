@@ -1,3 +1,6 @@
+
+$tableBg: #1ABEB9;
+
 .user-state-panel{
   position: relative;
   width: 300px ;
@@ -73,6 +76,19 @@
       }
     }
   }
-
 }
 
+.table-header{
+  .open-btn{
+    &:hover{
+      background-color: #3ad6d2;
+    }
+  }
+  .open {
+    > a{
+      &:hover{
+        background-color: $tableBg;
+      }
+    }
+  }
+}

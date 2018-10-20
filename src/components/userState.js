@@ -18,21 +18,13 @@ export default class UserState extends React.Component {
   }
   handleSignOut() {
     this.closePanel();
-    this.props.updateHeader();
     app.auth.signOut();
   }
   closePanel() {
     this.setState({isOpen: false});
   }
-
   render() {
-    let {currentUser, userList} = this.props;
-    if (userList && userList[currentUser.uid]) {
-      name = userList[currentUser.uid].displayName;
-    }
-    if (!name) {
-      name === "";
-    }
+    let {currentUser} = this.props;
     return (
       <div className="user-state-panel">
         <div
@@ -42,9 +34,13 @@ export default class UserState extends React.Component {
               : "Login-state-btn"
           }
           onClick={() => this.setState({isOpen: !this.state.isOpen})}>
-          <Thumbnail size={40} offset={5} name={name} />
+          <Thumbnail
+            size={40}
+            offset={5}
+            name={(currentUser && currentUser.displayName) || ""}
+          />
           <div>
-            <h6>{this.props.currentUser.displayName}</h6>
+            <h6>{currentUser.displayName}</h6>
             <span>online</span>
           </div>
         </div>
