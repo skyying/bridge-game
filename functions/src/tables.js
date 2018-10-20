@@ -24,19 +24,19 @@ exports.getAll = (newTable, tableIdList) => {
 
 exports.update = (oldTableList, newTableList) => {
     if (!newTableList) {
-        return -1;
+        return null;
     }
     return Object.keys(oldTableList).filter(
-        tableId => newTableList[tableId] !== true
-    )[0];
+        tableId => !newTableList[tableId]
+    );
 };
 
 exports.create = () => {
     let tableKey = Db.getNewChildKey("tables");
-    console.log("tableKey", tableKey);
     let tableRef = new Date().getTime();
     let newTable = {
         timeStamp: tableRef,
+        createTime: tableRef,
         gameState: "join",
         id: tableKey,
         linkId: tableRef,
@@ -61,6 +61,7 @@ exports.create = () => {
         }
     });
 };
+
 exports.close = table => {
     console.log("should print this, in Tables.close");
     let updateTable = Object.assign(
