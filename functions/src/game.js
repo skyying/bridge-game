@@ -3,6 +3,7 @@ const CardsSet = require("./cards.js");
 const Db = require("./db.js");
 
 exports.deal = function(table) {
+
     if (!table) {
         console.log("no table data in GAME deal");
         return null;
@@ -10,6 +11,7 @@ exports.deal = function(table) {
 
     let updateGame = Object.assign({}, table.game);
     let bestGuess = module.exports.guess(table);
+  console.log("bestGuess", bestGuess);
     delete bestGuess.diff;
     let order = Number(table.game.order) + 1;
 
@@ -55,6 +57,7 @@ exports.deal = function(table) {
     console.log("in game.deal---end");
 };
 
+
 exports.guess = function(table) {
     // let {game, players} = table;
     let game = table.game;
@@ -66,7 +69,6 @@ exports.guess = function(table) {
     let currentHand = module.exports.cardsByPlayer(players, cards);
     let currentTrickCards = module.exports.trickCard(cards);
     let isSameTeam = module.exports.sameTeam;
-    let dealCard;
 
     currentHand = currentHand[game.deal];
 
@@ -90,14 +92,16 @@ exports.guess = function(table) {
         // card of current trick;
         currentWinnerCard =
             currentTrumpWinnerCard ||
-            currentTrickCards
-                .filter(
-                    card =>
-                        Math.floor(card.value / 13) ===
-                        Math.floor(getFirstCard.value / 13)
-                )
-                .sort((cardA, cardB) => cardB.value - cardA.value)[0] ||
-            null;
+            (currentTrickCards.length === 1
+                ? currentTrickCards[0]
+                : currentTrickCards
+                      .filter(
+                          card =>
+                              Math.floor(card.value / 13) ===
+                              Math.floor(getFirstCard.value / 13)
+                      )
+                      .sort((cardA, cardB) => cardB.value - cardA.value)[0] ||
+                  null);
 
         isCurrentWinnerCardATrump = checkIfCardTrump(
             currentWinnerCard,
@@ -106,9 +110,9 @@ exports.guess = function(table) {
     }
 
     // cards are dealed by enemys
-    let enemyCardsOnTrick = currentTrickCards.filter(
-        card => card.player % 2 !== game.deal % 2
-    );
+    // let enemyCardsOnTrick = currentTrickCards.filter(
+    //     card => card.player % 2 !== game.deal % 2,
+    // );
 
     let cardsForFirstDraw = currentHand.sort(
         (cardA, cardB) => (cardB.value % 13) - (cardA.value % 13)
@@ -141,22 +145,26 @@ exports.guess = function(table) {
                 (!isSameTeam(currentWinnerCard, game.deal) &&
                     sameRankCards[0].value < currentWinnerCard.value)
             ) {
+                // lose strategy
                 return sameRankCards[sameRankCards.length - 1];
             } else {
                 // winner stratgy, find most possible answer
-                let diff = 52;
-
-                let bestShot = sameRankCards
-                    .filter(card => card.value > currentWinnerCard.value)
-                    .map(card =>
-                        Object.assign({}, card, {
-                            diff: card.value - currentWinnerCard.value
-                        })
-                    )
-                    .sort((cardA, cardB) => cardA.diff - cardB.diff)[0];
-                return bestShot;
+                // let diff = 52;
+                let bestShotList = sameRankCards.filter(
+                    card => card.value > currentWinnerCard.value
+                );
+                if (bestShotList.length) {
+                    return bestShotList
+                        .map(card =>
+                            Object.assign({}, card, {
+                                diff: card.value - currentWinnerCard.value
+                            })
+                        )
+                        .sort((cardA, cardB) => cardA.diff - cardB.diff)[0];
+                } else {
+                    return sameRankCards[sameRankCards.length - 1];
+                }
             }
-
             // if no same rank card  and current player has trumps cards
         } else if (currentPlayerhasTrumpCards) {
             // if my enemy has send trump card
@@ -191,7 +199,7 @@ exports.guess = function(table) {
             )[0];
         }
     }
-    return null;
+    // return currentHand.sort((cardA, cardB) => (cardA.value % 13) - (cardB.value % 13))[0];
 };
 
 exports.isCurrentCardTrump = function(card, trump) {
@@ -200,7 +208,8 @@ exports.isCurrentCardTrump = function(card, trump) {
 
 exports.followFirstCard = function(currentHand, firstCard) {
     return currentHand.filter(
-        card => Math.floor(card.value / 13) === Math.floor(firstCard.value / 13)
+        card =>
+            Math.floor(card.value / 13) === Math.floor(firstCard.value / 13)
     );
 };
 
@@ -258,18 +267,19 @@ exports.trickCard = function(cards) {
 
 exports.getMaxValueByTrump = function(arr, trump) {
     if (!arr || trump === null || trump === undefined) {
-        return;
+        return null;
     }
     let list = arr
         .filter(item => Math.floor(item.value / CONST.CARD_NUM.HAND) === trump)
         .sort((cardA, cardB) => cardB.value - cardA.value);
+
     return list.length ? list[0] : null;
 };
 
 exports.getWinner = function(game, cardValue) {
     let findMaxValueByTrump = module.exports.getMaxValueByTrump;
 
-    if (!game) return;
+    if (!game) return null;
 
     let cards = game.cards,
         maxTrick = module.exports.maxTrick(cards);
@@ -309,5 +319,5 @@ exports.getWinner = function(game, cardValue) {
             winnerCard = findMaxValueByTrump(cardsMatchCurrentTrick, trumpRef);
         } // end of no trump
     }
-    return winnerCard || null;
+    return (winnerCard || null);
 };
