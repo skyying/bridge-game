@@ -20,24 +20,9 @@ export const appReducer = (state, action) => {
         userInfo: action.userInfo
       });
     }
-    case "UPDATE_OPEN_TABLE_LIST": {
-      // let {closeTables} = Object.assign({}, state);
-      // closeTables[action.id] = action.linkId;
-      // console.log("udpated --------- in open table list");
-      // return Object.assign({}, state, {
-      //   closeTables: closeTables
-      //
-      // });
-      return Object.assign({}, state);
-    }
     case "UPDATE_USER_LIST": {
       return Object.assign({}, state, {
         userList: action.userList
-      });
-    }
-    case "SET_CURRENT_HEADER": {
-      return Object.assign({}, state, {
-        isInTablePage: action.isInTablePage
       });
     }
     case "STOP_LOADING": {
@@ -58,7 +43,6 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: updatedTables});
     }
     case "UPDATE_CURRENT_TABLE_ID": {
-      console.log("in update current table id, reducer");
       return Object.assign({}, state, {
         currentTableId: action.currentTableId
       });
@@ -78,6 +62,7 @@ export const dispatchToDatabase = (type, action) => {
       app.setNodeByPath(`/users/${action.uid}`, action.userInfo);
       break;
     }
+
     case "CREATE_TABLE": {
       let {currentUser} = action;
       if (!action.currentUser.uid) {
@@ -94,6 +79,7 @@ export const dispatchToDatabase = (type, action) => {
       let linkId = action.tableRef || timeStamp;
       let newTable = {
         timeStamp: linkId,
+        createTime: linkId,
         gameState: GAME_STATE.join,
         id: tableKey,
         linkId: linkId,
@@ -115,6 +101,7 @@ export const dispatchToDatabase = (type, action) => {
       app.setTableListData(linkId, {
         id: tableKey,
         isOpen: true,
+        players: players,
         playerInfo: Object.assign(
           {},
           {
@@ -139,23 +126,22 @@ export const dispatchToDatabase = (type, action) => {
         record = [game];
       }
       // reset table
+      let timeStamp = new Date().getTime();
+
       tableData.record = record;
+      tableData.createTime = timeStamp;
       tableData.game = Object.assign({}, DEFAULT_GAME);
       tableData.ready = [false, false, false, false];
-      tableData.timeStamp = new Date().getTime();
+      tableData.timeStamp = timeStamp;
       tableData.gameState = GAME_STATE.join;
       app.updateTableDataByID(tableData.id, tableData);
       break;
     }
     case "READY_A_PLAYER": {
       let {table, playerIndex} = action;
-      let path = `tables/${table.id}/ready/${playerIndex}`;
-      app.setNodeByPath(path, true);
-      // updateTimer
-      app.updateTableGameDataByPath(
-        `${table.id}/timeStamp/`,
-        new Date().getTime()
-      );
+      let updateTable = Object.assign({}, table);
+      updateTable.ready[playerIndex] = true;
+      app.setNodeByPath(`tables/${table.id}`, updateTable);
       break;
     }
     case "UPDATE_TABLE_TIMESTAMP": {
@@ -326,7 +312,6 @@ export const store = createStore(
     currentUser: null,
     isLoad: false,
     tables: {},
-    isInTablePage: false,
     currentTableId: null,
     closeTables: {}
   },
