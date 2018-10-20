@@ -67,7 +67,6 @@ export default class Table extends React.Component {
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.color = randomColor("dark");
-
   }
 
   closeTable(tableKey = this.tableKey, linkId = this.linkId) {
@@ -137,7 +136,6 @@ export default class Table extends React.Component {
     if (this.props.tableList[this.linkId].id) {
       if (this.props.tables[tableKey] !== prevProps.tables[tableKey]) {
         this.addPlayerToTable(this.props.tables[tableKey]);
-        dispatch("SET_CURRENT_HEADER", {isInTablePage: true});
       }
     }
   }
@@ -166,6 +164,7 @@ export default class Table extends React.Component {
     return (
       <div>
         <Header
+          roomNum={this.linkId || null}
           isTableColor={true}
           getUserAuthInfo={this.props.getUserAuthInfo}
           currentUser={this.props.currentUser}

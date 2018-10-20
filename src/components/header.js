@@ -31,6 +31,12 @@ export default class Header extends React.Component {
             this.props.currentUser && this.props.currentUser.uid
               ? userProfile
               : registerBtns;
+    let {roomNum} = this.props;
+    let roomInfo = null;
+    if (roomNum) {
+      roomNum = `${roomNum}`;
+      roomInfo ="桌號 " + roomNum.slice(roomNum.length - 3, roomNum.length);
+    }
     return (
       <header className={this.props.isTableColor ? "table-header" : ""}>
         <div>
@@ -38,6 +44,9 @@ export default class Header extends React.Component {
             <img src={logoImg} />
             <h1>Wow Bridge</h1>
           </Link>
+        </div>
+        <div>
+          <h3>{roomInfo}</h3>
         </div>
         <div>
           <div>{rightTopCorner}</div>
