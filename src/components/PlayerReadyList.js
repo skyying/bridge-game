@@ -5,53 +5,58 @@ import {EMPTY_SEAT, TIMER} from "./constant.js";
 import {getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import "../style/ready-list.scss";
-import {Thumbnail, WaitingThumbnail} from "./thumbnail.js";
+import {ThumbnailWithTag, WaitingThumbnail} from "./thumbnail.js";
 import {Progress} from "./progress.js";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);
-    this.timeInterval = 20000;
-    this.createTime = this.props.startTime;
+    this.timeInterval = 15000;
     this.frequency = 10; // update frequency per sec;
-    // update how many persec to current progress
-    // this.progressInterval = Math.floor(
-    //   TIMER.join / Math.floor(this.timeInterval / this.frequency)
-    // );
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxx");
-    console.log("renew a constructor");
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxx");
     // let timeStamp = new Date().getTime();
     this.state = {
-      progress: new Date().getTime() - this.createTime
+      progress: new Date().getTime() - this.props.table.createTime
     };
-    // Math.floor(this.timeInterval / this.frequency)
-    // this.duration = TIMER.join;
     this.setReadyState = this.setReadyState.bind(this);
     this.countDownTimer = this.countDownTimer.bind(this);
     this.checkReadyState = this.checkReadyState.bind(this);
     this.timer = setInterval(this.countDownTimer, this.frequency);
   }
+
   componentDidMount() {
     this.isMount = true;
+    let diffRange = new Date().getTime() - this.props.createTime;
+
+    if (this.isMount && diffRange >= this.timeInterval) {
+      this.setState({
+        progress: new Date().getTime() - this.props.table.createTime
+      });
+    }
   }
   componentWillUnmount() {
     this.isMount = false;
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.createTime !== prevProps.createTime) {
+      this.state.progress =
+                new Date().getTime() - this.props.table.createTime;
+    }
+  }
   countDownTimer() {
-    console.log("count down");
-    let createTime = this.createTime;
-    let progress = new Date().getTime() - this.createTime;
-    if (progress < this.timeInterval) {
+    let createTime = this.props.table.createTime;
+    let diffRange = new Date().getTime() - this.props.table.createTime;
+    if (this.isMount && diffRange < this.timeInterval) {
       this.setState({
-        progress: progress
+        progress: diffRange
       });
     } else {
       new Promise((resolve, reject) => {
         clearInterval(this.timer);
         resolve("cleard");
-        console.log(" in promise, this is ");
       }).then(val => {
-        if (this.isMount && this.createTime !== createTime) {
+        if (
+          this.isMount &&
+                    this.props.table.createTime !== createTime
+        ) {
           this.setState({timesUp: true});
         }
       });
@@ -65,9 +70,8 @@ export default class PlayerReadyList extends React.Component {
   setReadyState(playerIndex) {
     let {currentUser, table} = this.props;
     if (!table) return;
-    let {game} = table;
+    let {game, gameState} = table;
     let players = table.players.slice(0);
-
     dispatchToDatabase("READY_A_PLAYER", {
       playerIndex: playerIndex,
       table: table
@@ -78,49 +82,57 @@ export default class PlayerReadyList extends React.Component {
     let {game, ready, players, playerInfo} = table;
 
     if (!game) {
-      return <div> no game data </div>;
+      return <div> No game data </div>;
     }
 
     let {isGameOver, order} = game;
-    let isEmptySeat = players.some(seat => seat === EMPTY_SEAT);
+    let isAnyEmptySeat = players.some(seat => seat === EMPTY_SEAT);
     let isAllPlayerReady = ready.every(player => player === true);
 
     // if need to sho playerReadylist
     let showPlayerReadyList =
-            (isEmptySeat && order < 0) || !isAllPlayerReady;
+            (isAnyEmptySeat && order < 0) || !isAllPlayerReady;
 
     if (!showPlayerReadyList) {
       return null;
     }
     let playBtns = null;
 
-    if (this.state.timesUp && ready.some(player => player === true)) {
-      return <div>all player is ready, waiting for poker</div>;
-    }
-    if (this.state.timesUp && ready.every(player => player === false)) {
-      return <div> no one wants to play, redirect to lobby... </div>;
-    }
+    let totolProgress = 200;
+
+    let currentVal = Math.floor(
+      (this.state.progress / this.timeInterval) * totolProgress
+    );
+
+    let isTimesUp = currentVal >= totolProgress - 1;
+
     let thumbnails = players.map((player, index) => {
       let playerName;
       let size = 70;
+      let offset = 0;
+
       if (playerInfo[player]) {
         playerName = playerInfo[player].displayName;
       }
+
       if (!playerName) {
         return (
           <WaitingThumbnail
-            stop={this.state.progress >= TIMER.join}
+            stop={isTimesUp}
             key={`join-plyaer-${index}`}
             size={size}
           />
         );
       }
+
       return (
         <div
           key={`join-player-${index}`}
           className="player-ready-wrapper">
-          <Thumbnail
+          <ThumbnailWithTag
+            isCurrentUser={players[index] === currentUser.uid}
             size={size}
+            offset={offset}
             disabled={!ready[index]}
             name={playerName}
           />
@@ -153,27 +165,33 @@ export default class PlayerReadyList extends React.Component {
       });
     }
 
-    let totalWidth = 200;
-    let unit = this.timeInterval / totalWidth;
-
-    let currentVal = Math.floor(
-      (this.state.progress / this.timeInterval) * 200
+    let progressState = (
+      <Progress totalWidth={totolProgress} currentWidth={currentVal} />
     );
+    if (isTimesUp) {
+      if (ready.some(player => player === true)) {
+        progressState = <div>牌桌準備中...</div>;
+      } else {
+        progressState = <div>沒人加入，即將返回大廳...</div>;
+      }
+    }
+    let roomId = `${table.linkId}`;
+    let roomNum = "桌號 " + roomId.slice(roomId.length - 3, roomId.length);
 
     return (
       <div className="player-ready-list">
         <div className="player-ready-list-inner">
+          <h3>
+            <span>{roomNum}</span>
+          </h3>
           <div className="row"> {thumbnails}</div>
-          {currentUserCanPlay && (
+          {!isTimesUp &&
+                        currentUserCanPlay && (
             <div className="btn-wrapper">{playBtns}</div>
           )}
-          <div className="progress-panel">
-            <Progress totalWidth={200} currentWidth={currentVal} />
-          </div>
+          <div className="progress-panel">{progressState}</div>
         </div>
       </div>
     );
   }
 }
-
-// <div className="notes">等待加入中...</div>
