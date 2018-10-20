@@ -61,7 +61,9 @@ export const Thumbnail = ({
   offset = 16,
   border = false,
   isCurrentUser = false,
-  styleName = null
+  styleName = null,
+  robotMargin=0,
+  robotOffset=-5,
 }) => {
   let shiftAvatar = avatarNum;
   if (name.length) {
@@ -92,7 +94,8 @@ export const Thumbnail = ({
         <div className="border-style">
           <img
             className={disabled ? "disabled" : ""}
-            width={size - offset}
+            style={{marginTop: robotMargin}}
+            width={size - offset + robotOffset}
             src={source}
           />
         </div>

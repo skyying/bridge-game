@@ -41,11 +41,11 @@ export default class Trick extends React.Component {
       // sorting tricks by player index, and filter cards by max trick
       currentTrick = cardsByPlayer.map((hand, index) => {
         hand = hand.sort((cardA, cardB) => cardA.value - cardB.value);
-        let trickCards = hand.map(userHand => {
+        let trickCards = hand.map( (userHand, i) => {
           if (userHand.trick === maxTrick) {
             return (
               <TrickCard
-                key={`trick-card-index-${index}`}
+                key={`trick-card-x-index-${index}-${i}`}
                 value={userHand.value}
               />
             );

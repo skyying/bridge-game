@@ -9,7 +9,7 @@ export const Player = ({name, current = null}) => {
   return (
     <div className={current ? "player current" : "player"}>
       <div className="player-inner">
-        <Thumbnail styleName="border-thumbnail" size={current ? 40 : 50} offset={5} name={name} border={current} />
+        <Thumbnail robotOffset={-7} styleName="border-thumbnail" size={current ? 40 : 50} offset={5} name={name} border={current} />
       </div>
       <div className="name">{name}</div>
     </div>

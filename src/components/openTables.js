@@ -73,7 +73,7 @@ export default class OpenTables extends React.Component {
           <div
             className="table-list-item"
             key={`tablelist-item-${index}}`}>
-            <div>{index + 1}</div>
+            <div className="room-number"><span>{key.slice(key.length-3, key.length)}</span></div>
             <div>{owner}</div>
             <div className="empty-seats">{emptySeats} </div>
             <div>

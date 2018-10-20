@@ -60,7 +60,7 @@ export default class OpenTables extends React.Component {
           <div
             className="playing-table"
             key={`playing-table-item-${index}}`}>
-            <div>{index + 1}</div>
+            <div className="room-number"><span>{key.slice(key.length-3, key.length)}</span></div>
             {playerList}
             <div>
               <Link
