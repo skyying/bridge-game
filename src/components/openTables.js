@@ -15,9 +15,7 @@ export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
     this.createTable = this.createTable.bind(this);
-    this.updateHeader = this.updateHeader.bind(this);
     this.setCurrentTable = this.setCurrentTable.bind(this);
-    this.state = {};
   }
   createTable(tableRef) {
     if (!this.props.currentUser) {
@@ -27,34 +25,27 @@ export default class OpenTables extends React.Component {
       tableRef: tableRef,
       currentUser: this.props.currentUser
     });
-
-    this.updateHeader();
     this.setCurrentTable(tableRef);
   }
   setCurrentTable(id) {
     if (this.props.currentUser) {
       dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
     }
-    this.updateHeader();
-  }
-  updateHeader() {
-    let val = true;
-    if (!this.props.currentUser) {
-      val = false;
-    }
-    dispatch("SET_CURRENT_HEADER", {isInTablePage: val});
   }
   render() {
     let tableList = this.props.tableList;
-    // let closeTables = this.props.closeTables;
+
     let tableLinks;
 
     if (tableList) {
       let tableListKey = Object.keys(tableList);
-      let filteredList = tableListKey.filter(key => {
+
+      let openTableList = tableListKey.filter(key => {
+        let tableCreateTime = +key;
+
         if (
           tableList[key].players &&
-                    new Date().getTime() - +key <= 15000
+                    new Date().getTime() - tableCreateTime <= TIMER.join
         ) {
           return tableList[key].players.some(
             seat => seat === EMPTY_SEAT
@@ -63,17 +54,26 @@ export default class OpenTables extends React.Component {
           return !tableList[key].players;
         }
       });
-      tableLinks = filteredList.map((key, index) => {
+
+      let PLAYER_NUM = 4;
+      let ROOM_NUM_LEN = 3;
+
+      tableLinks = openTableList.map((key, index) => {
+        let roomNum = key.slice(key.length - ROOM_NUM_LEN, key.length);
         let players = this.props.tableList[key].players;
+        let playerInfo = this.props.tableList[key].playerInfo;
         let emptySeats = players
           ? players.filter(player => player === EMPTY_SEAT).length
-          : 4;
-        let owner = "";
+          : PLAYER_NUM - 1;
+
+        let owner = playerInfo[players[0]].displayName;
         return (
           <div
             className="table-list-item"
             key={`tablelist-item-${index}}`}>
-            <div className="room-number"><span>{key.slice(key.length-3, key.length)}</span></div>
+            <div className="room-number">
+              <span>{roomNum}</span>
+            </div>
             <div>{owner}</div>
             <div className="empty-seats">{emptySeats} </div>
             <div>
@@ -103,7 +103,7 @@ export default class OpenTables extends React.Component {
         to={
           this.props.currentUser ? `/table/${tableRef}` : "/login"
         }>
-        我要開桌
+                    我要開桌
       </Link>
     );
 
