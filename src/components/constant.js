@@ -7,7 +7,7 @@ export const CARD_NUM = {
 };
 
 export const TIMER = {
-  join: 25000,
+  join: 15000,
 
 }
 export const ROBOT_NAME = "-robot" ;
