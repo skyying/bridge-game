@@ -6,6 +6,7 @@ import {getRandomInt, getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
 import {Redirect} from "react-router-dom";
+import {GAME_STATE} from "./constant.js";
 import Trick from "./trick.js";
 import {
   CARD_NUM,
@@ -64,25 +65,20 @@ export default class Game extends React.Component {
     let newTable = this.props.table;
     let oldTable = prevProps.table;
 
-    // todo, refine logic, under some condition, state might not be update
-    // if ready state is change
-    if (
-      !newTable.ready.every(
-        (player, index) => player === oldTable.ready[index]
-      )
-    ) {
-      // and are all ready
-      if (newTable.ready.every(player => player === true)) {
-        this.suffleCardsWhenReady();
-      }
-    }
+    // todo, using a promise to do this task
+    this.suffleCardsWhenReady();
   }
+
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
-    let {players, game} = this.props.table;
+    let {players, game, gameState} = this.props.table;
     if (players) {
-      let isFourSeatsFull = players.every(seat => seat !== EMPTY_SEAT);
-      if (isFourSeatsFull && !game.cards) {
+      let isAnyEmptySeat = players.some(seat => seat === EMPTY_SEAT);
+      if (
+        !isAnyEmptySeat &&
+                !game.cards &&
+                gameState === GAME_STATE.auction
+      ) {
         this.shuffle();
       }
     }
@@ -177,14 +173,12 @@ export default class Game extends React.Component {
     );
   }
   render() {
-    // if (!this.state.redirectToLogin) {
-    //   return <Redirect />;
-    // }
     let {table, currentUser} = this.props;
 
     console.log("in game table", table);
 
     let {game, players, ready} = table;
+
     let {cards, isGameOver} = game;
 
     let isEndOfCurrentTrick = game.order % 4 === 3;
@@ -363,7 +357,6 @@ export default class Game extends React.Component {
         let horCardOffset = 40;
         let cardSize = 100;
 
-        // console.log("verHandPos", verHandPos);
         let horCardStyle =
                     DIRECTION[index] === "north" || DIRECTION[index] === "south"
                       ? {
@@ -384,7 +377,6 @@ export default class Game extends React.Component {
           );
         };
 
-        // console.log("cardsInHand", cardsInHand);
         let verTopPos =
                     DIRECTION[index] === "west" || DIRECTION[index] === "east"
                       ? (this.state.windowHeight -
@@ -407,6 +399,7 @@ export default class Game extends React.Component {
         if (verTopPos && DIRECTION[index] === "east") {
           verEdgePos = {top: verTopPos};
         }
+
         // console.log("verHandPos", verHandPos);
         // let verEdgePos = () => {
         //   if (verTopPos && DIRECTION[index] === "west") {
@@ -443,7 +436,6 @@ export default class Game extends React.Component {
         );
       });
     } // end of cards
-
     let isAllReady = table.ready.every(player => player === true);
 
     // dom elements
@@ -463,16 +455,10 @@ export default class Game extends React.Component {
       );
     }
 
-    let startTime = table.linkId;
-    if (!isAllReady && table.record) {
-      startTime = table.timeStamp;
-    }
-
     return (
       <div className="game">
         {!isAllReady && (
           <PlayerReadyList
-            startTime={startTime}
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
             table={this.props.table}
