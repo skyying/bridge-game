@@ -30,7 +30,7 @@ export default class Table extends React.Component {
             `tableList/${this.linkId}`,
             snapshot => {
               if (!snapshot.val()) {
-                this.setState({closed: true});
+                // this.setState({closed: true});
                 return null;
               }
               let tableKey = snapshot.val().id;

@@ -45,7 +45,7 @@ export default class Trick extends React.Component {
           if (userHand.trick === maxTrick) {
             return (
               <TrickCard
-                key={`trick-card-x-index-${index}-${i}`}
+                key={`trick-card-x-index-${index}-${i}-${userHand.trick}`}
                 value={userHand.value}
               />
             );
