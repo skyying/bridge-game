@@ -122,7 +122,8 @@ listenTableChanged("tables", snapshot => {
                 tableIdList[tableData.id],
                 tableData,
                 Players.join,
-                timeout.join - (new Date().getTime() - Number(tableData.linkId))
+                timeout.join -
+                    (new Date().getTime() - Number(tableData.createTime))
             );
         }
     } else if (gameState === state.phase.auction) {
@@ -143,7 +144,11 @@ listenTableChanged("tables", snapshot => {
                 timerInterval
             );
         } else {
-            Db.setTableData("gameState", tableData.id, state.phase.playing);
+            clearTimeout(tableIdList[tableData.id].timer);
+            tableData.game.deal = (tableData.game.bid.declarer + 1) % 4;
+            tableData.gameState = state.phase.playing;
+            tableData.timeStamp = new Date().getTime();
+            Db.setTableDataById(tableData);
         }
     } else if (gameState === state.phase.playing) {
         console.log("playing");
@@ -183,7 +188,7 @@ listenTableChanged("tables", snapshot => {
             Tables.close,
             timeout.close
         );
-    } else if (gameState === "close") {
+    } else if (gameState === state.phase.close) {
         Db.setTableData("", tableData.id, null);
         Db.setTableListData(tableData.linkId, null);
     }
