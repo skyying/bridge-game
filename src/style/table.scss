@@ -5,24 +5,36 @@ $tableBg: #1ABEB9;
   width: 100%;
   flex-direction:row ;
   .game{
-    width: calc(100% - 480px);
-    min-width: 600px;
+    width: calc(100% - 380px);
+    min-width: 900px;
   }
 
   .sidebar {
     min-width: 200px;
-    max-width: 480px;
+    max-width: 380px;
     width: 100%;
+  }
+}
+
+.table-notes{
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  span {
+    font-size: 20px;
+    color: #fff;
   }
 }
 
 @media screen and (max-width: 1200px) {
   .table{
     .game{
-      width: calc(100% - 400px);
+      width: calc(100% - 300px);
     }
     .sidebar{
-      max-width: 400px;
+      max-width: 300px;
       width: 100%;
     }
   }

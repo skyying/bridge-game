@@ -25,7 +25,7 @@ export const appReducer = (state, action) => {
         userList: action.userList
       });
     }
-    case "STOP_LOADING": {
+    case "UPDATE_LOADING_STATE": {
       return Object.assign({}, state, {isLoad: action.isLoad});
     }
     case "FETCH_TABLE_DATA": {
@@ -319,6 +319,7 @@ export const store = createStore(
 
 app.auth.onAuthStateChanged(user => {
   if (user) {
+    dispatch("UPDATE_LOADING_STATE", {isLoad: true})
     app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
       let userInfo = snapshot.val();
       dispatch("UPDATE_USER_INFO", {

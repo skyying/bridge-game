@@ -29,20 +29,17 @@ export class AuctionResult extends React.Component {
             offset={5}
           />
         );
-
       } else {
         return (
           <Thumbnail
             key={`resultThumbnail-${index}`}
             name={playerInfo[player].displayName}
             size={30}
-            isCurrentUser={true}
             offset={5}
           />
         );
       }
     });
-
     return (
       <div
         className="auction-result"

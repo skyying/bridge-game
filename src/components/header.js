@@ -10,11 +10,9 @@ import UserState from "./userState.js";
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
-    let _this = this;
     if (!this.props.currentUser) {
       this.props.getUserAuthInfo().then(user => {
-        console.log(_this.props.currentUser);
-        _this.setState({isLoad: true});
+        console.log("user login");
       });
     }
   }
@@ -35,7 +33,8 @@ export default class Header extends React.Component {
     let roomInfo = null;
     if (roomNum) {
       roomNum = `${roomNum}`;
-      roomInfo ="桌號 " + roomNum.slice(roomNum.length - 3, roomNum.length);
+      roomInfo =
+                "桌號 " + roomNum.slice(roomNum.length - 3, roomNum.length);
     }
     return (
       <header className={this.props.isTableColor ? "table-header" : ""}>

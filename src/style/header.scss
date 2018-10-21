@@ -2,6 +2,10 @@ $tableBg: #1ABEB9;
 $headerBg: #4844A3;
 $textColor: #fff;
 
+body{
+  background-color: $headerBg;
+}
+
 header {
   background-color: $headerBg;
   padding: 10px 0px 10px 30px;

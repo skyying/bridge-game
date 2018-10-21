@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import loadingImg from "../images/loading.svg";
+
+import "../style/loading.scss";
 
 export default class Loading extends React.Component {
   constructor(props) {
@@ -9,7 +12,9 @@ export default class Loading extends React.Component {
   render() {
     return (
       <div className="main-loading">
-        <h2>Loading ...</h2>
+        <div className="loading-anim">
+          <img src={loadingImg} />
+        </div>
       </div>
     );
   }

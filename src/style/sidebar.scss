@@ -119,7 +119,7 @@
   position: fixed;
   bottom: 0;
   padding: 10px 0 20px;
-  max-width: 480px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -127,7 +127,7 @@
   textarea{
     resize: none;
     height: 80px;
-    max-width: 480px;
+    max-width: 300px;
     width: 300px;
     border: 1px solid #ddd;
     border-radius: 3px;

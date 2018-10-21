@@ -1,0 +1,46 @@
+
+$headerBg: #4844A3;
+.main-loading{
+  width: 100%;
+  background-color: $headerBg;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+.loading-anim {
+  transform-origin: 50% 50%;
+  animation: loading 1.5s ease-out infinite;
+}
+
+@keyframes loading{
+  0% {
+   transform: rotate(0deg);
+  }
+  100% {
+   transform: rotate(360deg);
+  }
+
+}
+// @keyframes loading {
+//   0% {
+//     transform: scale(0.95);
+//   }
+//   5% {
+//     transform: scale(1.1);
+//   }
+//   39% {
+//     transform: scale(0.85);
+//   }
+//   45% {
+//     transform: scale(1);
+//   }
+//   60% {
+//     transform: scale(0.95);
+//   }
+//   100% {
+//     transform: scale(0.9);
+//   }
+// }

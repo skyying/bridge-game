@@ -16,6 +16,7 @@ import "../style/lobby.scss";
 import openImg from "../images/open.svg";
 import playImg from "../images/play.svg";
 import Header from "./header.js";
+import Loading from "./loading.js";
 
 export default class Lobby extends React.Component {
   constructor(props) {
@@ -24,6 +25,9 @@ export default class Lobby extends React.Component {
   render() {
     let open = 0,
       playing = 0;
+    if (!this.props.isLoad) {
+      return <Loading />;
+    }
     return (
       <div>
         <Header
@@ -32,7 +36,8 @@ export default class Lobby extends React.Component {
         />
         <div className="lobby">
           <div className="lobby-title">
-            <h2>Welcome to Wow Bridge</h2>
+            <h2> 鍛鍊腦力的最佳活動 <br /> <span>支援多人連線，單機版電腦對戰模式</span>
+            </h2>
           </div>
           <div className="table-lists">
             <div className="table-list-wrapper">

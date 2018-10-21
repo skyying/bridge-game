@@ -353,7 +353,7 @@ export default class Game extends React.Component {
         ).length;
 
         // handle resize
-        let sidebarWidth = this.state.windowWidth >= 1200 ? 480 : 400;
+        let sidebarWidth = this.state.windowWidth >= 1200 ? 380 : 300;
         let horCardOffset = 40;
         let cardSize = 100;
 
@@ -459,6 +459,7 @@ export default class Game extends React.Component {
       <div className="game">
         {!isAllReady && (
           <PlayerReadyList
+            progress={this.props.progress}
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
             table={this.props.table}
