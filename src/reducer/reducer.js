@@ -127,14 +127,13 @@ export const dispatchToDatabase = (type, action) => {
       }
       // reset table
       let timeStamp = new Date().getTime();
-
       tableData.record = record;
       tableData.createTime = timeStamp;
       tableData.game = Object.assign({}, DEFAULT_GAME);
       tableData.ready = [false, false, false, false];
       tableData.timeStamp = timeStamp;
       tableData.gameState = GAME_STATE.join;
-      app.updateTableDataByID(tableData.id, tableData);
+      app.setNodeByPath(`tables/${tableData.id}`, tableData);
       break;
     }
     case "READY_A_PLAYER": {
