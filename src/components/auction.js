@@ -190,17 +190,16 @@ export default class Auction extends React.Component {
       </button>
     );
 
-    let playerThumbnails = players.map(
-      (player, index) => (
-        <div
-          key={`auction-thumbnail-${index}`}
-          className={
-            index === this.props.game.deal
-              ? "default-thumbnail current"
-              : "default-thumbnail"
-          }>
-          <div className="default-thumbnail-inner">
-            <div className="default-thumbnail-inner-outline-wrapper">
+    let playerThumbnails = players.map((player, index) => (
+      <div
+        key={`auction-thumbnail-${index}`}
+        className={
+          index === this.props.game.deal
+            ? "default-thumbnail current"
+            : "default-thumbnail"
+        }>
+        <div className="default-thumbnail-inner">
+          <div className="default-thumbnail-inner-outline-wrapper">
             <div className="default-thumbnail-inner-outline">
               <Thumbnail
                 size={53}
@@ -209,12 +208,13 @@ export default class Auction extends React.Component {
               />
             </div>
           </div>
-            <span>{playerInfo[player].displayName}</span>
-          </div>
+          <span>{playerInfo[player].displayName}</span>
         </div>
-      )
-    );
-    if (this.props.isFinishAuction) {return null};
+      </div>
+    ));
+    if (this.props.isFinishAuction) {
+      return null;
+    }
 
     return (
       <div className="auction-inner">

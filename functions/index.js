@@ -26,7 +26,7 @@ const timeout = {
         robot: 3000
     },
     playing: {
-        human: 30000,
+        human: 10000,
         robot: 3000
     },
     close: 10000

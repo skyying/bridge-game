@@ -37,12 +37,14 @@ class App extends React.Component {
     });
   }
   getUserAuthInfo() {
+    let _this = this;
     return new Promise((resolve, reject) => {
       app.auth.onAuthStateChanged(user => {
         if (user) {
           app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
             let userInfo = snapshot.val();
             resolve(userInfo);
+            _this.stopLoading();
             dispatch("UPDATE_USER_INFO", {
               user: user,
               uid: user.uid,
@@ -51,17 +53,19 @@ class App extends React.Component {
           });
         } else {
           reject(true);
+          _this.stopLoading();
           return dispatch("UPDATE_USER_INFO", {
             uid: null,
             userInfo: null,
             user: null
           });
         }
+        dispatch("UPDATE_LOADING_STATE", {isLoad: true});
       });
     });
   }
   stopLoading() {
-    dispatch("STOP_LOADING", {isLoad: true});
+    dispatch("UPDATE_LOADING_STATE", {isLoad: true});
   }
   render() {
     if (!this.state.isLoad) {
@@ -116,6 +120,7 @@ class App extends React.Component {
                 path="/"
                 render={() => (
                   <Lobby
+                    isLoad={this.state.isLoad}
                     getUserAuthInfo={this.getUserAuthInfo}
                     tables={this.state.tables || null}
                     currentUser={this.state.user}

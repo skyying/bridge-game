@@ -30,6 +30,7 @@ export default class Table extends React.Component {
             `tableList/${this.linkId}`,
             snapshot => {
               if (!snapshot.val()) {
+                this.setState({closed: true});
                 return null;
               }
               let tableKey = snapshot.val().id;
@@ -41,7 +42,9 @@ export default class Table extends React.Component {
                 snapshot => {
                   this.updateTableData(tableKey, this.linkId)
                     .then(msg =>
-                      this.setState({isLoad: true})
+                      this.setState({
+                        isLoad: true
+                      })
                     )
                     .catch(err => console.log(err));
                 }
@@ -54,13 +57,18 @@ export default class Table extends React.Component {
       this.linkId = this.props.match.params.id;
       this.tableKey = this.props.tableList[this.linkId].id;
       this.updateTableData()
-        .then(msg => this.setState({isLoad: true}))
+        .then(msg =>
+          this.setState({
+            isLoad: true
+          })
+        )
         .catch(err => console.log(err));
     }
 
     this.state = {
       isLoad: false,
-      redirectToLogin: false
+      redirectToLogin: false,
+      isClosed: false
     };
 
     // only fetch data
@@ -68,20 +76,25 @@ export default class Table extends React.Component {
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.color = randomColor("dark");
   }
-
   closeTable(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
       app.setNodeByPath(
         `tables/${tableKey}/gameState/${GAME_STATE.gameover}`,
         GAME_STATE.gameover
       );
-    });
+    }).then(table => this.setState({closed: true}));
   }
-
   updateTableData(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
       app.getNodeByPath(`tables/${tableKey}`, value => {
         resolve(value.val());
+        if (!value.val()) {
+          this.setState({closed: true});
+        } else {
+          this.setState({
+            progress: new Date().getTime() - value.val().createTime
+          });
+        }
         return dispatch("UPDATE_TABLE_DATA", {
           table: value.val(),
           id: tableKey
@@ -97,7 +110,12 @@ export default class Table extends React.Component {
   }
   componentDidMount() {
     // fetch data again
-    this.updateTableData().then(data => this.setState({isLoad: true}));
+    this.updateTableData().then(data =>
+      this.setState({
+        isLoad: true,
+        isClosed: false
+      })
+    );
   }
   addPlayerToTable(table) {
     if (!table) return;
@@ -131,9 +149,11 @@ export default class Table extends React.Component {
       this.setState({isLoad: false});
       this.updateTableData().then(data => this.setState({isLoad: true}));
     }
-
     let {tableKey, linkId} = this;
-    if (this.props.tableList[this.linkId].id) {
+    if (
+      this.props.tableList[this.linkId] &&
+            this.props.tableList[this.linkId].id
+    ) {
       if (this.props.tables[tableKey] !== prevProps.tables[tableKey]) {
         this.addPlayerToTable(this.props.tables[tableKey]);
       }
@@ -149,18 +169,46 @@ export default class Table extends React.Component {
     }
 
     let {tables, currentUser} = this.props;
+
     let linkId = this.props.match.params.id;
-    let tableKey = this.props.tableList[linkId].id;
-    if (!tables || !tables[tableKey]) {
+
+    let tableKey;
+
+    if (tables && this.props.tableList) {
+      if (this.props.tableList[linkId]) {
+        tableKey = this.props.tableList[linkId].id;
+      }
+    }
+
+    if (!tables || !tables[tableKey] || !tableKey) {
+      console.log(" no table data");
       return null;
     }
+
+    if (this.state.isClosed) {
+      return (
+        <div>
+          <Header
+            roomNum={this.linkId || null}
+            getUserAuthInfo={this.props.getUserAuthInfo}
+            currentUser={this.props.currentUser}
+          />
+          <div className="table-notes">
+            <span>牌局已結束</span>
+          </div>
+        </div>
+      );
+    }
+
     let targetTable = tables[tableKey];
     if (
       targetTable.gameState &&
             targetTable.gameState === GAME_STATE.close
     ) {
+      console.log("in redirect");
       return <Redirect to="/" />;
     }
+
     return (
       <div>
         <Header
@@ -171,6 +219,7 @@ export default class Table extends React.Component {
         />
         <div className="table">
           <Game
+            progress={this.state.progress}
             currentUser={currentUser}
             currentTableId={this.props.currentTableId}
             table={targetTable}

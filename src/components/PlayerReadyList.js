@@ -28,17 +28,19 @@ export default class PlayerReadyList extends React.Component {
 
     if (this.isMount && diffRange >= this.timeInterval) {
       this.setState({
-        progress: new Date().getTime() - this.props.table.createTime
+         progress: this.props.progress
+        // progress: new Date().getTime() - this.props.table.createTime
       });
     }
   }
   componentWillUnmount() {
     this.isMount = false;
+    // this.setState({progress: this.props.progress})
   }
   componentDidUpdate(prevProps) {
     if (this.props.createTime !== prevProps.createTime) {
-      this.state.progress =
-                new Date().getTime() - this.props.table.createTime;
+      this.state.progress = this.props.progress;
+      // new Date().getTime() - this.props.table.createTime;
     }
   }
   countDownTimer() {
