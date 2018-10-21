@@ -17,6 +17,7 @@ export default class ScoreBoard extends React.Component {
     if (!table || game.order !== 51) {
       return;
     }
+
     dispatchToDatabase("CREATE_NEW_GAME", {
       table: table
     });
@@ -43,7 +44,9 @@ export default class ScoreBoard extends React.Component {
 
     let resultWords = null;
     let {declarer, trick} = game.bid;
-    let targetTrick = 6 + trick;
+
+    // trick start from 0, 0 means one trick... 
+    let targetTrick = 6 + (trick + 1);
     let isPlayerInDeclarerTeam = playerIndex % 2 === declarer % 2;
     let isCurrentUserAPlayer = playerIndex >= 0;
     let isUserWin = false;
@@ -56,6 +59,15 @@ export default class ScoreBoard extends React.Component {
     } else {
       resultWords = "";
     }
+
+    let resultAction = isCurrentUserAPlayer ? (
+      <button onClick={this.recordGame} className="btn">
+                再來一局
+      </button>
+    ) : (
+      "比賽結束"
+    );
+
     return (
       <div
         className={
@@ -72,11 +84,7 @@ export default class ScoreBoard extends React.Component {
             <div className="result">
               <div className="words">{resultWords}</div>
             </div>
-            <div className="btn-wrapper">
-              <button onClick={this.recordGame} className="btn">
-                                Play again ?
-              </button>
-            </div>
+            <div className="btn-wrapper">{resultAction}</div>
           </div>
         </TrickScore>
       </div>
