@@ -82,19 +82,19 @@ export default class Table extends React.Component {
         `tables/${tableKey}/gameState/${GAME_STATE.gameover}`,
         GAME_STATE.gameover
       );
-    }).then(table => this.setState({closed: true}));
+    })//.then(table => this.setState({closed: true}));
   }
   updateTableData(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
       app.getNodeByPath(`tables/${tableKey}`, value => {
         resolve(value.val());
-        if (!value.val()) {
-          this.setState({closed: true});
-        } else {
-          this.setState({
-            progress: new Date().getTime() - value.val().createTime
-          });
-        }
+        // if (!value.val()) {
+        //   // this.setState({closed: true});
+        // } else {
+        //   // this.setState({
+        //   //   progress: new Date().getTime() - value.val().createTime
+        //   // });
+        // }
         return dispatch("UPDATE_TABLE_DATA", {
           table: value.val(),
           id: tableKey
@@ -180,32 +180,35 @@ export default class Table extends React.Component {
       }
     }
 
-    if (!tables || !tables[tableKey] || !tableKey) {
-      console.log(" no table data");
-      return null;
-    }
+    // if (!tables || !tables[tableKey] || !tableKey) {
+    //   console.log(" no table data");
+    //   return null;
+    // }
 
-    if (this.state.isClosed) {
-      return (
-        <div>
-          <Header
-            roomNum={this.linkId || null}
-            getUserAuthInfo={this.props.getUserAuthInfo}
-            currentUser={this.props.currentUser}
-          />
-          <div className="table-notes">
-            <span>牌局已結束</span>
-          </div>
-        </div>
-      );
-    }
+    // if (this.state.isClosed) {
+    //   return (
+    //     <div>
+    //       <Header
+    //         roomNum={this.linkId || null}
+    //         getUserAuthInfo={this.props.getUserAuthInfo}
+    //         currentUser={this.props.currentUser}
+    //       />
+    //       <div className="table-notes">
+    //         <span>牌局已結束</span>
+    //       </div>
+    //     </div>
+    //   );
+    // }
 
     let targetTable = tables[tableKey];
     if (
       targetTable.gameState &&
             targetTable.gameState === GAME_STATE.close
     ) {
-      console.log("in redirect");
+      // console.log("check this table");
+      // console.log("targetTable", targetTable);
+      // console.log(window.location);
+      // console.log("in redirect");
       return <Redirect to="/" />;
     }
 
