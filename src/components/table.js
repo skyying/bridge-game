@@ -180,10 +180,10 @@ export default class Table extends React.Component {
       }
     }
 
-    // if (!tables || !tables[tableKey] || !tableKey) {
-    //   console.log(" no table data");
-    //   return null;
-    // }
+    if (!tables || !tables[tableKey] || !tableKey) {
+      console.log(" no table data");
+      return null;
+    }
 
     // if (this.state.isClosed) {
     //   return (
