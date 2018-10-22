@@ -10,6 +10,7 @@ exports.update = table => {
     } else {
         updatedTable.game.bid.result.push({opt: "Pass"});
     }
+
     let result = updatedTable.game.bid.result;
 
     // check if last two round of bids are all invalid, if yes, close this table
@@ -21,8 +22,8 @@ exports.update = table => {
     ) {
         updatedTable.gameState = state.phase.close;
     }
-
-    updatedTable.game.deal = (table.game.deal + 1) % PLAYER_NUM;
+    
+    updatedTable.game.deal = (updatedTable.game.deal + 1) % PLAYER_NUM;
     updatedTable.timeStamp = new Date().getTime();
 
     Db.setTableDataById(updatedTable);
@@ -38,8 +39,14 @@ exports.isFinish = function(table) {
     }
     let game = table.game;
     let result = game.bid.result;
+
+    // console.log("result, should have correct result", result);
+
     let isAllPass = result
-        .slice(result.length - PLAYER_NUM - 1, result.length)
+        .slice(result.length - PLAYER_NUM, result.length)
         .every(res => res.opt === "Pass");
-    return isAllPass && game.bid.trump >= 0;
+
+    // console.log("in isFinish ----, ");
+    // console.log("isAllPass, ", isAllPass);
+    return result.length >= 4 && isAllPass && game.bid.trump >= 0;
 };

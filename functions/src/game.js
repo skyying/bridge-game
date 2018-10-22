@@ -11,7 +11,9 @@ exports.deal = function(table) {
 
     let updateGame = Object.assign({}, table.game);
     let bestGuess = module.exports.guess(table);
+
   console.log("bestGuess", bestGuess);
+
     delete bestGuess.diff;
     let order = Number(table.game.order) + 1;
 
@@ -26,6 +28,7 @@ exports.deal = function(table) {
 
     updateGame.cards[tagetIndex] = bestGuess;
     updateGame.deal = (table.game.deal + 1) % 4;
+
     // getWinner got wrong cards, the card order didn't udpate
 
     let winnerCard = module.exports.getWinner(
@@ -36,6 +39,7 @@ exports.deal = function(table) {
     if (order === 51) {
         updateGame.isGameOver = true;
     }
+
     if (winnerCard) {
         //todo, update winner
         winnerCard.isWin = true;
@@ -45,6 +49,7 @@ exports.deal = function(table) {
         );
         updateGame.cards[winningCardIndex] = winnerCard;
     }
+
     let updateTable = Object.assign(
         {},
         table,
@@ -52,16 +57,17 @@ exports.deal = function(table) {
         {game: updateGame},
         {timeStamp: new Date().getTime()}
     );
+
     console.log("Best Guess:", bestGuess);
+    
     Db.setTableDataById(updateTable);
+
     console.log("in game.deal---end");
 };
 
 
 exports.guess = function(table) {
-    // let {game, players} = table;
     let game = table.game;
-
     let players = table.players;
     let cards = table.game.cards;
     let getFirstCard = module.exports.firstCard(cards, game.order);
@@ -87,6 +93,7 @@ exports.guess = function(table) {
             currentTrickCards
                 .filter(card => checkIfCardTrump(card, game.bid.trump))
                 .sort((cardA, cardB) => cardB.value - cardA.value)[0] || null;
+
 
         // if any card in current trick is trump and winner, or the highest face vaule
         // card of current trick;

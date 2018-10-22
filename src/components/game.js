@@ -168,8 +168,10 @@ export default class Game extends React.Component {
 
     return (
       result.length >= 4 &&
-            result.some(bid => bid.trick >= 0) &&
-            result.slice(result.length - 3).every(res => res.opt === "Pass")
+            game.bid.trump >= 0 &&
+            result
+              .slice(result.length - 4, result.length)
+              .every(res => res.opt === "Pass")
     );
   }
   render() {

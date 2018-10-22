@@ -124,8 +124,8 @@ listenTableChanged("tables", snapshot => {
         }
     } else if (gameState === state.phase.auction) {
         console.log("in auction");
-        // if still in acution, set timer
         let isFinishAuction = Auction.isFinish(tableData);
+
         if (!isFinishAuction) {
             // set timer
             let timerInterval = timeout.auction.robot;
@@ -141,11 +141,6 @@ listenTableChanged("tables", snapshot => {
             );
         } else {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
-            // clearTimeout(tableIdList[tableData.id].timer);
-            // tableData.game.deal = (tableData.game.bid.declarer + 1) % 4;
-            // tableData.gameState = state.phase.playing;
-            // tableData.timeStamp = new Date().getTime();
-            // Db.setTableDataById(tableData);
         }
     } else if (gameState === state.phase.playing) {
         console.log("playing");

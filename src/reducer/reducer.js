@@ -140,6 +140,13 @@ export const dispatchToDatabase = (type, action) => {
       let {table, playerIndex} = action;
       let updateTable = Object.assign({}, table);
       updateTable.ready[playerIndex] = true;
+
+
+      // batch update table, for client side usage
+      if (updateTable.ready.every(state => state === true)) {
+        updateTable.gameState = GAME_STATE.auction;
+      }
+
       app.setNodeByPath(`tables/${table.id}`, updateTable);
       break;
     }
@@ -319,7 +326,7 @@ export const store = createStore(
 
 app.auth.onAuthStateChanged(user => {
   if (user) {
-    dispatch("UPDATE_LOADING_STATE", {isLoad: true})
+    dispatch("UPDATE_LOADING_STATE", {isLoad: true});
     app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
       let userInfo = snapshot.val();
       dispatch("UPDATE_USER_INFO", {
