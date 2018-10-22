@@ -53,7 +53,7 @@ listenTableRemoved("tables", snapshot => {
         } else {
             removeKeys.map(key => {
                 // clear timeout callback before remove table;
-                clearTimeout(tableIdList[key].timer);
+                // clearTimeout(tableIdList[key].timer);
                 delete tableIdList[key];
             });
         }
@@ -81,11 +81,8 @@ listenTableChanged("tables", snapshot => {
             tableIdList = Tables.getAll(snapshot.val(), tableIdList);
             throw new Error("NO CHANGED TABLE DATA ON DATABASE");
         }
-
         tableData = snapshot.val();
-
         id = tableData.id;
-
         if (!tableIdList[id]) {
             throw new Error("NO DATA OF THIS TABLE ON SERVER TABLELIST OBJECT");
         }
@@ -107,7 +104,6 @@ listenTableChanged("tables", snapshot => {
 
     if (gameState === state.phase.join) {
         console.log("join");
-
         let isAllReady = ready.every(state => state === true);
         if (isAllReady) {
             let newTable = Object.assign(
@@ -144,11 +140,12 @@ listenTableChanged("tables", snapshot => {
                 timerInterval
             );
         } else {
-            clearTimeout(tableIdList[tableData.id].timer);
-            tableData.game.deal = (tableData.game.bid.declarer + 1) % 4;
-            tableData.gameState = state.phase.playing;
-            tableData.timeStamp = new Date().getTime();
-            Db.setTableDataById(tableData);
+            Db.setTableData("gameState", tableData.id, state.phase.playing);
+            // clearTimeout(tableIdList[tableData.id].timer);
+            // tableData.game.deal = (tableData.game.bid.declarer + 1) % 4;
+            // tableData.gameState = state.phase.playing;
+            // tableData.timeStamp = new Date().getTime();
+            // Db.setTableDataById(tableData);
         }
     } else if (gameState === state.phase.playing) {
         console.log("playing");
@@ -182,6 +179,7 @@ listenTableChanged("tables", snapshot => {
         }
     } else if (gameState === state.phase.gameover) {
         console.log("game over");
+        console.log("tableData.id", tableData.id);
         initTimer(
             tableIdList[tableData.id],
             tableData,
@@ -207,9 +205,7 @@ const initTimer = (timer, table, callback, interval) => {
     }
 
     clearTimeout(timer.timer);
-
     timer.timer = null;
-
     timer.timer = setTimeout(() => {
         callback(table);
     }, interval);
