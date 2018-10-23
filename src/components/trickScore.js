@@ -3,11 +3,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import "../style/trick-score.scss";
 import {teamScore} from "./socre.js";
-import {
-  Thumbnail,
-  ThumbnailWithTag,
-  ThumbailGroupWithTag
-} from "./thumbnail.js";
+import {ThumbailGroupWithTag} from "./thumbnail.js";
 
 export default class TrickScore extends React.Component {
   constructor(props) {
@@ -77,4 +73,3 @@ export default class TrickScore extends React.Component {
     );
   }
 }
-

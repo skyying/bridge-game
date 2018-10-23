@@ -21,7 +21,6 @@ export default class Chatroom extends React.Component {
   handleKeyPress(e) {
     // && this.state.message.length
     if (e.key === "Enter") {
-      console.log("has enter");
       this.sendMessage();
     }
   }
@@ -29,7 +28,6 @@ export default class Chatroom extends React.Component {
     this.scrollToBottom();
   }
   componentDidUpdate() {
-    console.log("did update");
     this.scrollToBottom();
   }
   addEmoji(emoji) {
@@ -44,13 +42,12 @@ export default class Chatroom extends React.Component {
     this.setState({
       message: ""
     });
-    // this.scrollToBottom();
   }
   handleChange(e) {
     this.setState({message: e.currentTarget.value});
   }
   scrollToBottom() {
-    // fixed when typing, message won't scroll to bottom
+    // in order to fix message will scroll to bottom
     setTimeout(() => {
       this.msgEnd.scrollIntoView({behavior: "smooth", block: "end"});
     }, 10);
@@ -58,7 +55,7 @@ export default class Chatroom extends React.Component {
   render() {
     let {currentUser, table, chatroom} = this.props;
     if (!table || !currentUser) {
-      console.log("no current table data");
+      return null;
     }
     let {players} = table;
     let messageList;
@@ -94,6 +91,7 @@ export default class Chatroom extends React.Component {
         let playerIndex = players.findIndex(
           player => player === chatroom.message[id].uid
         );
+
         if (playerIndex > -1) {
           symbol = (
             <div
@@ -104,6 +102,7 @@ export default class Chatroom extends React.Component {
           );
         }
         let msg = chatroom.message[id].content;
+
         return (
           <div className="msg" key={`message-${index}`}>
             <a>

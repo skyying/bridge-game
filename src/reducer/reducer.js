@@ -30,10 +30,10 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {chatroom: action.chatroom});
     }
     case "UPDATE_TABLE_DATA": {
-      let {id, table} = action;
+      let {table} = action;
       let tables = state.tables;
       let updatedTables = Object.assign({}, tables);
-      updatedTables[id] = table;
+      updatedTables[table.id] = table;
       return Object.assign({}, state, {tables: updatedTables});
     }
     case "UPDATE_CURRENT_TABLE_ID": {
@@ -235,6 +235,7 @@ export const dispatchToDatabase = (type, action) => {
     }
     case "ADD_PLAYER_TO_TABLE": {
       let {currentUser, table, emptySeatIndex, color} = action;
+
       let {linkId, id, players} = table;
 
       DB.setNodeByPath(
@@ -244,6 +245,7 @@ export const dispatchToDatabase = (type, action) => {
       DB.setNodeByPath(`tables/${id}/playerInfo/${currentUser.uid}`, {
         displayName: currentUser.displayName
       });
+
       DB.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
       // if anyone join this table, update data to table list
       let updatePlayers = players.slice(0);

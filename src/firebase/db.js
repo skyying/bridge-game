@@ -4,7 +4,6 @@ import {config} from "./config.js";
 export const firebaseApp = firebase.initializeApp(config);
 
 export const DB = {
-  db: firebaseApp.database(),
   auth: firebaseApp.auth(),
   onAuthChanged: callback => {
     firebaseApp.auth().onAuthStateChanged(user => {
@@ -82,11 +81,36 @@ export const DB = {
       .ref(`tableList/${id}/`)
       .set(data);
   },
+  getChatRoomById: id => {
+    return new Promise((resolve, reject) => {
+      DB.getNodeByPath(`chatroom/${id}/`, snapshot =>
+        resolve(snapshot.val())
+      );
+    });
+  },
+  getTableByLinkId: linkId => {
+    return new Promise((resolve, reject) => {
+      DB.getNodeByPath(`tableList/${linkId}`, snapshot => {
+        if (snapshot.val()) {
+          return DB.getNodeByPath(
+            `tables/${snapshot.val().id}/`,
+            snapshot => resolve(snapshot.val())
+          );
+        } else {
+          throw new Error("NO TABLE DATA IN DB");
+        }
+      });
+    }).catch( error => console.log(error.message));
+  },
+  signInWithEmailAndPassword: info => {
+    let {email, password} = info;
+    return firebaseApp.auth().signInWithEmailAndPassword(email, password);
+  },
   getCurrentUser: () => {
     return new Promise((resolve, reject) => {
-      this.auth.onAuthStateChanged(user => {
+      DB.auth.onAuthStateChanged(user => {
         if (user) {
-          this.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+          DB.getDataByPathOnce(`users/${user.uid}`, snapshot => {
             resolve({user: user, userInfo: snapshot.val()});
           });
         } else {

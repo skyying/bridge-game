@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Link} from "react-router-dom";
-import {dispatch, store} from "../reducer/reducer.js";
 import {Redirect} from "react-router-dom";
 import {DB} from "../firebase/db.js";
 import "../style/signup.scss";
@@ -22,33 +20,30 @@ export default class Login extends React.Component {
     this.redirectToLobbyIfLogin = this.redirectToLobbyIfLogin.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
-  componentDidMount() {
-    this.isMount = true;
-  }
-  componentWillUnmountMount() {
-    this.isMount = false;
-  }
   redirectToLobbyIfLogin() {
-    // todo
-    let promise = new Promise((resolve, reject) => {
-      DB.onAuthChanged(user => {
-        if (user && this.isMount) {
-          resolve(user);
+    DB.getCurrentUser()
+      .then(user => {
+        if (user) {
           this.setState({redirect: true});
+          return user;
         } else {
-          throw new Error("cancel redirect behavior");
+          throw new Error("NO CURRENT USER");
         }
+      })
+      .catch(error => {
+        console.log(error);
       });
-    }).catch(error => console.log(error.message));
   }
   handleLogin() {
-    let auth = DB.auth;
     let {email, password} = this.state;
     if (!email || !password) return;
-    let promise = auth.signInWithEmailAndPassword(email, password);
-    promise
-      .then(user => this.setState({redirect: true}))
-      .catch(err => this.setState({error: err.message}));
+    DB.signInWithEmailAndPassword(this.state)
+      .then(user => {
+        this.setState({redirect: true});
+      })
+      .catch(error => {
+        this.setState({error: error && error.message});
+      });
   }
   render() {
     if (this.state.redirect) {
