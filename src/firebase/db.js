@@ -3,7 +3,7 @@ import {config} from "./config.js";
 
 export const firebaseApp = firebase.initializeApp(config);
 
-export const app = {
+export const DB = {
   db: firebaseApp.database(),
   auth: firebaseApp.auth(),
   onAuthChanged: callback => {
@@ -19,7 +19,7 @@ export const app = {
     return firebaseApp
       .database()
       .ref(path)
-      .on("value", action);
+      .once("value", action);
   },
   getNodeByPath: (path, action) => {
     return firebaseApp
@@ -81,5 +81,18 @@ export const app = {
       .database()
       .ref(`tableList/${id}/`)
       .set(data);
+  },
+  getCurrentUser: () => {
+    return new Promise((resolve, reject) => {
+      this.auth.onAuthStateChanged(user => {
+        if (user) {
+          this.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+            resolve({user: user, userInfo: snapshot.val()});
+          });
+        } else {
+          reject(null);
+        }
+      });
+    });
   }
 };
