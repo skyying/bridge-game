@@ -4,7 +4,7 @@ import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import Sidebar from "./sidebar/sidebar.js";
 import {GAME_STATE} from "./constant.js";
-import {app} from "../firebase/firebase.js";
+import {DB} from "../firebase/db.js";
 import randomColor from "randomcolor";
 import {EMPTY_SEAT} from "./constant.js";
 import Header from "./header.js";
@@ -26,7 +26,7 @@ export default class Table extends React.Component {
       this.props
         .getUserAuthInfo()
         .then(user => {
-          app.getDataByPathOnce(
+          DB.getDataByPathOnce(
             `tableList/${this.linkId}`,
             snapshot => {
               if (!snapshot.val()) {
@@ -37,7 +37,7 @@ export default class Table extends React.Component {
               dispatchToDatabase("UPDATE_TABLE_TIMESTAMP", {
                 id: tableKey
               });
-              app.getDataByPathOnce(
+              DB.getDataByPathOnce(
                 `tables/${tableKey}/`,
                 snapshot => {
                   this.updateTableData(tableKey, this.linkId)
@@ -78,15 +78,15 @@ export default class Table extends React.Component {
   }
   closeTable(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
-      app.setNodeByPath(
+      DB.setNodeByPath(
         `tables/${tableKey}/gameState/${GAME_STATE.gameover}`,
         GAME_STATE.gameover
       );
-    })//.then(table => this.setState({closed: true}));
+    }); //.then(table => this.setState({closed: true}));
   }
   updateTableData(tableKey = this.tableKey, linkId = this.linkId) {
     return new Promise((resolve, reject) => {
-      app.getNodeByPath(`tables/${tableKey}`, value => {
+      DB.getNodeByPath(`tables/${tableKey}`, value => {
         resolve(value.val());
         // if (!value.val()) {
         //   // this.setState({closed: true});
@@ -100,7 +100,7 @@ export default class Table extends React.Component {
           id: tableKey
         });
       });
-      app.getNodeByPath(`chatroom/${tableKey}`, value => {
+      DB.getNodeByPath(`chatroom/${tableKey}`, value => {
         resolve("successfulyy");
         return dispatch("UPDATE_CHAT_ROOM", {
           chatroom: value.val()
@@ -184,7 +184,6 @@ export default class Table extends React.Component {
       console.log(" no table data");
       return null;
     }
-
     // if (this.state.isClosed) {
     //   return (
     //     <div>
@@ -205,10 +204,6 @@ export default class Table extends React.Component {
       targetTable.gameState &&
             targetTable.gameState === GAME_STATE.close
     ) {
-      // console.log("check this table");
-      // console.log("targetTable", targetTable);
-      // console.log(window.location);
-      // console.log("in redirect");
       return <Redirect to="/" />;
     }
 

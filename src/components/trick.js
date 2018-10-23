@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {getRandomKey} from "../helper/helper.js";
 import {Card, TrickCard} from "./card.js";
 import {getCurrentMaxTrick} from "./getCurrentMaxTrick.js";
 import "../style/game.scss";
@@ -41,11 +40,13 @@ export default class Trick extends React.Component {
       // sorting tricks by player index, and filter cards by max trick
       currentTrick = cardsByPlayer.map((hand, index) => {
         hand = hand.sort((cardA, cardB) => cardA.value - cardB.value);
-        let trickCards = hand.map( (userHand, i) => {
+        let trickCards = hand.map((userHand, i) => {
           if (userHand.trick === maxTrick) {
             return (
               <TrickCard
-                key={`trick-card-x-index-${index}-${i}-${userHand.trick}`}
+                key={`trick-card-x-index-${index}-${i}-${
+                  userHand.trick
+                }`}
                 value={userHand.value}
               />
             );

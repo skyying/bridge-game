@@ -1,12 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import {getRandomKey} from "../helper/helper.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {EMPTY_SEAT} from "../components/constant.js";
-import {getObj, getObjSortKey} from "../helper/helper.js";
-import {app} from "../firebase/firebase.js";
 import "../style/table-list.scss";
 
 export default class OpenTables extends React.Component {

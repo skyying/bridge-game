@@ -1,10 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {ThumbnailWithTag} from "./thumbnail.js";
-import {app} from "../firebase/firebase.js";
+import {DB} from "../firebase/db.js";
 import {Link} from "react-router-dom";
-import {dispatch} from "../reducer/reducer.js";
 import "../style/user-state.scss";
 
 export default class UserState extends React.Component {
@@ -18,7 +16,7 @@ export default class UserState extends React.Component {
   }
   handleSignOut() {
     this.closePanel();
-    app.auth.signOut();
+    DB.auth.signOut();
   }
   closePanel() {
     this.setState({isOpen: false});

@@ -6,7 +6,7 @@ import Table from "./components/table.js";
 import Lobby from "./components/lobby.js";
 import Loading from "./components/loading.js";
 import SignUp from "./components/signUp.js";
-import {app} from "./firebase/firebase.js";
+import {DB} from "./firebase/db.js";
 import {Route, HashRouter} from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
 
@@ -22,32 +22,30 @@ class App extends React.Component {
   update() {
     this.setState(store.getState());
   }
-  componentDidUnMount() {
-    this.unSubscribe();
-  }
   componentDidMount() {
     this.unSubscribe = store.subscribe(this.update.bind(this));
     this.stopLoading();
   }
+  componentDidUnMount() {
+    this.unSubscribe();
+  }
   updateUserInfo(user, userInfo) {
     dispatch("UPDATE_USER_INFO", {
       user: user,
-      uid: user.uid,
       userInfo: userInfo
     });
   }
   getUserAuthInfo() {
     let _this = this;
     return new Promise((resolve, reject) => {
-      app.auth.onAuthStateChanged(user => {
+      DB.auth.onAuthStateChanged(user => {
         if (user) {
-          app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+          DB.getDataByPathOnce(`users/${user.uid}`, snapshot => {
             let userInfo = snapshot.val();
             resolve(userInfo);
             _this.stopLoading();
             dispatch("UPDATE_USER_INFO", {
               user: user,
-              uid: user.uid,
               userInfo: snapshot.val()
             });
           });
@@ -55,7 +53,6 @@ class App extends React.Component {
           reject(true);
           _this.stopLoading();
           return dispatch("UPDATE_USER_INFO", {
-            uid: null,
             userInfo: null,
             user: null
           });
@@ -106,7 +103,6 @@ class App extends React.Component {
                       this.state.currentTableId
                     }
                     getUserAuthInfo={this.getUserAuthInfo}
-                    userInfo={this.state.userInfo}
                     chatroom={this.state.chatroom}
                     tables={this.state.tables}
                     tableList={this.state.tableList}

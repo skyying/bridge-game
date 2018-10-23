@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {Thumbnail} from "../thumbnail.js";
 import {CARD_NUM, CARD_RANK, SUIT_SHAPE} from "../constant.js";

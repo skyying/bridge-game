@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import TrickScore from "./trickScore.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
@@ -28,8 +27,6 @@ export default class ScoreBoard extends React.Component {
     if (!game || !game.cards) {
       return null;
     }
-    let scoreTeamOne = 0,
-      scoreTeamTwo = 0;
     let playerIndex = players.indexOf(currentUser.uid);
     let playerTeamScore = 0,
       opponentScore = 0;

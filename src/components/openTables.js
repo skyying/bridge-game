@@ -1,13 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {Link, Redirect} from "react-router-dom";
-import {getRandomKey} from "../helper/helper.js";
-import {GAME_STATE, TIMER} from "./constant.js";
+import {Link} from "react-router-dom";
+import {TIMER} from "./constant.js";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import {EMPTY_SEAT} from "../components/constant.js";
-import {getObj, getObjSortKey} from "../helper/helper.js";
-import {app} from "../firebase/firebase.js";
 
 import "../style/table-list.scss";
 

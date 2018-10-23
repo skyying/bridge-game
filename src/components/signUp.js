@@ -1,14 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {app} from "../firebase/firebase.js";
+import {DB} from "../firebase/db.js";
 import "../style/signup.scss";
 import "../style/btn.scss";
 import "../style/checkbox.scss";
 import {Redirect} from "react-router-dom";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import Header from "./header.js";
-
 
 export default class SignUp extends React.Component {
   constructor(props) {
@@ -25,7 +23,7 @@ export default class SignUp extends React.Component {
     this.handleSignUp = this.handleSignUp.bind(this);
   }
   handleSignUp() {
-    let auth = app.auth;
+    let auth = DB.auth;
     let {email, password, name} = this.state;
     if (!email || !password || !confirm) return;
     let promise = auth.createUserWithEmailAndPassword(email, password);
@@ -43,7 +41,7 @@ export default class SignUp extends React.Component {
               email: email
             };
             user.updateProfile(userInfo);
-            app.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+            DB.getDataByPathOnce(`users/${user.uid}`, snapshot => {
               if (!snapshot.val()) {
                 dispatchToDatabase("CREATE_USER", {
                   uid: user.uid,

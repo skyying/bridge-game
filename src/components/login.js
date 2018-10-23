@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, store} from "../reducer/reducer.js";
 import {Redirect} from "react-router-dom";
-import {app} from "../firebase/firebase.js";
+import {DB} from "../firebase/db.js";
 import "../style/signup.scss";
 import "../style/btn.scss";
 import "../style/checkbox.scss";
@@ -31,7 +31,7 @@ export default class Login extends React.Component {
   redirectToLobbyIfLogin() {
     // todo
     let promise = new Promise((resolve, reject) => {
-      app.onAuthChanged(user => {
+      DB.onAuthChanged(user => {
         if (user && this.isMount) {
           resolve(user);
           this.setState({redirect: true});
@@ -42,7 +42,7 @@ export default class Login extends React.Component {
     }).catch(error => console.log(error.message));
   }
   handleLogin() {
-    let auth = app.auth;
+    let auth = DB.auth;
     let {email, password} = this.state;
     if (!email || !password) return;
     let promise = auth.signInWithEmailAndPassword(email, password);

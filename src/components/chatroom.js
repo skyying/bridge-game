@@ -1,8 +1,7 @@
 import React from "react";
-import reactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {app} from "../firebase/firebase.js";
-import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
+import {DB} from "../firebase/db.js";
+import {dispatchToDatabase} from "../reducer/reducer.js";
 import randomColor from "randomcolor";
 import {SUIT_SHAPE, Emoji} from "./constant.js";
 
@@ -51,7 +50,7 @@ export default class Chatroom extends React.Component {
     this.setState({message: e.currentTarget.value});
   }
   scrollToBottom() {
-    // fixed when typing, message won't scroll to bottom 
+    // fixed when typing, message won't scroll to bottom
     setTimeout(() => {
       this.msgEnd.scrollIntoView({behavior: "smooth", block: "end"});
     }, 10);
@@ -149,4 +148,3 @@ export default class Chatroom extends React.Component {
     );
   }
 }
-

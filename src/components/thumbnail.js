@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import "../style/thumbnail.scss";
 import {ROBOT_NAME} from "./constant.js";
