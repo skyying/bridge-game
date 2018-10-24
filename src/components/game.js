@@ -102,7 +102,6 @@ export default class Game extends React.Component {
     this.setState({endAuction: true});
   }
   deal(value) {
-    console.log("value", value);
     let {table} = this.props;
     let {game} = this.props.table;
     if (!game) {
@@ -176,8 +175,6 @@ export default class Game extends React.Component {
   }
   render() {
     let {table, currentUser} = this.props;
-
-    console.log("in game table", table);
 
     let {game, players, ready} = table;
 
@@ -388,31 +385,12 @@ export default class Game extends React.Component {
 
         let verEdgePos;
 
-        // let verHandPos = getHandPosByCardNum(
-        //   cardsInHand,
-        //   cardSize,
-        //   horCardOffset,
-        //   this.state.windowWidth
-        // );
-
         if (verTopPos && DIRECTION[index] === "west") {
           verEdgePos = {top: verTopPos};
         }
         if (verTopPos && DIRECTION[index] === "east") {
           verEdgePos = {top: verTopPos};
         }
-
-        // console.log("verHandPos", verHandPos);
-        // let verEdgePos = () => {
-        //   if (verTopPos && DIRECTION[index] === "west") {
-        //     return Object.assign({}, verTopPos, {left: verHandPos});
-        //   } else if (verTopPos && DIRECTION[index] === "east") {
-        //     return Object.assign({}, verTopPos, {
-        //       right: verHandPos
-        //   }
-        // };
-
-        // console.log("verEdgePos", verEdgePos);
 
         return (
           <div
@@ -438,6 +416,7 @@ export default class Game extends React.Component {
         );
       });
     } // end of cards
+
     let isAllReady = table.ready.every(player => player === true);
 
     // dom elements
@@ -450,7 +429,7 @@ export default class Game extends React.Component {
               currentUser={currentUser}
               windowWidth={this.state.windowWidth}
               widnowHeight={this.state.windowHeight}
-              table={table}
+              table={this.props.table}
             />
           </div>
         </div>
@@ -461,7 +440,6 @@ export default class Game extends React.Component {
       <div className="game">
         {!isAllReady && (
           <PlayerReadyList
-            progress={this.props.progress}
             suffleCardsWhenReady={this.suffleCardsWhenReady}
             currentUser={currentUser}
             table={this.props.table}

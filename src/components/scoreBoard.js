@@ -16,7 +16,6 @@ export default class ScoreBoard extends React.Component {
     if (!table || game.order !== 51) {
       return;
     }
-
     dispatchToDatabase("CREATE_NEW_GAME", {
       table: table
     });

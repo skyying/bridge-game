@@ -3,7 +3,6 @@ const CardsSet = require("./cards.js");
 const Db = require("./db.js");
 
 exports.deal = function(table) {
-
     if (!table) {
         console.log("no table data in GAME deal");
         return null;

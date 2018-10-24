@@ -74,7 +74,7 @@
 
 .playing-table-header{
   display: grid;
-  grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 2fr;
+  grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 70px;
   justify-items: center;
   align-items: center;
   margin: 5px 0;
@@ -115,7 +115,7 @@
 .playing-table{
   font-size: 14px;
   display: grid;
-  grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 2fr;
+  grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 70px;
   .table-list-item {
     padding: 15px 0 15px;
     transition: all 0.5s;

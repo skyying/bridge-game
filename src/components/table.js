@@ -34,11 +34,16 @@ export default class Table extends React.Component {
   }
 
   componentDidMount() {
+
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
+    let currentUser = this.props.currentUser;
     this.model.get().then(table => {
       this.id = table.id;
       this.setState({isLoad: true});
+      if (!table.players.includes(currentUser.uid)) {
+        this.addPlayerToTable(table);
+      }
     });
 
     if (!this.props.currentUser) {
@@ -126,7 +131,6 @@ export default class Table extends React.Component {
         />
         <div className="table">
           <Game
-            progress={this.state.progress}
             currentUser={currentUser}
             currentTableId={this.props.currentTableId}
             table={targetTable}

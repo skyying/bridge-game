@@ -106,7 +106,7 @@ export default class Auction extends React.Component {
     this.setState({visibility: false, current: null});
   }
   render() {
-    let {game, players} = this.props;
+    let {game, players, currentUser} = this.props;
     let {playerInfo} = this.props.table;
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser.uid;
@@ -215,6 +215,7 @@ export default class Auction extends React.Component {
       return null;
     }
 
+    let currentUserAPlayer = players.includes(currentUser.uid);
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>
@@ -223,7 +224,7 @@ export default class Auction extends React.Component {
         )}
         <AuctionList scale={0.2} result={game.bid.result} />
         <div className="option-wrapper">
-          {isCurrentUser && (
+          {isCurrentUser  && (
             <div className="other-btns">
               <button
                 className="pass"
@@ -234,7 +235,7 @@ export default class Auction extends React.Component {
               {ReDoubleBtn}
             </div>
           )}
-          <div className="tricks">{allTrickOpt}</div>
+          <div className="tricks">{ allTrickOpt}</div>
           {this.state.visibility && (
             <div className="trumps">{selectedTrump}</div>
           )}

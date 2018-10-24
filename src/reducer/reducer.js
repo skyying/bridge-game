@@ -1,7 +1,12 @@
 import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {DB} from "../firebase/db.js";
-import {GAME_STATE, DEFAULT_GAME, PLAYERS} from "../components/constant.js";
+import {
+  GAME_STATE,
+  DEFAULT_GAME,
+  PLAYERS,
+  EMPTY_SEAT
+} from "../components/constant.js";
 
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
@@ -89,12 +94,11 @@ export const dispatchToDatabase = (type, action) => {
           newPlayerInfo
         ),
         players: players,
-        ready: [false, false, false, false]
+        ready: [true, false, false, false]
       };
       DB.setNodeByPath(`tables/${tableKey}`, newTable);
       DB.setTableListData(linkId, {
         id: tableKey,
-        isOpen: true,
         players: players,
         playerInfo: Object.assign(
           {},
@@ -112,6 +116,7 @@ export const dispatchToDatabase = (type, action) => {
 
     case "CREATE_NEW_GAME": {
       let {table} = action;
+      let {players} = table;
       let tableData = Object.assign({}, table);
       let {record, game} = tableData;
       if (record) {
@@ -119,15 +124,49 @@ export const dispatchToDatabase = (type, action) => {
       } else {
         record = [game];
       }
+
+      let robotName = "-robot";
+      let newPlayers = players.map(
+        player => (player.includes(robotName) ? EMPTY_SEAT : player)
+      );
       // reset table
       let timeStamp = new Date().getTime();
       tableData.record = record;
       tableData.createTime = timeStamp;
       tableData.game = Object.assign({}, DEFAULT_GAME);
-      tableData.ready = [false, false, false, false];
+      // tableData.players = players.filter( )
+      tableData.ready = [true, false, false, false];
       tableData.timeStamp = timeStamp;
       tableData.gameState = GAME_STATE.join;
+      tableData.players = newPlayers;
       DB.setNodeByPath(`tables/${tableData.id}`, tableData);
+      break;
+    }
+    case "START_GAME": {
+      let {table} = action;
+      let tableData = Object.assign({}, table);
+      let {players} = tableData;
+      let avatar = [1, 2, 3];
+      let index = 0;
+      let avaters = players.map(player => {
+        return player === EMPTY_SEAT
+          ? `C${avatar[index++]}-robot`
+          : player;
+      });
+      let newTable = Object.assign(
+        {},
+        tableData,
+        {ready: [true, true, true, true]},
+        {players: avaters},
+        {gameState: GAME_STATE.auction},
+        {timeStamp: new Date().getTime()}
+      );
+      DB.setNodeByPath(`tables/${newTable.id}`, newTable);
+      DB.setNodeByPath(`tableList/${table.linkId}`, {
+        id: table.id,
+        players: avaters,
+        playerInfo: table.playerInfo
+      });
       break;
     }
     case "READY_A_PLAYER": {

@@ -18,7 +18,7 @@
     grid-gap: 20px 0;
     width: 100%;
     display: grid;
-    grid-template: 30px 1fr 35px 35px / 1fr ;
+    grid-template: 30px 1fr 40px 10px 15px/ 1fr;
 
     .row {
       padding-top: 20px 0;
@@ -45,6 +45,11 @@
         // background-color: #4BC999;  
       }
     }
+  }
+  .waiting-info{
+    text-align: center;
+    font-size: 14px;
+
   }
   .btn-wrapper{
     display: flex;

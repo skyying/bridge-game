@@ -225,10 +225,10 @@ export class WaitingThumbnail extends React.Component {
     let size = this.props.size || 30;
     let disabled = this.props.disabled || false;
     let pos = this.state.position;
-    let name = disabled ? `disabled ${this.state.name}` : this.state.name;
+    let styleName = disabled ? `disabled ${this.state.name}` : this.state.name;
     let img = (
       <img
-        className={name}
+        className={styleName}
         style={{
           transform: `translateY(${this.state.posY}%) scale(1.07)`
         }}

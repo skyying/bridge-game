@@ -10,59 +10,16 @@ import {Progress} from "./progress.js";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);
-    this.timeInterval = 15000;
-    this.frequency = 10; // update frequency per sec;
-    // let timeStamp = new Date().getTime();
-    this.state = {
-      progress: new Date().getTime() - this.props.table.createTime
-    };
     this.setReadyState = this.setReadyState.bind(this);
-    this.countDownTimer = this.countDownTimer.bind(this);
     this.checkReadyState = this.checkReadyState.bind(this);
-    this.timer = setInterval(this.countDownTimer, this.frequency);
+    this.startGame = this.startGame.bind(this);
   }
-
-  componentDidMount() {
-    this.isMount = true;
-    let diffRange = new Date().getTime() - this.props.createTime;
-
-    if (this.isMount && diffRange >= this.timeInterval) {
-      this.setState({
-         progress: this.props.progress
-        // progress: new Date().getTime() - this.props.table.createTime
-      });
-    }
-  }
-  componentWillUnmount() {
-    this.isMount = false;
-    // this.setState({progress: this.props.progress})
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.createTime !== prevProps.createTime) {
-      this.state.progress = this.props.progress;
-      // new Date().getTime() - this.props.table.createTime;
-    }
-  }
-  countDownTimer() {
-    let createTime = this.props.table.createTime;
-    let diffRange = new Date().getTime() - this.props.table.createTime;
-    if (this.isMount && diffRange < this.timeInterval) {
-      this.setState({
-        progress: diffRange
-      });
-    } else {
-      new Promise((resolve, reject) => {
-        clearInterval(this.timer);
-        resolve("cleard");
-      }).then(val => {
-        if (
-          this.isMount &&
-                    this.props.table.createTime !== createTime
-        ) {
-          this.setState({timesUp: true});
-        }
-      });
-    }
+  startGame() {
+    if (!this.props.table) return;
+    dispatchToDatabase("START_GAME", {
+      currentUser: this.props.currentUser,
+      table: this.props.table
+    });
   }
   checkReadyState() {
     let {table, currentUser} = this.props;
@@ -98,15 +55,8 @@ export default class PlayerReadyList extends React.Component {
     if (!showPlayerReadyList) {
       return null;
     }
+
     let playBtns = null;
-
-    let totolProgress = 200;
-
-    let currentVal = Math.floor(
-      (this.state.progress / this.timeInterval) * totolProgress
-    );
-
-    let isTimesUp = currentVal >= totolProgress - 1;
 
     let thumbnails = players.map((player, index) => {
       let playerName;
@@ -119,11 +69,12 @@ export default class PlayerReadyList extends React.Component {
 
       if (!playerName) {
         return (
-          <WaitingThumbnail
-            stop={isTimesUp}
+          <div
             key={`join-plyaer-${index}`}
-            size={size}
-          />
+            className="player-ready-wrapper">
+            <WaitingThumbnail size={size} />
+            <span>等候中</span>
+          </div>
         );
       }
 
@@ -144,15 +95,18 @@ export default class PlayerReadyList extends React.Component {
     });
 
     let currentUserCanPlay;
+    let isTableOwner = currentUser.uid === players[0];
 
     if (players.includes(currentUser.uid)) {
       currentUserCanPlay = players.some(
-        (player, index) => player === currentUser.uid && !ready[index]
+        (player, i) => player === currentUser.uid && !ready[i]
       );
+
       playBtns = players.map((player, index) => {
         if (player === currentUser.uid && !ready[index]) {
           return (
             <div key={`playBtn-${index}`}>
+              <br />
               <button
                 style={{zIndex: 5}}
                 onClick={() => this.setReadyState(index)}
@@ -167,18 +121,17 @@ export default class PlayerReadyList extends React.Component {
       });
     }
 
-    let progressState = (
-      <Progress totalWidth={totolProgress} currentWidth={currentVal} />
+    let startGame = (
+      <button onClick={this.startGame} className="btn">
+                開始牌局
+      </button>
     );
-    if (isTimesUp) {
-      if (ready.some(player => player === true)) {
-        progressState = <div>牌桌準備中...</div>;
-      } else {
-        progressState = <div>沒人加入，即將返回大廳...</div>;
-      }
-    }
+
     let roomId = `${table.linkId}`;
     let roomNum = "桌號 " + roomId.slice(roomId.length - 3, roomId.length);
+    let notesText = isTableOwner
+      ? "按下方按鈕立即開始牌局"
+      : "等候其他玩家中...";
 
     return (
       <div className="player-ready-list">
@@ -187,11 +140,13 @@ export default class PlayerReadyList extends React.Component {
             <span>{roomNum}</span>
           </h3>
           <div className="row"> {thumbnails}</div>
-          {!isTimesUp &&
-                        currentUserCanPlay && (
-            <div className="btn-wrapper">{playBtns}</div>
+          {!currentUserCanPlay && (
+            <div className="waiting-info">{notesText}</div>
           )}
-          <div className="progress-panel">{progressState}</div>
+          <div className="btn-wrapper">
+            {currentUserCanPlay && playBtns}
+            {isTableOwner && startGame}
+          </div>
         </div>
       </div>
     );

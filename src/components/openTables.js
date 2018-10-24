@@ -15,6 +15,7 @@ export default class OpenTables extends React.Component {
   }
   createTable(tableRef) {
     if (!this.props.currentUser) {
+      console.log(" no user login");
       return;
     }
     dispatchToDatabase("CREATE_TABLE", {
@@ -40,8 +41,8 @@ export default class OpenTables extends React.Component {
         let tableCreateTime = +key;
 
         if (
-          tableList[key].players &&
-                    new Date().getTime() - tableCreateTime <= TIMER.join
+          tableList[key].players
+        //&& new Date().getTime() - tableCreateTime <= TIMER.join
         ) {
           return tableList[key].players.some(
             seat => seat === EMPTY_SEAT
