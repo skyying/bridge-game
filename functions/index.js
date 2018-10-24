@@ -20,16 +20,16 @@ let tableIdList = {};
 Db.init();
 
 const timeout = {
-    join: 15000,
+    join: 60000,
     auction: {
-        human: 10000,
+        human: 60000,
         robot: 3000
     },
     playing: {
-        human: 10000,
+        human: 60000,
         robot: 3000
     },
-    close: 10000
+    close: 60000
 };
 
 const robotName = "-robot";
