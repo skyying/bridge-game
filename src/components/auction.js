@@ -16,10 +16,10 @@ export default class Auction extends React.Component {
       visibility: false,
       current: null
     };
-    this.updateBid = this.updateBid.bind(this);
-    this.validateUserTurnAndsetTrump = this.validateUserTurnAndsetTrump.bind(
-      this
-    );
+
+    ["updateBid", "validateUserTurnAndsetTrump"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   validateUserTurnAndsetTrump(index) {
     // check if already current user's turn to give his bid
@@ -224,7 +224,7 @@ export default class Auction extends React.Component {
         )}
         <AuctionList scale={0.2} result={game.bid.result} />
         <div className="option-wrapper">
-          {isCurrentUser  && (
+          {isCurrentUser && (
             <div className="other-btns">
               <button
                 className="pass"
@@ -235,7 +235,7 @@ export default class Auction extends React.Component {
               {ReDoubleBtn}
             </div>
           )}
-          <div className="tricks">{ allTrickOpt}</div>
+          <div className="tricks">{allTrickOpt}</div>
           {this.state.visibility && (
             <div className="trumps">{selectedTrump}</div>
           )}

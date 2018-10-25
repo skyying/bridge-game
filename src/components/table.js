@@ -9,7 +9,7 @@ import randomColor from "randomcolor";
 import {EMPTY_SEAT} from "./constant.js";
 import TableModel from "../reducer/tableModel.js";
 import Header from "./header.js";
-import Loading from "./loading.js";
+import {Loading} from "./loading.js";
 import "../style/table.scss";
 import "../style/sidebar.scss";
 import "../style/record-item.scss";
@@ -34,7 +34,6 @@ export default class Table extends React.Component {
   }
 
   componentDidMount() {
-
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
     let currentUser = this.props.currentUser;
@@ -124,6 +123,7 @@ export default class Table extends React.Component {
     return (
       <div>
         <Header
+          isHeaderPanelClosed={this.props.isHeaderPanelClosed}
           roomNum={this.linkId || null}
           isTableColor={true}
           getUserAuthInfo={this.props.getUserAuthInfo}

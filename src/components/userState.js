@@ -4,22 +4,23 @@ import {ThumbnailWithTag} from "./thumbnail.js";
 import {DB} from "../firebase/db.js";
 import {Link} from "react-router-dom";
 import "../style/user-state.scss";
+import {dispatch} from "../reducer/reducer.js";
 
 export default class UserState extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isOpen: false
-    };
-    this.handleSignOut = this.handleSignOut.bind(this);
-    this.closePanel = this.closePanel.bind(this);
+
+    ["handleSignOut", "togglePanel"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   handleSignOut() {
-    this.closePanel();
+    this.togglePanel();
     DB.auth.signOut();
   }
-  closePanel() {
-    this.setState({isOpen: false});
+  togglePanel(e) {
+    dispatch("TOGGLE_HEADER_PANEL", {isToggle: true});
+    e.stopPropagation();
   }
   render() {
     let {currentUser} = this.props;
@@ -27,11 +28,11 @@ export default class UserState extends React.Component {
       <div className="user-state-panel">
         <div
           className={
-            this.state.isOpen
-              ? "Login-state-btn open-btn"
-              : "Login-state-btn"
+            this.props.isHeaderPanelClosed
+              ? "Login-state-btn"
+              : "Login-state-btn open-btn"
           }
-          onClick={() => this.setState({isOpen: !this.state.isOpen})}>
+          onClick={this.togglePanel}>
           <ThumbnailWithTag
             isCurrentUser={true}
             size={40}
@@ -43,9 +44,14 @@ export default class UserState extends React.Component {
             <span>線上</span>
           </div>
         </div>
-        <div className={this.state.isOpen ? "options open" : "options"}>
+        <div
+          className={
+            this.props.isHeaderPanelClosed
+              ? "options"
+              : "options open"
+          }>
           <Link onClick={this.handleSignOut} to="/">
-                登出
+                        登出
           </Link>
         </div>
       </div>

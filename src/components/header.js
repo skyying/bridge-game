@@ -17,7 +17,12 @@ export default class Header extends React.Component {
     }
   }
   render() {
-    let userProfile = <UserState currentUser={this.props.currentUser} />;
+    let userProfile = (
+      <UserState
+        isHeaderPanelClosed={this.props.isHeaderPanelClosed}
+        currentUser={this.props.currentUser}
+      />
+    );
     let rightTopCorner;
     let registerBtns = (
       <div className="register-btn-groups">

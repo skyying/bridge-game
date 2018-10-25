@@ -17,8 +17,10 @@ export default class Login extends React.Component {
       redirect: false
     };
     this.redirectToLobbyIfLogin();
-    this.redirectToLobbyIfLogin = this.redirectToLobbyIfLogin.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
+
+    ["redirectToLobbyIfLogin", "handleLogin"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   redirectToLobbyIfLogin() {
     DB.getCurrentUser()
@@ -52,6 +54,7 @@ export default class Login extends React.Component {
     return (
       <div>
         <Header
+          isHeaderPanelClosed={this.props.isHeaderPanelClosed}
           getUserAuthInfo={this.props.getUserAuthInfo}
           currentUser={this.props.currentUser}
         />

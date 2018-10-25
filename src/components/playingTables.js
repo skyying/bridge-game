@@ -8,8 +8,10 @@ import "../style/table-list.scss";
 export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
-    this.createTable = this.createTable.bind(this);
-    this.setCurrentTable = this.setCurrentTable.bind(this);
+
+    ["createTable", "setCurrentTable"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   createTable(tableRef) {
     dispatchToDatabase("CREATE_TABLE", {
@@ -47,7 +49,9 @@ export default class OpenTables extends React.Component {
           <div
             className="playing-table"
             key={`playing-table-item-${index}}`}>
-            <div className="room-number"><span>{key.slice(key.length-3, key.length)}</span></div>
+            <div className="room-number">
+              <span>{key.slice(key.length - 3, key.length)}</span>
+            </div>
             {playerList}
             <div>
               <Link
@@ -58,7 +62,7 @@ export default class OpenTables extends React.Component {
                     ? `/table/${key}`
                     : "/login"
                 }>
-                 觀賞 
+                                觀賞
               </Link>
             </div>
           </div>

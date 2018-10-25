@@ -10,9 +10,10 @@ import {Progress} from "./progress.js";
 export default class PlayerReadyList extends React.Component {
   constructor(props) {
     super(props);
-    this.setReadyState = this.setReadyState.bind(this);
-    this.checkReadyState = this.checkReadyState.bind(this);
-    this.startGame = this.startGame.bind(this);
+
+    ["setReadyState", "checkReadyState", "startGame"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   startGame() {
     if (!this.props.table) return;

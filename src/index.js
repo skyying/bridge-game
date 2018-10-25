@@ -3,8 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Login from "./components/login.js";
 import Table from "./components/table.js";
-import Lobby from "./components/lobby.js";
-import Loading from "./components/loading.js";
+import { Lobby } from "./components/lobby.js";
+import { Loading } from "./components/loading.js";
 import SignUp from "./components/signUp.js";
 import {DB} from "./firebase/db.js";
 import {Route, HashRouter} from "react-router-dom";
@@ -14,10 +14,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = store.getState();
-    this.update = this.update.bind(this);
-    this.stopLoading = this.stopLoading.bind(this);
-    this.updateUserInfo = this.updateUserInfo.bind(this);
-    this.getUserAuthInfo = this.getUserAuthInfo.bind(this);
+    [
+      "update",
+      "stopLoading",
+      "updateUserInfo",
+      "getUserAuthInfo",
+      "getUserAuthInfo"
+    ].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   update() {
     this.setState(store.getState());
@@ -61,6 +66,9 @@ class App extends React.Component {
       });
     });
   }
+  closeHeaderPanel(e) {
+    dispatch("TOGGLE_HEADER_PANEL", {isToggle: false});
+  }
   stopLoading() {
     dispatch("UPDATE_LOADING_STATE", {isLoad: true});
   }
@@ -69,7 +77,7 @@ class App extends React.Component {
       return <Loading />;
     }
     return (
-      <div>
+      <div className="main" onClick={this.closeHeaderPanel}>
         <HashRouter>
           <div>
             <div>
@@ -79,6 +87,9 @@ class App extends React.Component {
                 render={props => (
                   <Login
                     getUserAuthInfo={this.getUserAuthInfo}
+                    isHeaderPanelClosed={
+                      this.state.isHeaderPanelClosed
+                    }
                     currentUser={this.state.user}
                   />
                 )}
@@ -90,6 +101,9 @@ class App extends React.Component {
                   <SignUp
                     updateUserInfo={this.updateUserInfo}
                     getUserAuthInfo={this.getUserAuthInfo}
+                    isHeaderPanelClosed={
+                      this.state.isHeaderPanelClosed
+                    }
                     currentUser={this.state.user}
                     {...props}
                   />
@@ -107,6 +121,9 @@ class App extends React.Component {
                     tables={this.state.tables}
                     tableList={this.state.tableList}
                     currentUser={this.state.user}
+                    isHeaderPanelClosed={
+                      this.state.isHeaderPanelClosed
+                    }
                     {...props}
                   />
                 )}
@@ -120,6 +137,9 @@ class App extends React.Component {
                     getUserAuthInfo={this.getUserAuthInfo}
                     tables={this.state.tables || null}
                     currentUser={this.state.user}
+                    isHeaderPanelClosed={
+                      this.state.isHeaderPanelClosed
+                    }
                     tableList={this.state.tableList}
                   />
                 )}

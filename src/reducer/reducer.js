@@ -24,6 +24,17 @@ export const appReducer = (state, action) => {
         userList: action.userList
       });
     }
+    case "TOGGLE_HEADER_PANEL": {
+      let current = state.isHeaderPanelClosed;
+      if (action.isToggle) {
+        return Object.assign({}, state, {
+          isHeaderPanelClosed: !current
+        });
+      }
+      return Object.assign({}, state, {
+        isHeaderPanelClosed: true
+      });
+    }
     case "UPDATE_LOADING_STATE": {
       return Object.assign({}, state, {isLoad: action.isLoad});
     }
@@ -349,7 +360,8 @@ export const store = createStore(
     isLoad: false,
     tables: {},
     currentTableId: null,
-    closeTables: {}
+    closeTables: {},
+    isHeaderPanelClosed: true
   },
   applyMiddleware(thunk)
 );

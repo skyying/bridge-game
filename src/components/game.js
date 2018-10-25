@@ -40,13 +40,18 @@ export default class Game extends React.Component {
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight
     };
-    this.deal = this.deal.bind(this);
-    this.getNextMaxTrick = this.getNextMaxTrick.bind(this);
-    this.shuffle = this.shuffle.bind(this);
-    this.suffleCardsWhenReady = this.suffleCardsWhenReady.bind(this);
-    this.endAuction = this.endAuction.bind(this);
-    this.handleResize = this.handleResize.bind(this);
-    this.getAuctionStatus = this.getAuctionStatus.bind(this);
+
+    [
+      "deal",
+      "getNextMaxTrick",
+      "shuffle",
+      "suffleCardsWhenReady",
+      "endAuction",
+      "handleResize",
+      "getAuctionStatus"
+    ].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   handleResize() {
     this.setState({

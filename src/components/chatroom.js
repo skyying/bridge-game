@@ -11,11 +11,13 @@ export default class Chatroom extends React.Component {
     this.state = {
       message: ""
     };
-    this.sendMessage = this.sendMessage.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.addEmoji = this.addEmoji.bind(this);
-    this.msgEnd;
+
+    ["sendMessage", "handleChange", "handleKeyPress", "addEmoji"].forEach(
+      name => {
+        this[name] = this[name].bind(this);
+      }
+    );
+
     this.emoji = Emoji;
   }
   handleKeyPress(e) {
