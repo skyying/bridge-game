@@ -15,7 +15,7 @@ export const AuctionList = ({result, scale}) => {
       {Array.from({length: Math.ceil(resultsNum / 4)})
         .fill(0)
         .map((res, index) => (
-          <div key={getRandomKey()} className="row">
+          <div key={`result-item-${index}`} className="row">
             {Array.from({length: 4})
               .fill(0)
               .map((re, j) => {
@@ -23,7 +23,7 @@ export const AuctionList = ({result, scale}) => {
                 if (resultItem && resultItem.opt) {
                   return (
                     <div
-                      key={getRandomKey()}
+                      key={`result-item-opt-${j}`}
                       className="bid-result">
                       {resultItem.opt}
                     </div>
@@ -34,18 +34,18 @@ export const AuctionList = ({result, scale}) => {
                 ) {
                   return (
                     <div
-                      key={getRandomKey()}
+                      key={`result-item-opt-${j}`}
                       className="bid-result">
                       <div>{resultItem.trick + 1}</div>
                       {SUIT_SHAPE[resultItem.trump](
-                        scale,
+                        scale
                       )}
                     </div>
                   );
                 } else {
                   return (
                     <div
-                      key={getRandomKey()}
+                      key={`result-item-opt-${j}`}
                       className="bid-result">
                       {null}
                     </div>

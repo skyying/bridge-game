@@ -37,8 +37,9 @@ export default class Game extends React.Component {
     let {game} = this.props.table;
     this.state = {
       endAuction: game && game.order >= 0,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight
+      // windowWidth: window.innerWidth,
+      // windowHeight: window.innerHeight,
+      sidebarWidth: 0
     };
 
     [
@@ -47,30 +48,30 @@ export default class Game extends React.Component {
       "shuffle",
       "suffleCardsWhenReady",
       "endAuction",
-      "handleResize",
       "getAuctionStatus"
     ].forEach(name => {
       this[name] = this[name].bind(this);
     });
   }
-  handleResize() {
-    this.setState({
-      windowWidth: window.innerWidth,
-      height: window.innerHeight
-    });
-  }
-  componentDidMount() {
-    this.handleResize();
-    window.addEventListener("resize", this.handleResize);
-  }
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResize);
-  }
+  // handleResize() {
+  //   this.setState({
+  //     windowWidth: window.innerWidth,
+  //     height: window.innerHeight
+  //   });
+  // }
+  // componentDidMount() {
+  //   window.addEventListener("resize", this.handleResize);
+  //   setTimeout(this.handleResize, 10);
+  // }
+  // componentWillUnmount() {
+  //   window.removeEventListener("resize", this.handleResize);
+  // }
   componentDidUpdate(prevProps) {
     let newTable = this.props.table;
     let oldTable = prevProps.table;
-
-    // todo, using a promise to do this task
+    // if (prevProps.isChatroomShown !== this.props.isChatroomShown) {
+    //   // this.handleResize();
+    // }
     this.suffleCardsWhenReady();
   }
 
@@ -88,9 +89,9 @@ export default class Game extends React.Component {
       }
     }
   }
+
   // so far, how many tricks have been played ?
   getNextMaxTrick() {
-    // if (!this.props.table || this.props.table.game) return;
     let {game} = this.props.table;
     if (!game) {
       return;
@@ -357,7 +358,14 @@ export default class Game extends React.Component {
         ).length;
 
         // handle resize
-        let sidebarWidth = this.state.windowWidth >= 1200 ? 380 : 300;
+        // let sidebarWidth = this.state.windowWidth >= 1200 ? 380 : 300;
+        // let sidebarWidth = this.state.sidebarWidth;
+        // (this.props.sidebarRef.current &&
+        //     this.props.sidebarRef.current.offsetWidth) ||
+        // 0;
+
+        let sidebarWidth = this.props.sidebarWidth;
+
         let horCardOffset = 40;
         let cardSize = 100;
 
@@ -365,7 +373,7 @@ export default class Game extends React.Component {
                     DIRECTION[index] === "north" || DIRECTION[index] === "south"
                       ? {
                         left:
-                                  (this.state.windowWidth -
+                                  (this.props.windowWidth -
                                       sidebarWidth -
                                       (horCardOffset * totalCardsInHand +
                                           horCardOffset)) /
@@ -410,10 +418,8 @@ export default class Game extends React.Component {
                                     isFinishAuction
                 }
                 name={
-                  (table.playerInfo[playerHand] &&
-                                        table.playerInfo[playerHand]
-                                          .displayName) ||
-                                    "Anonymous"
+                  table.playerInfo[playerHand] &&
+                                    table.playerInfo[playerHand].displayName || "Anonymous"
                 }
               />
             </div>
@@ -423,17 +429,22 @@ export default class Game extends React.Component {
     } // end of cards
 
     let isAllReady = table.ready.every(player => player === true);
-
+    let gameStyleName;
+    if (this.props.isChatroomShown) {
+      gameStyleName = "game";
+    } else {
+      gameStyleName = "game full";
+    }
     // dom elements
     if (isGameOver) {
       return (
-        <div className="game">
+        <div className={gameStyleName}>
           <div>
             <ScoreBoard
               startGame={this.suffleCardsWhenReady}
               currentUser={currentUser}
-              windowWidth={this.state.windowWidth}
-              widnowHeight={this.state.windowHeight}
+              windowWidth={this.props.windowWidth}
+              widnowHeight={this.props.windowHeight}
               table={this.props.table}
             />
           </div>
@@ -442,7 +453,7 @@ export default class Game extends React.Component {
     }
 
     return (
-      <div className="game">
+      <div className={gameStyleName}>
         {!isAllReady && (
           <PlayerReadyList
             suffleCardsWhenReady={this.suffleCardsWhenReady}
@@ -453,8 +464,8 @@ export default class Game extends React.Component {
         {isFinishAuction && (
           <AuctionResult
             currentUser={currentUser}
-            windowWidth={this.state.windowWidth}
-            windowHeight={this.state.windowHeight}
+            windowWidth={this.props.windowWidth}
+            windowHeight={this.props.windowHeight}
             table={table}
           />
         )}
@@ -483,13 +494,13 @@ export default class Game extends React.Component {
             currentUser={currentUser}
             resizeRatio={0.15}
             innerStyle={{
-              bottom: Math.ceil(this.state.windowWidth / 500) * 5,
-              right: Math.ceil(this.state.windowWidth / 500) * 5
+              bottom: Math.ceil(this.props.windowWidth / 500) * 5,
+              right: Math.ceil(this.props.windowWidth / 500) * 5
             }}
             thumbnailSize={30}
             name="right-bottom-pos"
-            windowWidth={this.state.windowWidth}
-            widnowHeight={this.state.windowHeight}
+            windowWidth={this.props.windowWidth}
+            widnowHeight={this.props.windowHeight}
             table={this.props.table}
           />
         </div>

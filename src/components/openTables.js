@@ -13,6 +13,7 @@ export default class OpenTables extends React.Component {
     this.createTable = this.createTable.bind(this);
     this.setCurrentTable = this.setCurrentTable.bind(this);
   }
+
   createTable(tableRef) {
     if (!this.props.currentUser) {
       console.log(" no user login");
@@ -37,12 +38,13 @@ export default class OpenTables extends React.Component {
     if (tableList) {
       let tableListKey = Object.keys(tableList);
 
+      let timeLimit = 60000;
       let openTableList = tableListKey.filter(key => {
         let tableCreateTime = +key;
 
         if (
-          tableList[key].players
-        //&& new Date().getTime() - tableCreateTime <= TIMER.join
+          tableList[key].players &&
+                    new Date().getTime() - tableCreateTime <= timeLimit
         ) {
           return tableList[key].players.some(
             seat => seat === EMPTY_SEAT

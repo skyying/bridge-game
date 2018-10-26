@@ -17,7 +17,13 @@ export default class TrickScore extends React.Component {
     }
     let {playerInfo} = table;
     let score = teamScore(game.cards);
-    let playerList = players.map(key => playerInfo[key].displayName);
+    let playerList = players.map(key => {
+      if (playerInfo[key]) {
+        return playerInfo[key].displayName;
+      } else {
+        return "Anonymous";
+      }
+    });
     let innerStyle = this.props.innerStyle;
     let resizeRatio = this.props.ratio || 0.15;
     let thumbnailStyle = {

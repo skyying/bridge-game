@@ -1,15 +1,11 @@
 $gameBg: linear-gradient(-180deg, #0AC8C2 5%, #00B5AA 100%);
-*{
-  // border: 1px solid red; /* remove it */
-}
-
 
 $card-margin-hor: 40px;
 $card-margin-ver: 68px;
 
 .game {
   background-image:$gameBg;
-  width: 100%;
+  width: 70vw;
   height: calc(100vh - 60px);
   position: relative;
   .trick-area{
@@ -18,16 +14,16 @@ $card-margin-ver: 68px;
       height: 100%;
       .trick-card-wrapper {
         &:nth-child(1) {
-          z-index: 1;
+          z-index: 100;
         }
         &:nth-child(2) {
-          z-index:2; 
+          z-index:200; 
         }
         &:nth-child(3) {
-          z-index:3; 
+          z-index:300; 
         }
         &:nth-child(4) {
-          z-index:4; 
+          z-index:400; 
         }
         width: 100px;
         height: auto;
@@ -118,13 +114,11 @@ $card-margin-ver: 68px;
   .west {
     left: 15%;
     top: 25%;
-
     .hand-inner{
       .player{
         transform: translate(0%, -120%);
       }
     }
-
     .card-wrapper{
       position: absolute;
     }
@@ -144,7 +138,6 @@ $card-margin-ver: 68px;
         z-index:  $z;
       }
     }
-
   }
   .east {
     right: 15%;
@@ -284,7 +277,21 @@ $card-margin-ver: 68px;
   }
 }
 
+
+
+// @media screen and (max-width: 800px) {
+//   .game{
+//     width: 70vw;
+//   }
+//   .sidebar{
+//     width: 30vw;
+//   }
+// }
+
+
+
 // less than 1250
+
 
 // @media screen and (max-width: 1300px) {
 //   .game{
@@ -413,3 +420,4 @@ $card-margin-ver: 68px;
 // .west-card{
 //   transform: translate(-150%, -50%) scale(0.8);
 // }
+//

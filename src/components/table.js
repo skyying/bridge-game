@@ -10,12 +10,13 @@ import {EMPTY_SEAT} from "./constant.js";
 import TableModel from "../reducer/tableModel.js";
 import Header from "./header.js";
 import {Loading} from "./loading.js";
+import {FloatBtn} from "./floatBtn.js";
 import "../style/table.scss";
-import "../style/sidebar.scss";
 import "../style/record-item.scss";
 import "../style/record.scss";
 import "../style/dot.scss";
 import "../style/rewind.scss";
+import "../style/sidebar.scss";
 
 export default class Table extends React.Component {
   constructor(props) {
@@ -23,16 +24,45 @@ export default class Table extends React.Component {
     this.linkId =
             this.props.match.params.id || window.location.hash.slice(8);
 
+    this.childRef = React.createRef();
+
     this.state = {
       isLoad: false,
       canRedirect: false,
-      isClosed: false
+      isClosed: false,
+      sidebarWidth: null
     };
+    this.timer;
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
+    this.toggleChatroom = this.toggleChatroom.bind(this);
+    this.handleResize = this.handleResize.bind(this);
     this.color = randomColor("dark");
   }
+  handleResize() {
+    console.log("in talbe reisze , childrefwidth");
+    clearTimeout(this.timer);
+    if (window.innerWidth <= 700 && this.props.isChatroomShown) {
+      this.timer = setTimeout(this.toggleChatroom, 0);
+    } else if (window.innerWidth > 700 && !this.props.isChatroomShown) {
+      this.timer = setTimeout(this.toggleChatroom, 0);
+    }
+    setTimeout(() => {
+      let width = 0;
+      if (this.childRef.current) {
+        width = this.childRef.current.offsetWidth;
+      }
+      this.setState({sidebarWidth: width});
+    }, 0);
 
+    this.setState({
+      windowWidth: window.innerWidth,
+      windowheight: window.innerHeight
+    });
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
   componentDidMount() {
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
@@ -40,6 +70,8 @@ export default class Table extends React.Component {
     this.model.get().then(table => {
       this.id = table.id;
       this.setState({isLoad: true});
+      window.addEventListener("resize", this.handleResize);
+      this.handleResize();
       if (!table.players.includes(currentUser.uid)) {
         this.addPlayerToTable(table);
       }
@@ -48,8 +80,8 @@ export default class Table extends React.Component {
     if (!this.props.currentUser) {
       DB.getCurrentUser();
     }
+    // this.handleResize();
   }
-
   addPlayerToTable(table) {
     let {players, viewers} = table;
     let {currentUser} = this.props;
@@ -75,7 +107,11 @@ export default class Table extends React.Component {
       });
     }
   }
-
+  toggleChatroom() {
+    dispatch("TOGGLE_CHATROOM_PANEL", {
+      isChatroomShown: !this.props.isChatroomShown
+    });
+  }
   componentDidUpdate(prevProps) {
     let {tableList, tables, currentTableId} = this.props;
     if (!tableList) return;
@@ -94,6 +130,11 @@ export default class Table extends React.Component {
     }
   }
   render() {
+    console.log(
+      "this.state.sidebarWidth, in table",
+      this.state.sidebarWidth
+    );
+
     let {canRedirect, isLoad} = this.state;
 
     if (canRedirect) {
@@ -120,6 +161,11 @@ export default class Table extends React.Component {
       return <Redirect to="/" />;
     }
 
+    let chatroomToggleBtn = this.props.isHeaderPanelClosed &&
+            !this.props.isChatroomShown && (
+      <FloatBtn clickEvt={this.toggleChatroom} />
+    );
+
     return (
       <div>
         <Header
@@ -131,15 +177,24 @@ export default class Table extends React.Component {
         />
         <div className="table">
           <Game
+            windowWidth={this.state.windowWidth}
+            windowHeight={this.state.windowheight}
+            sidebarWidth={this.state.sidebarWidth}
+            sidebarRef={this.childRef}
+            isChatroomShown={this.props.isChatroomShown}
             currentUser={currentUser}
             currentTableId={this.props.currentTableId}
             table={targetTable}
           />
           <Sidebar
+            setRef={this.childRef}
+            toggleChatroom={this.toggleChatroom}
+            isChatroomShown={this.props.isChatroomShown}
             currentUser={currentUser}
             chatroom={chatroom}
             table={targetTable}
           />
+          {chatroomToggleBtn}
         </div>
       </div>
     );

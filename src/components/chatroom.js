@@ -4,6 +4,7 @@ import {DB} from "../firebase/db.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import randomColor from "randomcolor";
 import {SUIT_SHAPE, Emoji} from "./constant.js";
+import {dispatch} from "../reducer/reducer.js";
 
 export default class Chatroom extends React.Component {
   constructor(props) {
@@ -11,29 +12,57 @@ export default class Chatroom extends React.Component {
     this.state = {
       message: ""
     };
+    [
+      "sendMessage",
+      "handleChange",
+      "handleKeyPress",
+      "addEmoji",
+      "handleMessageHeight"
+      // "handleShowChatRoom"
+    ].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
 
-    ["sendMessage", "handleChange", "handleKeyPress", "addEmoji"].forEach(
-      name => {
-        this[name] = this[name].bind(this);
-      }
-    );
-
+    this.state = {
+      height: "30vh"
+    };
     this.emoji = Emoji;
-  }
-  handleKeyPress(e) {
-    // && this.state.message.length
-    if (e.key === "Enter") {
-      this.sendMessage();
-    }
+    this.msgContent;
+    this.typingArea;
   }
   componentDidMount() {
     this.scrollToBottom();
+    this.handleMessageHeight();
+    // this.handleShowChatRoom();
+    window.addEventListener("resize", this.handleMessageHeight);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleMessageHeight);
+  }
+  handleMessageHeight() {
+    let remainingHeight = 180;
+    this.setState({
+      height:
+                window.innerHeight -
+                this.typingArea.offsetHeight -
+                remainingHeight
+    });
+  }
+  handleKeyPress(e) {
+    if (e.key === "Enter") {
+      this.sendMessage();
+    }
   }
   componentDidUpdate() {
     this.scrollToBottom();
   }
   addEmoji(emoji) {
-    this.setState({message: this.state.message + emoji});
+    this.setState(prevState => {
+      if (prevState.message) {
+        return {message: prevState.message + emoji};
+      }
+      return {message: emoji};
+    });
   }
   sendMessage(e) {
     dispatchToDatabase("SEND_MESSAGE_TO_CHATROOM", {
@@ -51,7 +80,9 @@ export default class Chatroom extends React.Component {
   scrollToBottom() {
     // in order to fix message will scroll to bottom
     setTimeout(() => {
-      this.msgEnd.scrollIntoView({behavior: "smooth", block: "end"});
+      if (this.msgEnd) {
+        this.msgEnd.scrollIntoView({behavior: "smooth", block: "end"});
+      }
     }, 10);
   }
   render() {
@@ -122,7 +153,12 @@ export default class Chatroom extends React.Component {
 
     return (
       <div className="chatroom">
-        <div className="msg-wrapper">
+        <div
+          ref={el => {
+            this.msgContent = el;
+          }}
+          style={{height: this.state.height}}
+          className="msg-wrapper">
           {messageList}
 
           <div
@@ -133,7 +169,11 @@ export default class Chatroom extends React.Component {
             <i />
           </div>
         </div>
-        <div className="typing-area">
+        <div
+          ref={el => {
+            this.typingArea = el;
+          }}
+          className="typing-area">
           <textarea
             placeholder="type something..."
             rows="10"

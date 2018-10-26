@@ -3,8 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Login from "./components/login.js";
 import Table from "./components/table.js";
-import { Lobby } from "./components/lobby.js";
-import { Loading } from "./components/loading.js";
+import {Lobby} from "./components/lobby.js";
+import {Loading} from "./components/loading.js";
 import SignUp from "./components/signUp.js";
 import {DB} from "./firebase/db.js";
 import {Route, HashRouter} from "react-router-dom";
@@ -115,6 +115,9 @@ class App extends React.Component {
                   <Table
                     currentTableId={
                       this.state.currentTableId
+                    }
+                    isChatroomShown={
+                      this.state.isChatroomShown
                     }
                     getUserAuthInfo={this.getUserAuthInfo}
                     chatroom={this.state.chatroom}

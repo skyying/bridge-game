@@ -4,8 +4,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  min-width: 300px;
+  width: 100vw;
+  max-width: 500px;
   z-index: 500;
-  width: 40vw;
   transform: translate(-50%, -50%);
 
   .player-ready-list-inner{
@@ -13,8 +15,6 @@
     align-items: center;
     border-radius: 3px;
     background-color: #F4F4EB;
-    max-width: 500px;
-    min-width: 200px;
     grid-gap: 20px 0;
     width: 100%;
     display: grid;

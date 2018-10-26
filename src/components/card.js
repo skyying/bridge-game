@@ -6,7 +6,7 @@ import "../style/card.scss";
 
 export const TrickCard = ({value}) => {
   return (
-    <div className="abbbbbbbbbbbbb">
+    <div>
       <Card flipUp={true} value={value} />
     </div>
   );

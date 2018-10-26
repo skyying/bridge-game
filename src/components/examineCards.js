@@ -103,6 +103,7 @@ export const shuffleCards = () => {
   return cards;
 };
 
+// split all cards to four hands
 export const mapToFourHands = cards => {
   if (!cards) return;
   return [0, 0, 0, 0]
@@ -112,11 +113,14 @@ export const mapToFourHands = cards => {
     .slice(0);
 };
 
+
+// filter only JQKA
 export const fourHands = cards => {
   return mapToFourHands(cards).map(hand =>
     hand.map(value => (value % 13 > 8 ? (value % 13) - 8 : 0))
   );
 };
+
 
 const getRandomCards = () => {
   let cards = Array.from({length: CARD_NUM.TOTAL})
@@ -132,6 +136,9 @@ const getRandomCards = () => {
   return cards;
 };
 
+
+// check if all hands are valid, at least have 7 points;
+// A: 4 points, K: 3 points, Q: 2points, J: 1 points
 const validateShuffle = cards => {
   return fourHands(cards).every(
     hand => hand.reduce((sum, value) => value + sum, 0) >= 7

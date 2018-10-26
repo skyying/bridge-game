@@ -3,7 +3,8 @@ $tableBg: #1ABEB9;
 
 .user-state-panel{
   position: relative;
-  width: 300px ;
+  width: 30vw;
+  max-width: 300px;
   .thumbnail-with-tag{
     .tag{
       left: 60%;
@@ -27,10 +28,13 @@ $tableBg: #1ABEB9;
       background-color: #22213B;
       cursor: pointer;
       transition: 0.2s all;
+      z-index: 1003;
     }
     span {
+      z-index: 2000;
       font-size: 0.7rem;
       font-weight: 200;
+      z-index: 1001;
     }
     > div {
       &:last-child{
@@ -42,9 +46,11 @@ $tableBg: #1ABEB9;
 
   .open-btn{
     background-color: #22213B;
+    z-index: 1003;
     transition: 0.2s all;
     cursor: pointer;
     &:hover{
+      z-index: 1001;
       background-color: #6965C2;
       cursor: pointer;
       transition: 0.2s all;
@@ -57,6 +63,7 @@ $tableBg: #1ABEB9;
     overflow: hidden;
   }
   .options{
+    z-index: 1001;
     width: 300px;
     position: absolute;
     bottom: 0;
@@ -65,6 +72,7 @@ $tableBg: #1ABEB9;
     display: none;
   }
   .open{
+    z-index: 1001;
     transform: translateY(100%);
     display: flex;
     flex-direction: column;
