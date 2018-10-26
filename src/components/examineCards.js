@@ -146,7 +146,6 @@ const validateShuffle = cards => {
 };
 
 export const getMaxCardNumPerSuit = cardsForPlayerHand => {
-  console.log("max card num");
   return Math.max(...cardsForPlayerHand.map(suit => suit.length));
 };
 
@@ -155,6 +154,5 @@ export const getHandPosByCardNum = (cardsForPlayerHand, cardSize, offset) => {
   if (maxCardNum === 0) {
     return 0;
   }
-  console.log("maxCardNum", maxCardNum);
   return (maxCardNum - 1) * offset + cardSize;
 };

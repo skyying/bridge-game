@@ -30,6 +30,8 @@ export default class Table extends React.Component {
       isLoad: false,
       canRedirect: false,
       isClosed: false,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
       sidebarWidth: null
     };
     this.timer;
@@ -40,24 +42,20 @@ export default class Table extends React.Component {
     this.color = randomColor("dark");
   }
   handleResize() {
-    console.log("in talbe reisze , childrefwidth");
-    clearTimeout(this.timer);
-    if (window.innerWidth <= 700 && this.props.isChatroomShown) {
-      this.timer = setTimeout(this.toggleChatroom, 0);
-    } else if (window.innerWidth > 700 && !this.props.isChatroomShown) {
-      this.timer = setTimeout(this.toggleChatroom, 0);
-    }
     setTimeout(() => {
       let width = 0;
       if (this.childRef.current) {
         width = this.childRef.current.offsetWidth;
+      }
+      if (this.props.isChatroomShown && window.innerWidth <= 700) {
+        this.toggleChatroom();
       }
       this.setState({sidebarWidth: width});
     }, 0);
 
     this.setState({
       windowWidth: window.innerWidth,
-      windowheight: window.innerHeight
+      windowHeight: window.innerHeight
     });
   }
   componentWillUnmount() {
@@ -67,20 +65,24 @@ export default class Table extends React.Component {
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
     let currentUser = this.props.currentUser;
-    this.model.get().then(table => {
-      this.id = table.id;
-      this.setState({isLoad: true});
-      window.addEventListener("resize", this.handleResize);
-      this.handleResize();
-      if (!table.players.includes(currentUser.uid)) {
-        this.addPlayerToTable(table);
-      }
-    });
-
     if (!this.props.currentUser) {
       DB.getCurrentUser();
     }
-    // this.handleResize();
+    this.model
+      .get()
+      .then(table => {
+        this.id = table.id;
+        this.setState({isLoad: true});
+        window.addEventListener("resize", this.handleResize);
+        this.handleResize();
+        if (
+          this.props.currentUser &&
+                    !table.players.includes(currentUser.uid)
+        ) {
+          this.addPlayerToTable(table);
+        }
+      })
+      .catch(error => console.log(error));
   }
   addPlayerToTable(table) {
     let {players, viewers} = table;
@@ -111,6 +113,7 @@ export default class Table extends React.Component {
     dispatch("TOGGLE_CHATROOM_PANEL", {
       isChatroomShown: !this.props.isChatroomShown
     });
+    this.handleResize();
   }
   componentDidUpdate(prevProps) {
     let {tableList, tables, currentTableId} = this.props;
@@ -130,11 +133,6 @@ export default class Table extends React.Component {
     }
   }
   render() {
-    console.log(
-      "this.state.sidebarWidth, in table",
-      this.state.sidebarWidth
-    );
-
     let {canRedirect, isLoad} = this.state;
 
     if (canRedirect) {
@@ -178,7 +176,7 @@ export default class Table extends React.Component {
         <div className="table">
           <Game
             windowWidth={this.state.windowWidth}
-            windowHeight={this.state.windowheight}
+            windowHeight={this.state.windowHeight}
             sidebarWidth={this.state.sidebarWidth}
             sidebarRef={this.childRef}
             isChatroomShown={this.props.isChatroomShown}

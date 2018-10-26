@@ -8,11 +8,11 @@ import "../style/table-list.scss";
 export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
-
     ["createTable", "setCurrentTable"].forEach(name => {
       this[name] = this[name].bind(this);
     });
   }
+
   createTable(tableRef) {
     dispatchToDatabase("CREATE_TABLE", {
       tableRef: tableRef,
@@ -36,6 +36,7 @@ export default class OpenTables extends React.Component {
                       player => player === EMPTY_SEAT
                     )
       );
+
       tableLinks = playingTables.map((key, index) => {
         let {players, playerInfo} = this.props.tableList[key];
         let playerList = players.map((playerKey, index) => (
