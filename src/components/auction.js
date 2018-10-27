@@ -10,7 +10,7 @@ import "../style/auction.scss";
 export default class Auction extends React.Component {
   constructor(props) {
     super(props);
-    let {game} = this.props;
+    let {game} = this.props.table;
     this.state = {
       currentTrick: game.bid.trick,
       visibility: false,
@@ -23,7 +23,8 @@ export default class Auction extends React.Component {
   }
   validateUserTurnAndsetTrump(index) {
     // check if already current user's turn to give his bid
-    let {game, currentUser, players} = this.props;
+    let {game, players}  = this.props.table;
+    let {currentUser} = this.props;
     if (!currentUser || !game) return;
     if (players && currentUser) {
       // if currentUser's Index is same as game deal, let him give bid
@@ -43,9 +44,9 @@ export default class Auction extends React.Component {
   updateBid(trump, opt = null) {
     let newBid,
       isFinishAuction = false,
-      declarer = this.props.game.bid.declarer;
+      declarer = this.props.table.game.bid.declarer;
 
-    let result = this.props.game.bid.result || [];
+    let result = this.props.table.game.bid.result || [];
     if (trump > -1 && trump !== null) {
       let bid = {
         trick: this.state.currentTrick,
@@ -56,11 +57,11 @@ export default class Auction extends React.Component {
 
       // update bid taker, when give a trump bid,
       // record who is the last bid giver;
-      declarer = this.props.game.deal;
+      declarer = this.props.table.game.deal;
 
       newBid = Object.assign(
         {},
-        this.props.game.bid,
+        this.props.table.game.bid,
         bid,
         {declarer: declarer},
         {result: result}
@@ -79,12 +80,12 @@ export default class Auction extends React.Component {
       }
 
       // update bid
-      newBid = Object.assign({}, this.props.game.bid, {
+      newBid = Object.assign({}, this.props.table.game.bid, {
         result: result
       });
     }
 
-    let deal = this.props.game.deal;
+    let deal = this.props.table.game.deal;
 
     // if (isFinishAuction) {
     //   deal = (declarer + 1) % 4;
@@ -94,7 +95,7 @@ export default class Auction extends React.Component {
 
     let newGame = Object.assign(
       {},
-      this.props.game,
+      this.props.table.game,
       {bid: newBid},
       {deal: (deal + 1) % 4}
     );
@@ -106,8 +107,8 @@ export default class Auction extends React.Component {
     this.setState({visibility: false, current: null});
   }
   render() {
-    let {game, players, currentUser} = this.props;
-    let {playerInfo} = this.props.table;
+    let {table, currentUser} = this.props;
+    let {players, playerInfo, game} = table;
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser.uid;
 
@@ -193,7 +194,7 @@ export default class Auction extends React.Component {
       <div
         key={`auction-thumbnail-${index}`}
         className={
-          index === this.props.game.deal
+          index === this.props.table.game.deal
             ? "default-thumbnail current"
             : "default-thumbnail"
         }>
@@ -202,7 +203,7 @@ export default class Auction extends React.Component {
             <div className="default-thumbnail-inner-outline">
               <Thumbnail
                 size={53}
-                current={index === this.props.game.deal}
+                current={index === this.props.table.game.deal}
                 name={playerInfo[player].displayName}
               />
             </div>
@@ -211,11 +212,30 @@ export default class Auction extends React.Component {
         </div>
       </div>
     ));
-    if (this.props.isFinishAuction) {
+
+    const getAuctionStatus = game => {
+      // check if fishish auction
+      let result = game.bid.result;
+
+      if (!game || !result) {
+        return false;
+      }
+
+      return (
+        result.length >= 4 &&
+                game.bid.trump >= 0 &&
+                result
+                  .slice(result.length - 4, result.length)
+                  .every(res => res.opt === "Pass")
+      );
+    };
+    let isFinishAuction = getAuctionStatus(game);
+    if(isFinishAuction){
       return null;
     }
 
     let currentUserAPlayer = players.includes(currentUser.uid);
+
     return (
       <div className="auction-inner">
         <div className="thumbnail-group">{playerThumbnails}</div>

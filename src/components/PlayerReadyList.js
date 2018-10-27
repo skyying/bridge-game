@@ -45,7 +45,7 @@ export default class PlayerReadyList extends React.Component {
       return <div> No game data </div>;
     }
 
-    let {isGameOver, order} = game;
+    let {order} = game;
     let isAnyEmptySeat = players.some(seat => seat === EMPTY_SEAT);
     let isAllPlayerReady = ready.every(player => player === true);
 

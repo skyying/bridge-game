@@ -10,7 +10,7 @@ export default class TrickScore extends React.Component {
     super(props);
   }
   render() {
-    let {table, windowWidth, windowHeight, currentUser} = this.props;
+    let {table, windowWidth, windowHeight, currentUser, canSwitchToSmallerPanel} = this.props;
     let {game, players} = table;
     if (!table || !table.game.cards) {
       return null;
@@ -32,19 +32,18 @@ export default class TrickScore extends React.Component {
     };
     let offset = 3;
     let thumbnailSize = this.props.thumbnailSize * 1.2;
+    let styleName = canSwitchToSmallerPanel ? "smaller-panel" : "";
+
     return (
       <div
         className={
           this.props.name
-            ? `trick-score ${this.props.name}`
-            : "trick-score"
+            ? `trick-score ${this.props.name} ${styleName}`
+            : `trick-score ${styleName}`
         }
         style={innerStyle}>
         <div
-          className="trick-score-inner"
-          style={{
-            width: windowWidth * resizeRatio
-          }}>
+          className="trick-score-inner">
           <div className="group-wrapper">
             <div className="group">
               <ThumbailGroupWithTag
@@ -79,3 +78,8 @@ export default class TrickScore extends React.Component {
     );
   }
 }
+
+
+          // style={{
+          //   width: windowWidth * resizeRatio
+          // }}>

@@ -232,15 +232,17 @@ export const dispatchToDatabase = (type, action) => {
       game.deal = winner.player;
       cards[targetCardIndex] = winner;
       // 51 means the index in the card array , the n-52 cards is given
-      if (action.order === 51) {
-        game.isGameOver = true;
-      }
       DB.updateTableDataByID(`${table.id}/game/`, game);
+      if (action.order === 51) {
+        DB.setNodeByPath(
+          `tables/${table.id}/gameState/`,
+          GAME_STATE.gameover
+        );
+      }
       break;
     }
     case "UPDATE_CURRENT_TRICK": {
       // update this is how many trick players have been draw
-
       let {table, order, deal} = action;
       let {game} = table;
       DB.updateTableGameDataByPath(`${table.id}/game/order/`, order);

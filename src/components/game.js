@@ -2,34 +2,20 @@ import "../style/reset.scss";
 import "../style/game.scss";
 import React from "react";
 import PropTypes from "prop-types";
-import {getRandomInt, getRandomKey} from "../helper/helper.js";
-import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
+import {dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
-import {Redirect} from "react-router-dom";
 import {GAME_STATE} from "./constant.js";
-import Trick from "./trick.js";
 import TrickLogic from "./trickModel/trick.js";
-import {
-  CARD_NUM,
-  DIRECTION,
-  EMPTY_SEAT,
-  NO_TRUMP,
-  DEFAULT_GAME
-} from "./constant.js";
-import TrickScore from "./trickScore.js";
-import ScoreBoard from "./scoreBoard.js";
-import Auction from "./auction.js";
+import {CARD_NUM, DIRECTION, EMPTY_SEAT} from "./constant.js";
 import {Player} from "./player.js";
-import {AuctionResult} from "./auctionResult.js";
 import {
   hasSameSuitWithFirstCard,
   getOffsetDatabyCurrentUser,
   mapFlipDownCards,
-  shuffleCards,
-  getHandPosByCardNum
+  shuffleCards
 } from "./examineCards.js";
 import {getWinnerCard} from "./getWinnerCard.js";
-import PlayerReadyList from "./playerReadyList.js";
+import GameState from "./gameState.js";
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -37,23 +23,20 @@ export default class Game extends React.Component {
     let {game} = this.props.table;
     this.trickModel = new TrickLogic();
     this.state = {
-      endAuction: game && game.order >= 0,
       sidebarWidth: 0
     };
 
-    [
-      "deal",
-      "shuffle",
-      "suffleCardsWhenReady",
-      "endAuction",
-      "getAuctionStatus"
-    ].forEach(name => {
-      this[name] = this[name].bind(this);
-    });
+    ["deal", "shuffle", "suffleCardsWhenReady", "getAuctionStatus"].forEach(
+      name => {
+        this[name] = this[name].bind(this);
+      }
+    );
   }
+
   componentDidUpdate() {
     this.suffleCardsWhenReady();
   }
+
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let {players, game, gameState} = this.props.table;
@@ -67,9 +50,6 @@ export default class Game extends React.Component {
         this.shuffle();
       }
     }
-  }
-  endAuction() {
-    this.setState({endAuction: true});
   }
   deal(value) {
     let {table} = this.props;
@@ -94,9 +74,7 @@ export default class Game extends React.Component {
         }
       )
     );
-
     let winnerCard = getWinnerCard(game, value);
-
     // make sure winnerCard exists, and write winner to database
     if (winnerCard) {
       // remove index data while dispatch to database
@@ -145,9 +123,7 @@ export default class Game extends React.Component {
   }
   render() {
     let {table, currentUser} = this.props;
-
     let {game, players, ready} = table;
-
     let {cards, isGameOver} = game;
 
     let isEndOfCurrentTrick = game.order % 4 === 3;
@@ -233,7 +209,7 @@ export default class Game extends React.Component {
         // from big to small
         let firstCard = this.trickModel.getFirstCardOfCurrentTrick(
           game
-        ); 
+        );
 
         let hasFollowSameSuit = hasSameSuitWithFirstCard(
           firstCard,
@@ -323,13 +299,6 @@ export default class Game extends React.Component {
           suit => suit.length !== 0
         ).length;
 
-        // handle resize
-        // let sidebarWidth = this.state.windowWidth >= 1200 ? 380 : 300;
-        // let sidebarWidth = this.state.sidebarWidth;
-        // (this.props.sidebarRef.current &&
-        //     this.props.sidebarRef.current.offsetWidth) ||
-        // 0;
-
         let sidebarWidth = this.props.sidebarWidth;
 
         let horCardOffset = 40;
@@ -397,88 +366,29 @@ export default class Game extends React.Component {
     } // end of cards
 
     let isAllReady = table.ready.every(player => player === true);
+
     let gameStyleName;
+
     if (this.props.isChatroomShown) {
       gameStyleName = "game";
     } else {
       gameStyleName = "game full";
     }
-    // dom elements
-    if (isGameOver) {
-      return (
-        <div className={gameStyleName}>
-          <div>
-            <ScoreBoard
-              startGame={this.suffleCardsWhenReady}
-              currentUser={currentUser}
-              windowWidth={this.props.windowWidth}
-              widnowHeight={this.props.windowHeight}
-              table={this.props.table}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    let canSwitchToSmallerPanel =
-            (this.props.isChatroomShown && this.props.windowWidth <= 1300) ||
-            this.props.windowWidth <= 1000;
 
     return (
       <div className={gameStyleName}>
-        {!isAllReady && (
-          <PlayerReadyList
-            suffleCardsWhenReady={this.suffleCardsWhenReady}
-            currentUser={currentUser}
-            table={this.props.table}
-          />
-        )}
-        {isFinishAuction && (
-          <AuctionResult
-            canSwitchToSmallerPanel={canSwitchToSmallerPanel}
-            isChatroomShown={this.props.isChatroomShown}
-            currentUser={currentUser}
-            windowWidth={this.props.windowWidth}
-            windowHeight={this.props.windowHeight}
-            table={table}
-          />
-        )}
-        <div className="auction">
-          {game.bid &&
-                        game.cards && (
-            <Auction
-              isFinishAuction={isFinishAuction}
-              endAuction={this.endAuction}
-              game={game}
-              table={table}
-              currentUser={currentUser}
-              players={players}
-            />
-          )}
-        </div>
-        <div className="arena">
-          <div className="hands">{hands}</div>
-          <Trick
-            cards={cards}
-            cardsByPlayer={cardsByPlayer}
-            order={game.order}
-            isTrickFinish={isEndOfCurrentTrick}
-          />
-          <TrickScore
-            canSwitchToSmallerPanel={canSwitchToSmallerPanel}
-            currentUser={currentUser}
-            resizeRatio={0.15}
-            innerStyle={{
-              bottom: Math.ceil(this.props.windowWidth / 500) * 5,
-              right: Math.ceil(this.props.windowWidth / 500) * 5
-            }}
-            thumbnailSize={30}
-            name="right-bottom-pos"
-            windowWidth={this.props.windowWidth}
-            widnowHeight={this.props.windowHeight}
-            table={this.props.table}
-          />
-        </div>
+        <GameState
+          gameStyleName={gameStyleName}
+          suffleCardsWhenReady={this.suffleCardsWhenReady}
+          isChatroomShown={this.props.isChatroomShown}
+          windowWidth={this.props.windowWidth}
+          windowHeight={this.props.windowHeight}
+          currentUser={currentUser}
+          table={this.props.table}
+          hands={hands}
+          cardsByPlayer={cardsByPlayer}
+          sTrickFinish={isEndOfCurrentTrick}
+        />
       </div>
     );
   }
