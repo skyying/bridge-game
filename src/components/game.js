@@ -8,6 +8,7 @@ import {Card} from "./card.js";
 import {Redirect} from "react-router-dom";
 import {GAME_STATE} from "./constant.js";
 import Trick from "./trick.js";
+import TrickLogic from "./trickModel/trick.js";
 import {
   CARD_NUM,
   DIRECTION,
@@ -24,7 +25,6 @@ import {
   hasSameSuitWithFirstCard,
   getOffsetDatabyCurrentUser,
   mapFlipDownCards,
-  getFirstCard,
   shuffleCards,
   getHandPosByCardNum
 } from "./examineCards.js";
@@ -35,16 +35,14 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     let {game} = this.props.table;
+    this.trickModel = new TrickLogic();
     this.state = {
       endAuction: game && game.order >= 0,
-      // windowWidth: window.innerWidth,
-      // windowHeight: window.innerHeight,
       sidebarWidth: 0
     };
 
     [
       "deal",
-      "getNextMaxTrick",
       "shuffle",
       "suffleCardsWhenReady",
       "endAuction",
@@ -70,21 +68,6 @@ export default class Game extends React.Component {
       }
     }
   }
-
-  // so far, how many tricks have been played ?
-  getNextMaxTrick() {
-    let {game} = this.props.table;
-    if (!game) {
-      return;
-    }
-    let cards = game.cards,
-      maxTrick = Math.max(...cards.map(card => card.trick)),
-      maxTrickNum = cards.filter(card => card.trick === maxTrick).length;
-    if (maxTrick === 0 || maxTrickNum >= 4) {
-      return maxTrick + 1;
-    }
-    return maxTrick;
-  }
   endAuction() {
     this.setState({endAuction: true});
   }
@@ -105,7 +88,7 @@ export default class Game extends React.Component {
           table: table,
           value: value,
           time: new Date().getTime(),
-          maxTrick: this.getNextMaxTrick(),
+          maxTrick: this.trickModel.getNextTrickCount(game),
           order: order,
           deal: (game.deal + 1) % 4
         }
@@ -248,8 +231,11 @@ export default class Game extends React.Component {
 
         // handle sort isssue of west player, should sort
         // from big to small
-        let firstCard = getFirstCard(game);
+        let firstCard = this.trickModel.getFirstCardOfCurrentTrick(
+          game
+        ); // getFirstCard(game);
 
+        console.log("firstCard", firstCard);
         let hasFollowSameSuit = hasSameSuitWithFirstCard(
           firstCard,
           display.flat()
@@ -399,8 +385,10 @@ export default class Game extends React.Component {
                                     isFinishAuction
                 }
                 name={
-                  table.playerInfo[playerHand] &&
-                                    table.playerInfo[playerHand].displayName || "Anonymous"
+                  (table.playerInfo[playerHand] &&
+                                        table.playerInfo[playerHand]
+                                          .displayName) ||
+                                    "Anonymous"
                 }
               />
             </div>
@@ -433,6 +421,10 @@ export default class Game extends React.Component {
       );
     }
 
+    let canSwitchToSmallerPanel =
+            (this.props.isChatroomShown && this.props.windowWidth <= 1300) ||
+            this.props.windowWidth <= 1000;
+
     return (
       <div className={gameStyleName}>
         {!isAllReady && (
@@ -444,6 +436,7 @@ export default class Game extends React.Component {
         )}
         {isFinishAuction && (
           <AuctionResult
+            canSwitchToSmallerPanel={canSwitchToSmallerPanel}
             isChatroomShown={this.props.isChatroomShown}
             currentUser={currentUser}
             windowWidth={this.props.windowWidth}
@@ -473,6 +466,7 @@ export default class Game extends React.Component {
             isTrickFinish={isEndOfCurrentTrick}
           />
           <TrickScore
+            canSwitchToSmallerPanel={canSwitchToSmallerPanel}
             currentUser={currentUser}
             resizeRatio={0.15}
             innerStyle={{

@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {getRandomKey} from "../helper/helper.js";
 import {SUIT_SHAPE} from "./constant.js";
 import {Thumbnail, ThumbnailWithTag} from "./thumbnail.js";
 import {AuctionList} from "./auctionList.js";
@@ -12,7 +10,7 @@ export const AuctionResult = ({
   windowWidth,
   currentUser,
   windowHeight,
-  isChatroomShown
+  canSwitchToSmallerPanel
 }) => {
   let {game, playerInfo, players} = table;
   if (!game || !game.bid.result) {
@@ -41,12 +39,9 @@ export const AuctionResult = ({
     }
   });
 
-  let largeScreenWidth = 1300, smallerScreenWidth = 1000;
-  let canSwitchToSmallerResult = isChatroomShown && windowWidth <= largeScreenWidth || windowWidth <= smallerScreenWidth;
-
   let declarer = playerInfo[players[game.bid.declarer]];
 
-  if (canSwitchToSmallerResult) {
+  if (canSwitchToSmallerPanel) {
     return (
       <div
         className="auction-result"
