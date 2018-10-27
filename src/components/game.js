@@ -53,28 +53,9 @@ export default class Game extends React.Component {
       this[name] = this[name].bind(this);
     });
   }
-  // handleResize() {
-  //   this.setState({
-  //     windowWidth: window.innerWidth,
-  //     height: window.innerHeight
-  //   });
-  // }
-  // componentDidMount() {
-  //   window.addEventListener("resize", this.handleResize);
-  //   setTimeout(this.handleResize, 10);
-  // }
-  // componentWillUnmount() {
-  //   window.removeEventListener("resize", this.handleResize);
-  // }
-  componentDidUpdate(prevProps) {
-    let newTable = this.props.table;
-    let oldTable = prevProps.table;
-    // if (prevProps.isChatroomShown !== this.props.isChatroomShown) {
-    //   // this.handleResize();
-    // }
+  componentDidUpdate() {
     this.suffleCardsWhenReady();
   }
-
   suffleCardsWhenReady() {
     // when seats is full and has no cards on databse
     let {players, game, gameState} = this.props.table;
@@ -463,6 +444,7 @@ export default class Game extends React.Component {
         )}
         {isFinishAuction && (
           <AuctionResult
+            isChatroomShown={this.props.isChatroomShown}
             currentUser={currentUser}
             windowWidth={this.props.windowWidth}
             windowHeight={this.props.windowHeight}

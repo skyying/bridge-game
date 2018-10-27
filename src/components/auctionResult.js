@@ -11,7 +11,8 @@ export const AuctionResult = ({
   table,
   windowWidth,
   currentUser,
-  windowHeight
+  windowHeight,
+  isChatroomShown
 }) => {
   let {game, playerInfo, players} = table;
   if (!game || !game.bid.result) {
@@ -40,7 +41,12 @@ export const AuctionResult = ({
     }
   });
 
-  if (windowWidth <= 1000) {
+  let largeScreenWidth = 1300, smallerScreenWidth = 1000;
+  let canSwitchToSmallerResult = isChatroomShown && windowWidth <= largeScreenWidth || windowWidth <= smallerScreenWidth;
+
+  let declarer = playerInfo[players[game.bid.declarer]];
+
+  if (canSwitchToSmallerResult) {
     return (
       <div
         className="auction-result"
@@ -48,8 +54,15 @@ export const AuctionResult = ({
           top: 20,
           right: Math.ceil(windowWidth / 500) * 5
         }}>
-        <div className="auction-result-inner">
+        <div className="auction-result-inner result-small">
           <div className="auction-result-small">
+            <span>
+              <Thumbnail
+                name={declarer.displayName}
+                size={20}
+                offset={0}
+              />
+            </span>
             <span> {game.bid.trick + 1} </span>{" "}
             {SUIT_SHAPE[game.bid.trump](0.14)}
           </div>
