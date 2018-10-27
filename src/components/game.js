@@ -391,7 +391,7 @@ export default class Game extends React.Component {
 
         let verTopPos =
                     DIRECTION[index] === "west" || DIRECTION[index] === "east"
-                      ? (this.state.windowHeight -
+                      ? (this.props.windowHeight -
                               getHandHeight(totalSuitType)) /
                           2
                       : null;
