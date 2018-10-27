@@ -233,9 +233,8 @@ export default class Game extends React.Component {
         // from big to small
         let firstCard = this.trickModel.getFirstCardOfCurrentTrick(
           game
-        ); // getFirstCard(game);
+        ); 
 
-        console.log("firstCard", firstCard);
         let hasFollowSameSuit = hasSameSuitWithFirstCard(
           firstCard,
           display.flat()

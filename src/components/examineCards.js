@@ -77,23 +77,23 @@ export const mapFlipDownCards = dislayList => {
   }
 };
 
-export const getFirstCard = game => {
-  if (!game) {
-    return null;
-  }
-  // what is the first card of current trick
-  // in order to let players only can draw card as the same suit
-  if (
-    game.cards &&
-        game.cards.length >= PLAYER_NUM &&
-        game.order % PLAYER_NUM !== PLAYER_NUM - 1
-  ) {
-    return game.cards
-      .filter(card => card.order % PLAYER_NUM === 0)
-      .sort((cardA, cardB) => cardB.order - cardA.order)[0];
-  }
-  return null;
-};
+// export const getFirstCard = game => {
+//   if (!game) {
+//     return null;
+//   }
+//   // what is the first card of current trick
+//   // in order to let players only can draw card as the same suit
+//   if (
+//     game.cards &&
+//         game.cards.length >= PLAYER_NUM &&
+//         game.order % PLAYER_NUM !== PLAYER_NUM - 1
+//   ) {
+//     return game.cards
+//       .filter(card => card.order % PLAYER_NUM === 0)
+//       .sort((cardA, cardB) => cardB.order - cardA.order)[0];
+//   }
+//   return null;
+// };
 
 export const shuffleCards = () => {
   let cards = getRandomCards();
