@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {GAME_STATE} from "./constant.js";
 import JoinState from "./JoinState.js";
@@ -29,12 +28,12 @@ export default class GameState extends React.Component {
         return (
           <div>
             <AuctionState {...this.props} />;
-            <PlayingState {...this.props} />
+            <PlayingState isFinishAuction={false} {...this.props} />
           </div>
         );
       }
       case GAME_STATE.playing: {
-        return <PlayingState {...this.props} />;
+        return <PlayingState isFinishAuction={true} {...this.props} />;
       }
       case GAME_STATE.gameover: {
         return <GameoverState {...this.props} />;
@@ -45,6 +44,12 @@ export default class GameState extends React.Component {
   }
   render() {
     let {gameState} = this.state;
-    return this.stateComponents(gameState);
+    let {isChatroomShown} = this.props;
+
+    return (
+      <div className={isChatroomShown ? "game" : "game full"}>
+        {this.stateComponents(gameState)}
+      </div>
+    );
   }
 }

@@ -5,7 +5,8 @@ import {
   GAME_STATE,
   DEFAULT_GAME,
   PLAYERS,
-  EMPTY_SEAT
+  EMPTY_SEAT,
+  ROBOT_NAME
 } from "../components/constant.js";
 
 export const dispatch = (type, action) =>
@@ -102,9 +103,9 @@ export const dispatchToDatabase = (type, action) => {
         playerInfo: Object.assign(
           {},
           {
-            "C1-robot": {displayName: "C1-robot"},
-            "C2-robot": {displayName: "C2-robot"},
-            "C3-robot": {displayName: "C3-robot"},
+            "C1-robot": {displayName: `C1${ROBOT_NAME}`},
+            "C2-robot": {displayName: `C2${ROBOT_NAME}`},
+            "C3-robot": {displayName: `C3${ROBOT_NAME}`},
             "-1": {displayName: ""}
           },
           newPlayerInfo
@@ -141,16 +142,14 @@ export const dispatchToDatabase = (type, action) => {
         record = [game];
       }
 
-      let robotName = "-robot";
       let newPlayers = players.map(
-        player => (player.includes(robotName) ? EMPTY_SEAT : player)
+        player => (player.includes(ROBOT_NAME) ? EMPTY_SEAT : player)
       );
       // reset table
       let timeStamp = new Date().getTime();
       tableData.record = record;
       tableData.createTime = timeStamp;
       tableData.game = Object.assign({}, DEFAULT_GAME);
-      // tableData.players = players.filter( )
       tableData.ready = [true, false, false, false];
       tableData.timeStamp = timeStamp;
       tableData.gameState = GAME_STATE.join;
@@ -159,24 +158,33 @@ export const dispatchToDatabase = (type, action) => {
       break;
     }
     case "START_GAME": {
-      let {table} = action;
+      let {table, cards} = action;
       let tableData = Object.assign({}, table);
-      let {players} = tableData;
+
+      // add new deck to table
+      let {players, game} = tableData;
+      game.cards = cards;
+
+      // add avatar to empty seats
       let avatar = [1, 2, 3];
       let index = 0;
       let avaters = players.map(player => {
         return player === EMPTY_SEAT
-          ? `C${avatar[index++]}-robot`
+          ? `C${avatar[index++]}${ROBOT_NAME}`
           : player;
       });
+
+      // compose new game data for current table
       let newTable = Object.assign(
         {},
         tableData,
+        {game: game},
         {ready: [true, true, true, true]},
         {players: avaters},
         {gameState: GAME_STATE.auction},
         {timeStamp: new Date().getTime()}
       );
+
       DB.setNodeByPath(`tables/${newTable.id}`, newTable);
       DB.setNodeByPath(`tableList/${table.linkId}`, {
         id: table.id,
@@ -205,16 +213,16 @@ export const dispatchToDatabase = (type, action) => {
       );
       break;
     }
-    case "ADD_NEW_DECK_TO_TABLE": {
-      // todo, use high order function to wrap this
-      // create a game
-      let {cards, table} = action;
-      let newGame = Object.assign({}, table.game, {
-        cards: cards
-      });
-      DB.updateTableDataByID(`${table.id}/game/`, newGame);
-      break;
-    }
+    // case "ADD_NEW_DECK_TO_TABLE": {
+    //   // todo, use high order function to wrap this
+    //   // create a game
+    //   let {cards, table} = action;
+    //   let newGame = Object.assign({}, table.game, {
+    //     cards: cards
+    //   });
+    //   DB.updateTableDataByID(`${table.id}/game/`, newGame);
+    //   break;
+    // }
     case "UPDATE_WINNER_CARD": {
       // todo, use high order function to wrap this
       let {table} = action;

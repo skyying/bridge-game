@@ -1,5 +1,4 @@
 import React from "react";
-import Game from "./game.js";
 import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import Sidebar from "./sidebar/sidebar.js";
@@ -11,7 +10,10 @@ import TableModel from "../reducer/tableModel.js";
 import Header from "./header.js";
 import {Loading} from "./loading.js";
 import {FloatBtn} from "./floatBtn.js";
+import GameState from "./gameState.js";
+import "../style/reset.scss";
 import "../style/table.scss";
+import "../style/game.scss";
 import "../style/record-item.scss";
 import "../style/record.scss";
 import "../style/dot.scss";
@@ -174,7 +176,7 @@ export default class Table extends React.Component {
           currentUser={currentUser}
         />
         <div className="table">
-          <Game
+          <GameState
             windowWidth={this.state.windowWidth}
             windowHeight={this.state.windowHeight}
             sidebarWidth={this.state.sidebarWidth}
