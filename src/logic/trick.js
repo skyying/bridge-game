@@ -1,19 +1,7 @@
-import {
-  PLAYER_NUM,
-  CARD_NUM,
-  EMPTY_SEAT,
-  NO_TRUMP,
-  DEFAULT_GAME
-} from "../constant.js";
-
-// get first card so far
-// get current trick count
-// get next trick count
-// get winner cards
+import {TOTAL_TRICKS} from "../components/constant.js";
 
 export default class TrickLogic {
   constructor() {
-    this.TOTAL_TRICK_NUM = 13;
     this.TOTAL_CARDS_OF_EACH_TRICK = 4;
   }
   getFirstCardOfCurrentTrick(game) {

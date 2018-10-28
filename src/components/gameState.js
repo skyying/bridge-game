@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {GAME_STATE} from "./constant.js";
-import JoinState from "./JoinState.js";
-import AuctionState from "./AuctionState.js";
-import PlayingState from "./PlayingState.js";
-import GameoverState from "./GameoverState.js";
+import JoinState from "./joinState.js";
+import AuctionState from "./auctionState.js";
+import PlayingState from "./playingState.js";
+import GameoverState from "./gameoverState.js";
 
 export default class GameState extends React.Component {
   constructor(props) {

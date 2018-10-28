@@ -52,7 +52,7 @@ export default class Header extends React.Component {
         <div>
           <h3>{roomInfo}</h3>
         </div>
-        <div>
+        <div> 
           <div>{rightTopCorner}</div>
         </div>
       </header>

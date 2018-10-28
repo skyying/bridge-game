@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Trick from "./trick.js";
-import PlayingInfo from "./PlayingInfo.js";
+import PlayingInfo from "./playingInfo.js";
 import {Card} from "./card.js";
-import TrickLogic from "./trickModel/trick.js";
+import TrickLogic from "../logic/trick.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import {CARD_NUM, DIRECTION, EMPTY_SEAT, TOTAL_TRICKS} from "./constant.js";
 import {Player} from "./player.js";
