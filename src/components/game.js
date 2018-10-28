@@ -6,7 +6,7 @@ import {dispatchToDatabase} from "../reducer/reducer.js";
 import {Card} from "./card.js";
 import {GAME_STATE} from "./constant.js";
 import TrickLogic from "./trickModel/trick.js";
-import {CARD_NUM, DIRECTION, EMPTY_SEAT} from "./constant.js";
+import {CARD_NUM, DIRECTION, EMPTY_SEAT, TOTAL_TRICKS} from "./constant.js";
 import {Player} from "./player.js";
 import {
   hasSameSuitWithFirstCard,
@@ -112,7 +112,6 @@ export default class Game extends React.Component {
     if (!game || !result) {
       return false;
     }
-
     return (
       result.length >= 4 &&
             game.bid.trump >= 0 &&
@@ -184,7 +183,7 @@ export default class Game extends React.Component {
 
         let display = [[], [], [], []];
         handCopy.map(card =>
-          display[Math.floor(card.value / CARD_NUM.HAND)].push(card)
+          display[Math.floor(card.value / TOTAL_TRICKS)].push(card)
         );
 
         // handle flip down card, group them into n rows base on
@@ -267,8 +266,8 @@ export default class Game extends React.Component {
             return (
               firstCard === null ||
                             !hasFollowSameSuit ||
-                            Math.floor(card.value / CARD_NUM.HAND) ===
-                                Math.floor(firstCard.value / CARD_NUM.HAND)
+                            Math.floor(card.value / TOTAL_TRICKS) ===
+                                Math.floor(firstCard.value / TOTAL_TRICKS)
             );
           };
 

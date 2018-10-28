@@ -87,12 +87,6 @@ export default class Auction extends React.Component {
 
     let deal = this.props.table.game.deal;
 
-    // if (isFinishAuction) {
-    //   deal = (declarer + 1) % 4;
-    // } else {
-    //   deal = (deal + 1) % 4;
-    // }
-
     let newGame = Object.assign(
       {},
       this.props.table.game,

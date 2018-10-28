@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {CARD_NUM, CARD_RANK, SUIT_SHAPE} from "./constant.js";
+import {CARD_NUM, CARD_RANK, SUIT_SHAPE, TOTAL_TRICKS} from "./constant.js";
 import "../style/reset.scss";
 import "../style/card.scss";
 
@@ -13,7 +13,7 @@ export const TrickCard = ({value}) => {
 };
 
 export const Card = ({value, evt = null, flipUp, name = null}) => {
-  let kind = Math.floor(value / CARD_NUM.HAND);
+  let kind = Math.floor(value / TOTAL_TRICKS);
   let wrapperName = name ? `card-wrapper ${name}` : "card-wrapper";
   if (flipUp) {
     return (
@@ -32,7 +32,7 @@ export const Card = ({value, evt = null, flipUp, name = null}) => {
                   ? "red value"
                   : "black value"
               }>
-              {CARD_RANK[value % CARD_NUM.HAND]}
+              {CARD_RANK[value % TOTAL_TRICKS]}
             </div>
             {SUIT_SHAPE[kind](0.235)}
             <div className="large-shape">

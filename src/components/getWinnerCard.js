@@ -1,4 +1,4 @@
-import {CARD_NUM, NO_TRUMP} from "./constant.js";
+import {CARD_NUM, NO_TRUMP, TOTAL_TRICKS} from "./constant.js";
 import {getCurrentMaxTrick} from "./getCurrentMaxTrick.js";
 
 // which card has max value by the bid trump
@@ -7,7 +7,7 @@ const findMaxValueByTrump = (arr, trump) => {
     return;
   }
   let list = arr
-    .filter(item => Math.floor(item.value / CARD_NUM.HAND) === trump)
+    .filter(item => Math.floor(item.value / TOTAL_TRICKS ) === trump)
     .sort((cardA, cardB) => cardB.value - cardA.value);
   return list.length ? list[0] : null;
 };
@@ -51,7 +51,7 @@ export const getWinnerCard = (game, cardValue) => {
 
     if (trump === NO_TRUMP || noTrumpCards) {
       // if their quotient are the same, compare their value, else, let first win
-      let trumpRef = Math.floor(firstHand.value / CARD_NUM.HAND);
+      let trumpRef = Math.floor(firstHand.value / TOTAL_TRICKS);
       winnerCard = findMaxValueByTrump(cardsMatchCurrentTrick, trumpRef);
     } // end of no trump
   }

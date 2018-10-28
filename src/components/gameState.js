@@ -26,7 +26,12 @@ export default class GameState extends React.Component {
         return <JoinState {...this.props} />;
       }
       case GAME_STATE.auction: {
-        return <AuctionState {...this.props} />;
+        return (
+          <div>
+            <AuctionState {...this.props} />;
+            <PlayingState {...this.props} />
+          </div>
+        );
       }
       case GAME_STATE.playing: {
         return <PlayingState {...this.props} />;

@@ -2,6 +2,7 @@ import {
   PLAYER_NUM,
   CARD_NUM,
   EMPTY_SEAT,
+  TOTAL_TRICKS, 
   NO_TRUMP,
   DEFAULT_GAME
 } from "./constant.js";
@@ -15,8 +16,8 @@ export const hasSameSuitWithFirstCard = (firstCard, cards) => {
     firstCard &&
         cards.filter(card => {
           return (
-            Math.floor(card.value / CARD_NUM.HAND) ===
-                Math.floor(firstCard.value / CARD_NUM.HAND)
+            Math.floor(card.value / TOTAL_TRICKS) ===
+                Math.floor(firstCard.value / TOTAL_TRICKS)
           );
         }).length > 0
   );

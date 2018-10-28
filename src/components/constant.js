@@ -2,15 +2,16 @@ import React from "react";
 import {Heart, Spade, Diamond, Club} from "./shape/shape.js";
 export const CARD_NUM = {
   TOTAL: 52,
-  SUITS: 4,
-  HAND: 13
+  SUITS: 4
 };
+export const TOTAL_TRICKS = 13;
+
+export const TOTAL_CARDS_OF_EACH_TRICK = 4;
 
 export const TIMER = {
-  join: 15000,
-
-}
-export const ROBOT_NAME = "-robot" ;
+  join: 15000
+};
+export const ROBOT_NAME = "-robot";
 
 export const RESULT = {
   win: "YOU WIN",
@@ -40,8 +41,7 @@ export const DEFAULT_GAME = {
     trick: 0,
     trump: -1
   },
-  order: -1,
-  isGameOver: false
+  order: -1
 };
 
 export const PLAYERS = [EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT, EMPTY_SEAT];
