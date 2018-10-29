@@ -1,15 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {SUIT_SHAPE} from "./constant.js";
-import {getRandomKey} from "../helper/helper.js";
 
 export const AuctionList = ({result, scale}) => {
   if (!result) {
     return null;
   }
   let resultsNum = result.length;
-
   return (
     <div className="record">
       {Array.from({length: Math.ceil(resultsNum / 4)})

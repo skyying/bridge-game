@@ -15,9 +15,9 @@ $tableBg: #1ABEB9;
 }
 
 .sidebar{
-  width: 30vw;
+  width: 25vw;
   .typing-area{
-    width: 25vw;
+    width: 20vw;
   }
 }
 
@@ -55,25 +55,25 @@ $tableBg: #1ABEB9;
 
 @media screen and (max-width: 1000px) {
   .sidebar{
-    width: 30vw;
+    width: 25vw;
     .typing-area{
-      width: 25vw;
+      width: 20vw;
     }
   }
 }
 
 @media screen and (max-width: 800px) {
   .sidebar{
-    width: 30vw;
+    width: 25vw;
     .typing-area{
-      width: 25vw;
+      width: 20vw;
     }
   }
 }
 
 @media screen and (max-width: 699px) {
   .sidebar{
-    min-width: 300px;
+    min-width: 260px;
     height: calc(100vh - 60px);
     position: absolute;
     max-width: 100vw;

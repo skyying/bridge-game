@@ -12,25 +12,18 @@ $textColor: #515151;
   -moz-box-shadow:0px 0px 20px rgba(#000000, 0.1);
   -webkit-box-shadow:0px 0px 20px rgba(#000000, 0.1);
   box-shadow:0px 0px 20px rgba(#000000, 0.1);
-  // .thumbnail {
-  //   margin-right: 10px;
-  //   overflow: hidden;
-  //
-  // }
   .player-inner{
     overflow:hidden;
     height: 100%;
     background-color:#fff; 
     border-radius: 100%;
   }
-
   .name{
     margin-left: 10px;
-    padding-right: 10px;
+    padding-right: 16px;
     display: inline;
   }
 }
-
 
 .current {
   padding: 2px;
@@ -43,9 +36,6 @@ $textColor: #515151;
   
   }
   .thumbnail {
-    // background-color: #FF525D;
-    // animation: breath 3s;
-    // animation-iteration-count:infinite;
   }
 }
 

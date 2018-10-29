@@ -5,7 +5,7 @@ $card-margin-ver: 68px;
 
 .game {
   background-image:$gameBg;
-  width: 70vw;
+  width: 75vw;
   height: calc(100vh - 60px);
   position: relative;
   .trick-area{
@@ -112,8 +112,8 @@ $card-margin-ver: 68px;
 
   }
   .west {
-    left: 15%;
-    top: 25%;
+    left: 20px;
+
     .hand-inner{
       .player{
         transform: translate(0%, -120%);
@@ -140,8 +140,7 @@ $card-margin-ver: 68px;
     }
   }
   .east {
-    right: 15%;
-    top: 30%;
+    right: 20px;
 
     .hand-inner{
       .player{

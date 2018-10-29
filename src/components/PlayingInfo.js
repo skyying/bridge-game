@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {AuctionResult} from "./auctionResult.js";
+import {GAME_STATE} from "./constant.js";
 import TrickScore from "./trickScore.js";
 
 export default class PlayingInfo extends React.Component {
@@ -24,6 +25,11 @@ export default class PlayingInfo extends React.Component {
             (this.props.isChatroomShown && this.props.windowWidth <= 1300) ||
             this.props.windowWidth <= 1000;
 
+    
+    if (table.gameState === GAME_STATE.auction) {
+      return null;
+    }
+      
     return (
       <div>
         <AuctionResult

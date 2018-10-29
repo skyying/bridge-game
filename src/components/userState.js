@@ -19,8 +19,10 @@ export default class UserState extends React.Component {
     DB.auth.signOut();
   }
   togglePanel(e) {
+    if (e) {
+      e.stopPropagation();
+    }
     dispatch("TOGGLE_HEADER_PANEL", {isToggle: true});
-    e.stopPropagation();
   }
   render() {
     let {currentUser} = this.props;

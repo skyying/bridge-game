@@ -37,9 +37,8 @@ export default class Sidebar extends React.Component {
           </div>
           <span
             onClick={this.props.toggleChatroom}
-            className="close-btn">
-                        
-          </span>
+            className="close-btn"
+          />
         </div>
         <div className="tab-wrapper" />
         <div>
