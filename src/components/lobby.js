@@ -41,8 +41,7 @@ export const Lobby = ({
       <div className="lobby">
         <div className="lobby-title">
           <h2>
-            {" "}
-                        鍛鍊腦力的最佳活動 <br />{" "}
+                        鍛鍊腦力的最佳活動<br />
             <span>支援多人連線，單機版電腦對戰模式</span>
           </h2>
         </div>

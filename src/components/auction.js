@@ -5,6 +5,7 @@ import {getRandomKey} from "../helper/helper.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import {AuctionList} from "./auctionList.js";
 import {Thumbnail} from "./thumbnail.js";
+import {AuctionThumbnails} from "./auctionThumbnails.js";
 import "../style/auction.scss";
 
 export default class Auction extends React.Component {
@@ -23,7 +24,7 @@ export default class Auction extends React.Component {
   }
   validateUserTurnAndsetTrump(index) {
     // check if already current user's turn to give his bid
-    let {game, players}  = this.props.table;
+    let {game, players} = this.props.table;
     let {currentUser} = this.props;
     if (!currentUser || !game) return;
     if (players && currentUser) {
@@ -158,6 +159,7 @@ export default class Auction extends React.Component {
     if (value === 34) {
       selectedTrump = [];
     }
+
     selectedTrump = selectedTrump.map(opt => (
       <div onClick={() => this.updateBid(opt, null)} key={getRandomKey()}>
         {SUIT_SHAPE[opt](0.25)}
@@ -184,55 +186,15 @@ export default class Auction extends React.Component {
       </button>
     );
 
-    let playerThumbnails = players.map((player, index) => (
-      <div
-        key={`auction-thumbnail-${index}`}
-        className={
-          index === this.props.table.game.deal
-            ? "default-thumbnail current"
-            : "default-thumbnail"
-        }>
-        <div className="default-thumbnail-inner">
-          <div className="default-thumbnail-inner-outline-wrapper">
-            <div className="default-thumbnail-inner-outline">
-              <Thumbnail
-                size={53}
-                current={index === this.props.table.game.deal}
-                name={playerInfo[player].displayName}
-              />
-            </div>
-          </div>
-          <span>{playerInfo[player].displayName}</span>
-        </div>
-      </div>
-    ));
-
-    const getAuctionStatus = game => {
-      // check if fishish auction
-      let result = game.bid.result;
-
-      if (!game || !result) {
-        return false;
-      }
-
-      return (
-        result.length >= 4 &&
-                game.bid.trump >= 0 &&
-                result
-                  .slice(result.length - 4, result.length)
-                  .every(res => res.opt === "Pass")
-      );
-    };
-    let isFinishAuction = getAuctionStatus(game);
-    if(isFinishAuction){
-      return null;
-    }
-
-    let currentUserAPlayer = players.includes(currentUser.uid);
-
     return (
       <div className="auction-inner">
-        <div className="thumbnail-group">{playerThumbnails}</div>
+        <div className="thumbnail-group">
+          <AuctionThumbnails
+            players={this.props.table.players}
+            playerInfo={this.props.table.playerInfo}
+            currentTurn={this.props.table.game.deal}
+          />
+        </div>
         {!game.bid.result && (
           <div className="notes"> Start Auction </div>
         )}
@@ -245,8 +207,6 @@ export default class Auction extends React.Component {
                 onClick={() => this.updateBid(null, "Pass")}>
                                 Pass
               </button>
-              {DoubleBtn}
-              {ReDoubleBtn}
             </div>
           )}
           <div className="tricks">{allTrickOpt}</div>
