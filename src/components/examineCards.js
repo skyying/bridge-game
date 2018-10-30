@@ -1,5 +1,3 @@
-import {TOTAL_TRICKS} from "./constant.js";
-
 // get porker card detail information offset by current login user
 export const mapFlipDownCards = dislayList => {
   if (!dislayList) return;

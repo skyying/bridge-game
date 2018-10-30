@@ -1,15 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {
-  IndexRoute,
-  BrowserRouter,
-  Router,
-  Route,
-  Switch,
-  Link
-} from "react-router-dom";
-import {EMPTY_SEAT} from "./constant.js";
 import OpenTables from "./openTables.js";
 import PlayingTables from "./playingTables.js";
 import "../style/lobby.scss";
@@ -67,7 +57,6 @@ export const Lobby = ({
               <PlayingTables
                 tables={tables}
                 title={"熱門牌桌"}
-                openBtn={true}
                 open={false}
                 currentUser={currentUser}
                 tableList={tableList}

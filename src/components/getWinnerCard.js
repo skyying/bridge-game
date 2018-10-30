@@ -1,4 +1,4 @@
-import {CARD_NUM, NO_TRUMP, TOTAL_TRICKS} from "./constant.js";
+import {NO_TRUMP, TOTAL_TRICKS} from "./constant.js";
 import {getCurrentMaxTrick} from "./getCurrentMaxTrick.js";
 
 // which card has max value by the bid trump
@@ -7,7 +7,7 @@ const findMaxValueByTrump = (arr, trump) => {
     return;
   }
   let list = arr
-    .filter(item => Math.floor(item.value / TOTAL_TRICKS ) === trump)
+    .filter(item => Math.floor(item.value / TOTAL_TRICKS) === trump)
     .sort((cardA, cardB) => cardB.value - cardA.value);
   return list.length ? list[0] : null;
 };
@@ -26,7 +26,7 @@ export const getWinnerCard = (game, cardValue) => {
     .filter(
       card =>
         (card.trick === maxTrick && card.trick > 0) ||
-                card.value === cardValue,
+                card.value === cardValue
     );
   let winnerCard,
     noTrumpCards = false;
@@ -35,7 +35,7 @@ export const getWinnerCard = (game, cardValue) => {
     // which card is first been played
     let first = Math.min(...cardsMatchCurrentTrick.map(card => card.order));
     let [firstHand] = cardsMatchCurrentTrick.filter(
-      card => card.order === first,
+      card => card.order === first
     );
     // trump matters most, else, decide by what first hand has draw
     if (trump !== NO_TRUMP) {

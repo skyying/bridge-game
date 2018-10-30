@@ -18,7 +18,6 @@ export default class Chatroom extends React.Component {
       "handleKeyPress",
       "addEmoji",
       "handleMessageHeight"
-      // "handleShowChatRoom"
     ].forEach(name => {
       this[name] = this[name].bind(this);
     });
@@ -33,7 +32,6 @@ export default class Chatroom extends React.Component {
   componentDidMount() {
     this.scrollToBottom();
     this.handleMessageHeight();
-    // this.handleShowChatRoom();
     window.addEventListener("resize", this.handleMessageHeight);
   }
   componentWillUnmount() {
@@ -102,8 +100,6 @@ export default class Chatroom extends React.Component {
     ));
 
     if (chatroom && chatroom.message && table && table.viewers) {
-      let end = Object.keys(chatroom.message).length;
-      let chatStart = 0; //end - chatLen >= 0 ? end - chatLen : 0;
       let isCurrentUserAPlayer = players.some(
         player => player === currentUser.uid
       );
