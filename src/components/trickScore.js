@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import "../style/trick-score.scss";
 import {teamScore} from "./socre.js";
@@ -10,7 +9,13 @@ export default class TrickScore extends React.Component {
     super(props);
   }
   render() {
-    let {table, windowWidth, windowHeight, currentUser, canSwitchToSmallerPanel} = this.props;
+    let {
+      table,
+      windowWidth,
+      windowHeight,
+      currentUser,
+      canSwitchToSmallerPanel
+    } = this.props;
     let {game, players} = table;
     if (!table || !table.game.cards) {
       return null;
@@ -42,8 +47,7 @@ export default class TrickScore extends React.Component {
             : `trick-score ${styleName}`
         }
         style={innerStyle}>
-        <div
-          className="trick-score-inner">
+        <div className="trick-score-inner">
           <div className="group-wrapper">
             <div className="group">
               <ThumbailGroupWithTag
@@ -78,8 +82,3 @@ export default class TrickScore extends React.Component {
     );
   }
 }
-
-
-          // style={{
-          //   width: windowWidth * resizeRatio
-          // }}>

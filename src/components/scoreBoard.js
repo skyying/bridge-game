@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import TrickScore from "./trickScore.js";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import {RESULT} from "./constant.js";
+import TeamScore from "../logic/teamscore.js";
 import "../style/btn.scss";
 
 export default class ScoreBoard extends React.Component {
@@ -21,42 +22,12 @@ export default class ScoreBoard extends React.Component {
     });
   }
   render() {
-    let {windowWidth, table, windowHeight, currentUser} = this.props;
-    let {game, players} = this.props.table;
-    if (!game || !game.cards) {
+    let {table, currentUser} = this.props;
+    if (!table || !table.game.cards) {
       return null;
     }
-    let playerIndex = players.indexOf(currentUser.uid);
-    let playerTeamScore = 0,
-      opponentScore = 0;
-    game.cards.map((card, index) => {
-      let winScore = card.isWin ? 1 : 0;
-      if (card.player % 2 === playerIndex % 2) {
-        playerTeamScore += winScore;
-      } else {
-        opponentScore += winScore;
-      }
-    });
-
-    let resultWords = null;
-    let {declarer, trick} = game.bid;
-
-    // trick start from 0, 0 means one trick... 
-    let targetTrick = 6 + (trick + 1);
-    let isPlayerInDeclarerTeam = playerIndex % 2 === declarer % 2;
-    let isCurrentUserAPlayer = playerIndex >= 0;
-    let isUserWin = false;
-
-    if (isPlayerInDeclarerTeam && playerTeamScore >= targetTrick) {
-      resultWords = RESULT.win;
-      isUserWin = true;
-    } else if (isCurrentUserAPlayer) {
-      resultWords = RESULT.lose;
-    } else {
-      resultWords = "";
-    }
-
-    let resultAction = isCurrentUserAPlayer ? (
+    let score = new TeamScore(table, currentUser);
+    let resultAction = score.isCurrentUserAPlayer ? (
       <button onClick={this.recordGame} className="btn">
                 再來一局
       </button>
@@ -67,18 +38,23 @@ export default class ScoreBoard extends React.Component {
     return (
       <div
         className={
-          isUserWin ? "game-over-board win" : "game-over-board lose"
+          score.result.isUserWin
+            ? "game-over-board win"
+            : "game-over-board lose"
         }>
         <TrickScore
           currentUser={this.props.currentUser}
           ratio={0.5}
+          score={score.scoreboard}
           thumbnailSize={46}
           windowWidth={this.props.windowWidth}
           widnowHeight={this.props.windowHeight}
           table={this.props.table}>
           <div className="game-over-board-inner">
             <div className="result">
-              <div className="words">{resultWords}</div>
+              <div className="words">
+                {score.result.resultWords}
+              </div>
             </div>
             <div className="btn-wrapper">{resultAction}</div>
           </div>

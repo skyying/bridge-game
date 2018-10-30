@@ -2,20 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
-import {EMPTY_SEAT} from "../components/constant.js";
+import TableLogic from "../logic/tableLogic.js";
 import "../style/table-list.scss";
 
-export default class OpenTables extends React.Component {
+export default class PlayingTables extends React.Component {
   constructor(props) {
     super(props);
     ["createTable", "setCurrentTable"].forEach(name => {
       this[name] = this[name].bind(this);
     });
   }
-
-  createTable(tableRef) {
+  createTable(linkId) {
     dispatchToDatabase("CREATE_TABLE", {
-      tableRef: tableRef,
+      linkId: linkId,
       currentUser: this.props.currentUser
     });
   }
@@ -25,42 +24,30 @@ export default class OpenTables extends React.Component {
     }
   }
   render() {
-    let {tableList} = this.props;
+    let tableList = this.props.tableList;
     let tableLinks;
-    if (tableList) {
-      let tableListKey = Object.keys(tableList);
-      let playingTables = tableListKey.filter(
-        key =>
-          tableList[key].players &&
-                    !tableList[key].players.some(
-                      player => player === EMPTY_SEAT
-                    )
-      );
-
-      tableLinks = playingTables.map((key, index) => {
-        let {players, playerInfo} = this.props.tableList[key];
-        let playerList = players.map((playerKey, index) => (
-          <div key={`playerSeat-${index}`}>
-            {playerInfo[playerKey]
-              ? playerInfo[playerKey].displayName
-              : "Anonymous"}
-          </div>
+    let allTables = new TableLogic(this.props.tableList);
+    if (tableList && allTables.playing) {
+      tableLinks = allTables.playing.map((table, index) => {
+        let {roomId, linkId, players} = table;
+        let playerList = players.map((name, index) => (
+          <div key={`playerSeat-${index}`}>{name}</div>
         ));
         return (
           <div
             className="playing-table"
             key={`playing-table-item-${index}}`}>
             <div className="room-number">
-              <span>{key.slice(key.length - 3, key.length)}</span>
+              <span>{roomId}</span>
             </div>
             {playerList}
             <div>
               <Link
-                onClick={() => this.setCurrentTable(key)}
+                onClick={() => this.setCurrentTable(linkId)}
                 className="btn-style-border"
                 to={
                   this.props.currentUser
-                    ? `/table/${key}`
+                    ? `/table/${linkId}`
                     : "/login"
                 }>
                                 觀賞

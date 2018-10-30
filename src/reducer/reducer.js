@@ -78,9 +78,8 @@ export const dispatchToDatabase = (type, action) => {
       DB.setNodeByPath(`/users/${action.uid}`, action.userInfo);
       break;
     }
-
     case "CREATE_TABLE": {
-      let {currentUser} = action;
+      let {currentUser, linkId} = action;
       if (!action.currentUser.uid) {
         console.log("user is not login");
         return;
@@ -92,13 +91,13 @@ export const dispatchToDatabase = (type, action) => {
       newPlayerInfo[uidKey] = {displayName: currentUser.displayName};
       players[0] = action.currentUser.uid;
       let tableKey = DB.getNewChildKey("tables");
-      let linkId = action.tableRef || timeStamp;
+      let newLinkId = linkId || timeStamp;
       let newTable = {
-        timeStamp: linkId,
-        createTime: linkId,
+        timeStamp: newLinkId,
+        createTime: newLinkId,
         gameState: GAME_STATE.join,
         id: tableKey,
-        linkId: linkId,
+        linkId: newLinkId,
         game: DEFAULT_GAME,
         playerInfo: Object.assign(
           {},
@@ -114,7 +113,7 @@ export const dispatchToDatabase = (type, action) => {
         ready: [true, false, false, false]
       };
       DB.setNodeByPath(`tables/${tableKey}`, newTable);
-      DB.setTableListData(linkId, {
+      DB.setTableListData(newLinkId, {
         id: tableKey,
         players: players,
         playerInfo: Object.assign(
@@ -213,16 +212,6 @@ export const dispatchToDatabase = (type, action) => {
       );
       break;
     }
-    // case "ADD_NEW_DECK_TO_TABLE": {
-    //   // todo, use high order function to wrap this
-    //   // create a game
-    //   let {cards, table} = action;
-    //   let newGame = Object.assign({}, table.game, {
-    //     cards: cards
-    //   });
-    //   DB.updateTableDataByID(`${table.id}/game/`, newGame);
-    //   break;
-    // }
     case "UPDATE_WINNER_CARD": {
       // todo, use high order function to wrap this
       let {table} = action;
@@ -376,7 +365,6 @@ export const store = createStore(
     tables: {},
     currentTableId: null,
     isChatroomShown: true,
-    closeTables: {},
     isHeaderPanelClosed: true
   },
   applyMiddleware(thunk)
