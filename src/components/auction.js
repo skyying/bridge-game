@@ -110,8 +110,6 @@ export default class Auction extends React.Component {
 
     let {trickOpt, trumpOpt, value, isLastOpt} = getAuctionOpt(game);
 
-    console.log("value", value);
-
     let allTrickOpt = trickOpt.map((opt, index) => (
       <button
         className={opt === this.state.current ? "current" : null}
