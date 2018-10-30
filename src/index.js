@@ -9,6 +9,7 @@ import SignUp from "./components/signUp.js";
 import {DB} from "./firebase/db.js";
 import {Route, HashRouter} from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
+import {initializeReactGA} from "./firebase/config.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class App extends React.Component {
   componentDidMount() {
     this.unSubscribe = store.subscribe(this.update.bind(this));
     this.stopLoading();
+    initializeReactGA();
   }
   componentDidUnMount() {
     this.unSubscribe();
