@@ -6,6 +6,7 @@ import {dispatchToDatabase} from "../reducer/reducer.js";
 import {AuctionList} from "./auctionList.js";
 import {Thumbnail} from "./thumbnail.js";
 import {AuctionThumbnails} from "./auctionThumbnails.js";
+import {getAuctionOpt} from "../logic/auction.js";
 import "../style/auction.scss";
 
 export default class Auction extends React.Component {
@@ -79,7 +80,6 @@ export default class Auction extends React.Component {
         let hasValidTrump = result.some(bid => bid.trump >= 0);
         isFinishAuction = isAllPass && hasValidTrump;
       }
-
       // update bid
       newBid = Object.assign({}, this.props.table.game.bid, {
         result: result
@@ -104,41 +104,13 @@ export default class Auction extends React.Component {
   render() {
     let {table, currentUser} = this.props;
     let {players, playerInfo, game} = table;
+
     let isCurrentUser =
             players && players[game.deal] === this.props.currentUser.uid;
 
-    let value = game.bid.trick * 5 + game.bid.trump;
+    let {trickOpt, trumpOpt, value, isLastOpt} = getAuctionOpt(game);
 
-    // todo: refactor
-    let trickOpt, trumpOpt;
-    if (value < 0) {
-      trickOpt = Array.from({length: 7})
-        .fill(0)
-        .map((opt, index) => index);
-      trumpOpt = Array.from({length: 5})
-        .fill(0)
-        .map((opt, index) => index);
-    } else if (value === 34) {
-      trickOpt = [];
-      trumpOpt = [];
-    } else if (value % 5 === 4 && value !== 0) {
-      trickOpt = Array.from({length: 7})
-        .fill(0)
-        .map((opt, index) => index)
-        .filter(opt => opt > game.bid.trick);
-      trumpOpt = Array.from({length: 5})
-        .fill(0)
-        .map((opt, index) => index);
-    } else {
-      trickOpt = Array.from({length: 7})
-        .fill(0)
-        .map((opt, index) => index)
-        .filter(opt => opt >= game.bid.trick);
-      trumpOpt = Array.from({length: 5})
-        .fill(0)
-        .map((opt, index) => index)
-        .filter(opt => opt > game.bid.trump);
-    }
+    console.log("value", value);
 
     let allTrickOpt = trickOpt.map((opt, index) => (
       <button
