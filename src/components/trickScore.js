@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "../style/trick-score.scss";
 import {teamScore} from "./socre.js";
 import {ThumbailGroupWithTag} from "./thumbnail.js";
+import TeamScore from "../logic/teamscore.js";
 
 export default class TrickScore extends React.Component {
   constructor(props) {
@@ -20,8 +21,13 @@ export default class TrickScore extends React.Component {
     if (!table || !table.game.cards) {
       return null;
     }
+
+    let score = new TeamScore(table, currentUser);
+    let scoreboard = score.getDefaultScore(game);
+
     let {playerInfo} = table;
-    let score = teamScore(game.cards);
+
+    // let score = teamScore(game.cards);
     let playerList = players.map(key => {
       if (playerInfo[key]) {
         return playerInfo[key].displayName;
@@ -29,12 +35,14 @@ export default class TrickScore extends React.Component {
         return "Anonymous";
       }
     });
+
     let innerStyle = this.props.innerStyle;
     let resizeRatio = this.props.ratio || 0.15;
     let thumbnailStyle = {
       width: this.props.thumbnailSize,
       height: this.props.thumbnailSize
     };
+
     let offset = 3;
     let thumbnailSize = this.props.thumbnailSize * 1.2;
     let styleName = canSwitchToSmallerPanel ? "smaller-panel" : "";
@@ -60,7 +68,7 @@ export default class TrickScore extends React.Component {
                 offset={offset}
                 currentUser={currentUser}
               />
-              <div className="score">{score.teamA}</div>
+              <div className="score">{scoreboard.teamOne}</div>
             </div>
             <div className="group">
               <ThumbailGroupWithTag
@@ -73,7 +81,7 @@ export default class TrickScore extends React.Component {
                 offset={offset}
                 currentUser={currentUser}
               />
-              <div className="score">{score.teamB}</div>
+              <div className="score">{scoreboard.teamTwo}</div>
             </div>
           </div>
           {this.props.children}

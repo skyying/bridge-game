@@ -12,21 +12,26 @@ export default class ScoreBoard extends React.Component {
     this.recordGame = this.recordGame.bind(this);
   }
   recordGame() {
+
     let {table} = this.props;
     let {game} = table;
     if (!table || game.order !== 51) {
       return;
     }
+
     dispatchToDatabase("CREATE_NEW_GAME", {
       table: table
     });
+
   }
   render() {
     let {table, currentUser} = this.props;
     if (!table || !table.game.cards) {
       return null;
     }
+
     let score = new TeamScore(table, currentUser);
+
     let resultAction = score.isCurrentUserAPlayer ? (
       <button onClick={this.recordGame} className="btn">
                 再來一局
@@ -45,7 +50,6 @@ export default class ScoreBoard extends React.Component {
         <TrickScore
           currentUser={this.props.currentUser}
           ratio={0.5}
-          score={score.scoreboard}
           thumbnailSize={46}
           windowWidth={this.props.windowWidth}
           widnowHeight={this.props.windowHeight}
