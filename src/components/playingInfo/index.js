@@ -40,20 +40,7 @@ export default class PlayingInfo extends React.Component {
           windowHeight={windowHeight}
           table={table}
         />
-        <GameResult
-          canSwitchToSmallerPanel={canSwitchToSmallerPanel}
-          currentUser={currentUser}
-          resizeRatio={0.15}
-          innerStyle={{
-            bottom: Math.ceil(this.props.windowWidth / 500) * 5,
-            right: Math.ceil(this.props.windowWidth / 500) * 5
-          }}
-          thumbnailSize={30}
-          name="right-bottom-pos"
-          windowWidth={this.props.windowWidth}
-          widnowHeight={this.props.windowHeight}
-          table={this.props.table}
-        />
+        <GameResult currentUser={currentUser} table={table} />
       </div>
     );
   }

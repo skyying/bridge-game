@@ -171,7 +171,7 @@ export const ThumbailGroupWithTag = ({
     }
   });
   return (
-    <div className="thumbnail-group" style={styleObj}>
+    <div className="thumbnail-group">
       {members}
     </div>
   );
