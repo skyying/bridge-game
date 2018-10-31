@@ -9,7 +9,7 @@ export default class GameoverState extends React.Component {
   render() {
     let {
       currentUser,
-      isChatroomShown,
+      isSidebarPanelShown,
       windowWidth,
       windowHeight,
       table,

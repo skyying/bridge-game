@@ -118,8 +118,8 @@ class App extends React.Component {
                     currentTableId={
                       this.state.currentTableId
                     }
-                    isChatroomShown={
-                      this.state.isChatroomShown
+                    isSidebarPanelShown={
+                      this.state.isSidebarPanelShown
                     }
                     getUserAuthInfo={this.getUserAuthInfo}
                     chatroom={this.state.chatroom}

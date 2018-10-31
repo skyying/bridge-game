@@ -44,10 +44,10 @@ export default class GameState extends React.Component {
   }
   render() {
     let {gameState} = this.state;
-    let {isChatroomShown} = this.props;
+    let {isSidebarPanelShown} = this.props;
 
     return (
-      <div className={isChatroomShown ? "game" : "game full"}>
+      <div className={isSidebarPanelShown ? "game" : "game full"}>
         {this.stateComponents(gameState)}
       </div>
     );

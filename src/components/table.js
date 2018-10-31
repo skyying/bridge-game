@@ -39,7 +39,7 @@ export default class Table extends React.Component {
     this.timer;
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
-    this.toggleChatroom = this.toggleChatroom.bind(this);
+    this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.color = randomColor("dark");
   }
@@ -49,7 +49,7 @@ export default class Table extends React.Component {
       if (this.childRef.current) {
         width = this.childRef.current.offsetWidth;
       }
-      if (this.props.isChatroomShown && window.innerWidth <= 700) {
+      if (this.props.isSidebarPanelShown && window.innerWidth <= 700) {
         this.toggleChatroom();
       }
       this.setState({sidebarWidth: width});
@@ -111,9 +111,9 @@ export default class Table extends React.Component {
       });
     }
   }
-  toggleChatroom() {
-    dispatch("TOGGLE_CHATROOM_PANEL", {
-      isChatroomShown: !this.props.isChatroomShown
+  toggleSidebar() {
+    dispatch("TOGGLE_SIDEBAR_PANEL", {
+      isSidebarPanelShown: !this.props.isSidebarPanelShown
     });
     this.handleResize();
   }
@@ -161,9 +161,9 @@ export default class Table extends React.Component {
       return <Redirect to="/" />;
     }
 
-    let chatroomToggleBtn = this.props.isHeaderPanelClosed &&
-            !this.props.isChatroomShown && (
-      <FloatBtn clickEvt={this.toggleChatroom} />
+    let sidebarPanelToggleBtn = this.props.isHeaderPanelClosed &&
+            !this.props.isSidebarPanelShown && (
+      <FloatBtn clickEvt={this.toggleSidebar} />
     );
 
     return (
@@ -181,20 +181,20 @@ export default class Table extends React.Component {
             windowHeight={this.state.windowHeight}
             sidebarWidth={this.state.sidebarWidth}
             sidebarRef={this.childRef}
-            isChatroomShown={this.props.isChatroomShown}
+            isSidebarPanelShown={this.props.isSidebarPanelShown}
             currentUser={currentUser}
             currentTableId={this.props.currentTableId}
             table={targetTable}
           />
           <Sidebar
             setRef={this.childRef}
-            toggleChatroom={this.toggleChatroom}
-            isChatroomShown={this.props.isChatroomShown}
+            toggleSidebar={this.toggleSidebar}
+            isSidebarPanelShown={this.props.isSidebarPanelShown}
             currentUser={currentUser}
             chatroom={chatroom}
             table={targetTable}
           />
-          {chatroomToggleBtn}
+          {sidebarPanelToggleBtn}
         </div>
       </div>
     );

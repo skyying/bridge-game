@@ -11,7 +11,7 @@ export default class PlayingInfo extends React.Component {
   }
   render() {
     let {
-      isChatroomShown,
+      isSidebarPanelShown,
       currentUser,
       windowWidth,
       windowHeight,
@@ -22,19 +22,19 @@ export default class PlayingInfo extends React.Component {
     } = this.props;
 
     let canSwitchToSmallerPanel =
-            (this.props.isChatroomShown && this.props.windowWidth <= 1300) ||
+            (this.props.isSidebarPanelShown &&
+                this.props.windowWidth <= 1300) ||
             this.props.windowWidth <= 1000;
 
-    
     if (table.gameState === GAME_STATE.auction) {
       return null;
     }
-      
+
     return (
       <div>
         <AuctionResult
           canSwitchToSmallerPanel={canSwitchToSmallerPanel}
-          isChatroomShown={isChatroomShown}
+          isSidebarPanelShown={isSidebarPanelShown}
           currentUser={currentUser}
           windowWidth={windowWidth}
           windowHeight={windowHeight}

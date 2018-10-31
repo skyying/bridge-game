@@ -1,56 +1,62 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import {TAB_OPTION} from "../constant.js";
 import Chatroom from "../chatroom.js";
 
-export default class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
-    let {record} = this.props.table;
-    this.state = {
-      tab: 0,
-      currentRecord: record ? record.length - 1 : null
-    };
-    this.changeRecord = this.changeRecord.bind(this);
-    this.handleTab = this.handleTab.bind(this);
-  }
-  changeRecord(index) {
-    this.setState({currentRecord: index});
-  }
-  handleTab(index) {
-    this.setState({tab: index});
-  }
-  render() {
-    if (!this.props.table) return null;
-    if (!this.props.isChatroomShown) {
-      return null;
-    }
-    return (
-      <div ref={this.props.setRef} className="sidebar">
-        <div className="tabs">
-          <div className={"current chatroom"}>
-            <span />
-            <b>chatroom</b>
-          </div>
-          <span
-            onClick={this.props.toggleChatroom}
-            className="close-btn"
-          />
-        </div>
-        <div className="tab-wrapper" />
-        <div>
-          <Chatroom
-            screenHeight={this.props.screenWidth}
-            screenWidth={this.props.screenWidth}
-            currentUser={this.props.currentUser}
-            chatroom={this.props.chatroom}
-            table={this.props.table}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+/*
+ * Sidebar, a sidebar panel contain chatroom message
+ * @param currentUser, who is login
+ * @param table, current table data, include all game data, players and viewers
+ * @param isSidebarPanelShown, a boolean value to decide should show/hide sidebar
+ * @param setRef, set ref for sidebar component, in order to get sidebar width
+ * @param toggleSidebar, a function to toggle chatroom
+ * @param screenWidth, current screen width value
+ * @param chatroom, chatroom object, includes chat message and chatroom info
+ */
 
-// <div>{currentTabContent}</div>
+Sidebar.propTypes = {
+  currentUser: PropTypes.object,
+  table: PropTypes.object,
+  isSidebarPanelShown: PropTypes.bool,
+  setRef: PropTypes.object,
+  toggleSidebar: PropTypes.func,
+  screenWidth: PropTypes.number,
+  chatroom: PropTypes.object
+};
+
+const Sidebar = ({
+  currentUser,
+  table,
+  isSidebarPanelShown,
+  setRef,
+  toggleSidebar,
+  screenWidth,
+  chatroom
+}) => {
+  if (!table || !isSidebarPanelShown) {
+    return null;
+  }
+
+  return (
+    <div ref={setRef} className="sidebar">
+      <div className="tabs">
+        <div className={"current chatroom"}>
+          <span />
+          <b>chatroom</b>
+        </div>
+        <span onClick={toggleSidebar} className="close-btn" />
+      </div>
+      <div className="tab-wrapper" />
+      <div>
+        <Chatroom
+          screenHeight={screenWidth}
+          screenWidth={screenWidth}
+          currentUser={currentUser}
+          chatroom={chatroom}
+          table={table}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;

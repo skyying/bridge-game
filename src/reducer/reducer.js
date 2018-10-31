@@ -25,9 +25,9 @@ export const appReducer = (state, action) => {
         userList: action.userList
       });
     }
-    case "TOGGLE_CHATROOM_PANEL": {
+    case "TOGGLE_SIDEBAR_PANEL": {
       return Object.assign({}, state, {
-        isChatroomShown: action.isChatroomShown
+        isSidebarPanelShown: action.isSidebarPanelShown
       });
     }
     case "TOGGLE_HEADER_PANEL": {
@@ -364,7 +364,7 @@ export const store = createStore(
     isLoad: false,
     tables: {},
     currentTableId: null,
-    isChatroomShown: true,
+    isSidebarPanelShown: true,
     isHeaderPanelClosed: true
   },
   applyMiddleware(thunk)
