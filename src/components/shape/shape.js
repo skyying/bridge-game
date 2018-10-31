@@ -82,8 +82,7 @@ const SvgContainer = ({children, ratio, scale, fill}) => {
   );
 };
 
-SvgContainer.propTypes = {
+SvgContainer.propTypes = Object.assign(defaultProps, {
   children: PropTypes.element,
-  ratio: PropTypes.number,
-  ...defaultProps
-};
+  ratio: PropTypes.number
+});
