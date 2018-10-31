@@ -6,7 +6,6 @@ export default class TeamScore {
     this.declarer = this.bid.declarer;
     this.players = table.players;
     this.playerIndex = this.getPlayerIndex(currentUser.uid);
-    // trick start from 0, 0 means one trick...
     this.targetTrick = this.bid.trick + 1 + BASE_TRICK;
     this.isCurrentUserAPlayer = this.playerIndex >= 0;
     this.scoreboard = this.getScore(table.game);

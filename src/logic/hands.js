@@ -34,26 +34,29 @@ export default class Hands {
     return index < 0 ? 0 : index;
   }
 
-  getDisplayHand() {
+  getDisplayHands() {
     // flip cards up or down base on current user, player, and is dummy hand
     return this.getUnplayedCards().map((hand, playerHandIndex) => {
       let flipDownCards = [[], [], [], []];
       hand.map(card => {
         flipDownCards[Math.floor(card.value / TOTAL_TRICKS)].push(card);
       });
-
       flipDownCards.filter(item => item.length !== 0);
 
+      // flip down cards will be display evently
       if (
-        playerHandIndex !== this.currentUserIndex &&
-                playerHandIndex !== this.offsetDummyIndex &&
-                this.isCurrentUserAPlayer
+        (this.table.gameState === GAME_STATE.auction &&
+                    playerHandIndex !== this.currentUserIndex) ||
+                (playerHandIndex !== this.currentUserIndex &&
+                    playerHandIndex !== this.offsetDummyIndex &&
+                    this.isCurrentUserAPlayer)
       ) {
         let mapResult = this.mapFlipDownCards(flipDownCards);
         if (mapResult) {
           flipDownCards = mapResult;
         }
       }
+
       return flipDownCards;
     });
   }
@@ -67,26 +70,27 @@ export default class Hands {
       return hand.filter(card => card.trick === 0);
     });
   }
-  getFilteredHand() {
-    const hands = this.getDisplayHand();
+  getFilteredHands() {
+    const hands = this.getDisplayHands();
     return hands.map(hand => hand.filter(suit => suit.length > 0));
   }
   getHands() {
-    const hands = this.getFilteredHand();
+    const hands = this.getFilteredHands();
     return hands.map((hand, playerHandIndex) => {
       const hasFollowSameSuit = this.hasSameSuitWithFirstCard(
         hand.flat()
       );
-
       const playerHand = this.offsetPlayers[playerHandIndex];
 
       return hand.map((each, index) => {
         let dummyPlayer = this.players[this.dummyIndex];
         let declarerPlayer = this.players[this.declarerIndex];
+        let isPlayingState =
+                    this.table.gameState === GAME_STATE.playing;
 
         // if player is nither declarer nor dummy plaer
         let canBeClick =
-                    this.table.gameState === GAME_STATE.playing &&
+                    isPlayingState &&
                     this.isCurrentUserAPlayer &&
                     // current player is equal to south;
                     this.currentTurnPlayer === playerHand &&
@@ -97,7 +101,8 @@ export default class Hands {
         if (
           this.dummyMode &&
                     this.isCurrentUserAPlayer &&
-                    dummyPlayer === this.currentTurnPlayer
+                    dummyPlayer === this.currentTurnPlayer &&
+                    isPlayingState
         ) {
           if (
             this.currentUser.uid === declarerPlayer &&
@@ -114,7 +119,7 @@ export default class Hands {
         }
 
         let flipUp =
-                    (this.table.gameState === GAME_STATE.playing ||
+                    (isPlayingState ||
                         playerHandIndex === this.currentUserIndex) &&
                     (!this.isCurrentUserAPlayer ||
                         playerHandIndex === this.currentUserIndex ||

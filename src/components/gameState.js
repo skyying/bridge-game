@@ -45,7 +45,6 @@ export default class GameState extends React.Component {
   render() {
     let {gameState} = this.state;
     let {isSidebarPanelShown} = this.props;
-
     return (
       <div className={isSidebarPanelShown ? "game" : "game full"}>
         {this.stateComponents(gameState)}
