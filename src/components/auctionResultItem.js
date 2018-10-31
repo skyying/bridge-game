@@ -22,6 +22,7 @@ export const AcutionResultItem = ({item, scale}) => {
   return <div className="bid-result" />;
 };
 
+
 AcutionResultItem.propTypes = {
   item: PropTypes.object,
   scale: PropTypes.number

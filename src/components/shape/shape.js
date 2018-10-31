@@ -1,18 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-let redColor = "#FF525D";
-let blackColor = "#222222";
+const colorForHeartAndDiamond = "#FF525D";
+const colorForSpadeAndClub = "#222222";
+const defaultProps = {
+  scale: PropTypes.number,
+  fill: PropTypes.string
+};
 
-export const Heart = ({scale, fill = "#FF525D"}) => {
+/*
+ * four svg shape, spade, heart, diamond, club
+ * @param, scale, how large is this shape, scale 1 is 100 width, default is 1;
+ * @param, fill, color for shape
+ */
+export const Heart = ({scale, fill = colorForHeartAndDiamond}) => {
+  const DEFAULT_RATIO = 0.89;
   return (
-    <SvgContainer scale={scale} ratio={0.89} fill={fill}>
+    <SvgContainer scale={scale} ratio={DEFAULT_RATIO} fill={fill}>
       <path d="M70.9643211,0 C59.2565148,0 53.056072,5.64335169 49.9709368,10.1546618 C46.889795,5.64335169 40.6986702,0 29.0152682,0 C15.0405332,0 0,9.29808951 0,29.7129874 C0,37.7588224 1.74734105,44.1438566 5.84192287,51.0638602 C9.82779506,57.7993304 18.2685439,66.1002296 30.9298889,75.7372219 C35.8715185,79.4984213 40.4235682,82.6625486 43.3724836,84.6547112 C49.0391399,88.4833363 49.2609963,88.5228158 49.9456452,88.5232594 C49.9802548,88.5241466 50.0135332,88.5245902 50.0468117,88.5245902 C50.6941887,88.5245902 51.1401201,88.3183208 56.5574098,84.6764471 C59.5081,82.6922691 64.0641431,79.5401188 69.0102098,75.7873476 C81.6870849,66.1698733 90.1513504,57.851674 94.1682825,51.0643038 C98.2557649,44.1571643 100,37.7712429 100,29.713431 C100,9.29808951 84.9488177,0 70.9643211,0 Z" />
     </SvgContainer>
   );
 };
+Heart.propTypes = defaultProps;
 
-export const Spade = ({scale, fill = "#222"}) => {
+export const Spade = ({scale, fill = colorForSpadeAndClub}) => {
   return (
     <SvgContainer scale={scale} ratio={1} fill={fill}>
       <path
@@ -22,8 +33,9 @@ export const Spade = ({scale, fill = "#222"}) => {
     </SvgContainer>
   );
 };
+Spade.propTypes = defaultProps;
 
-export const Diamond = ({scale, fill = "#FF525D"}) => {
+export const Diamond = ({scale, fill = colorForHeartAndDiamond}) => {
   let w = 93,
     h = 100;
   return (
@@ -34,10 +46,12 @@ export const Diamond = ({scale, fill = "#FF525D"}) => {
     </SvgContainer>
   );
 };
+Diamond.propTypes = defaultProps;
 
-export const Club = ({scale, fill = "#222"}) => {
+export const Club = ({scale, fill = colorForSpadeAndClub}) => {
+  const DEFAULT_RATIO = 0.98;
   return (
-    <SvgContainer scale={scale} ratio={0.98} fill={fill}>
+    <SvgContainer scale={scale} ratio={DEFAULT_RATIO} fill={fill}>
       <path
         d="M70.3555185,31.9345189 C71.174537,29.4903991 71.587963,26.9404062 71.587963,24.3163882 C71.587963,10.9083748 60.5577593,0 47,0 C33.4422407,0 22.412037,10.9083748 22.412037,24.3163882 C22.412037,26.9404062 22.825463,29.4903991 23.6444815,31.9345189 C10.5223426,32.426872 0,43.137703 0,56.2332616 C0,69.641275 11.0302037,80.5496498 24.587963,80.5496498 C30.872037,80.5496498 36.6116944,78.2040867 40.9631111,74.3539201 L35.6686481,92.1010101 L58.1820833,92.1010101 L52.8323519,74.1692877 C57.2077037,78.12834 63.0287407,80.5496498 69.412037,80.5496498 C82.9697963,80.5496498 94,69.641275 94,56.2332616 C94,43.137703 83.4776574,32.426872 70.3555185,31.9345189 Z"
         fill={fill}
@@ -46,19 +60,30 @@ export const Club = ({scale, fill = "#222"}) => {
   );
 };
 
+Club.propTypes = defaultProps;
+/*
+ * Svg container, will wrap svg as children and decide their viewbox
+ * @param, children, four svg shape
+ * @param, ratio, used to calcuate container height
+ * @param, scale, from 0 to n, e.g. scale 1 = 100 width
+ * @param, fill, shape color
+ */
 const SvgContainer = ({children, ratio, scale, fill}) => {
-  let width = scale * 100,
-    height = Math.floor(width * ratio);
+  let w = scale * 100,
+    h = Math.floor(w * ratio);
   return (
     <div>
-      <svg
-        width={`${width}px`}
-        height={`${height}px`}
-        viewBox={`0 0 ${width} ${height}`}>
+      <svg width={`${w}px`} height={`${h}px`} viewBox={`0 0 ${w} ${h}`}>
         <g fill={fill} transform={`scale(${scale})`}>
           {children}
         </g>
       </svg>
     </div>
   );
+};
+
+SvgContainer.propTypes = {
+  children: PropTypes.element,
+  ratio: PropTypes.number,
+  ...defaultProps
 };

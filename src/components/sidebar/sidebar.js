@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import GameRecord from "./gameRecord.js";
-import GameRewind from "./gameRewind.js";
 import {TAB_OPTION} from "../constant.js";
 import Chatroom from "../chatroom.js";
 
