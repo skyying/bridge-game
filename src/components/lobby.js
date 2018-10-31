@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import OpenTables from "./openTables.js";
-import PlayingTables from "./playingTables.js";
+import OpenTables from "./tableList/openTables.js";
+import PlayingTables from "./tableList/playingTables.js";
 import "../style/lobby.scss";
 import openImg from "../images/open.svg";
 import playImg from "../images/play.svg";
-import Header from "./header.js";
-import {Loading} from "./loading.js";
+import Header from "./header";
+import Loading from "./common/loading.js";
 
-export const Lobby = ({
+const Lobby = ({
   isHeaderPanelClosed,
   getUserAuthInfo,
   currentUser,
@@ -68,3 +68,5 @@ export const Lobby = ({
     </div>
   );
 };
+
+export default Lobby;

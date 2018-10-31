@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ScoreBoard from "./scoreBoard.js";
+import ScoreBoard from "./scoreboard";
 
 export default class GameoverState extends React.Component {
   constructor(props) {

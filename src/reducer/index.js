@@ -242,7 +242,10 @@ export const dispatchToDatabase = (type, action) => {
       // update this is how many trick players have been draw
       let {table, order, deal} = action;
       let {game} = table;
-      Database.updateTableGameDataByPath(`${table.id}/game/order/`, order);
+      Database.updateTableGameDataByPath(
+        `${table.id}/game/order/`,
+        order
+      );
 
       let cards = game.cards;
 
@@ -279,7 +282,10 @@ export const dispatchToDatabase = (type, action) => {
     case "ADD_VIEWER_TO_TABLE": {
       let {currentUser, table, color} = action;
       let {linkId, id} = table;
-      Database.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
+      Database.setNodeByPath(
+        `tables/${id}/viewers/${currentUser.uid}`,
+        color
+      );
       Database.updateTableGameDataByPath(
         `${id}/timeStamp/`,
         new Date().getTime()
@@ -296,15 +302,24 @@ export const dispatchToDatabase = (type, action) => {
         `tables/${id}/players/${emptySeatIndex}`,
         currentUser.uid
       );
-      Database.setNodeByPath(`tables/${id}/playerInfo/${currentUser.uid}`, {
-        displayName: currentUser.displayName
-      });
+      Database.setNodeByPath(
+        `tables/${id}/playerInfo/${currentUser.uid}`,
+        {
+          displayName: currentUser.displayName
+        }
+      );
 
-      Database.setNodeByPath(`tables/${id}/viewers/${currentUser.uid}`, color);
+      Database.setNodeByPath(
+        `tables/${id}/viewers/${currentUser.uid}`,
+        color
+      );
       // if anyone join this table, update data to table list
       let updatePlayers = players.slice(0);
       updatePlayers[emptySeatIndex] = currentUser.uid;
-      Database.setNodeByPath(`tableList/${linkId}/players`, updatePlayers);
+      Database.setNodeByPath(
+        `tableList/${linkId}/players`,
+        updatePlayers
+      );
       Database.setNodeByPath(
         `tableList/${linkId}/playerInfo/${currentUser.uid}`,
         {displayName: currentUser.displayName}

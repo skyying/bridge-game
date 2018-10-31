@@ -1,4 +1,4 @@
-import {EMPTY_SEAT, PLAYER_NUM} from "../components/constant.js";
+import {EMPTY_SEAT, PLAYER_NUM} from "../components/constant";
 
 export default class TableLogic {
   constructor(tableList) {

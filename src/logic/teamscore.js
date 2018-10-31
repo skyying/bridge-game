@@ -1,4 +1,4 @@
-import {RESULT, PLAYER_NUM} from "../components/constant.js";
+import {RESULT, PLAYER_NUM} from "../components/constant/index.js";
 export default class TeamScore {
   constructor(table, currentUser) {
     const BASE_TRICK = 6;

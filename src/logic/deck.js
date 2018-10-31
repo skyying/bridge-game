@@ -1,5 +1,5 @@
 import {getRandomInt} from "../helper/helper.js";
-import {CARD_NUM, TOTAL_TRICKS} from "../components/constant.js";
+import {CARD_NUM, TOTAL_TRICKS} from "../components/constant";
 
 export default class Deck {
   constructor() {

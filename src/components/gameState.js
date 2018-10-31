@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {GAME_STATE} from "./constant.js";
+import {GAME_STATE} from "./constant";
 import JoinState from "./joinState.js";
-import AuctionState from "./auctionState.js";
+import AuctionState from "./auction";
 import PlayingState from "./playingState.js";
 import GameoverState from "./gameoverState.js";
 

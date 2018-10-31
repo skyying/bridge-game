@@ -1,12 +1,12 @@
 import "./style/main.scss";
 import React from "react";
 import ReactDOM from "react-dom";
-import Login from "./components/login.js";
+import Login from "./components/login";
+import SignUp from "./components/signUp";
 import Table from "./components/table.js";
-import {Lobby} from "./components/lobby.js";
-import {Loading} from "./components/loading.js";
-import SignUp from "./components/signUp.js";
-import {DB} from "./firebase/db.js";
+import Lobby from "./components/lobby.js";
+import Loading from "./components/common/loading.js";
+import Database from "./firebase";
 import {Route, HashRouter} from "react-router-dom";
 import {dispatch, store} from "./reducer/reducer.js";
 import {initializeReactGA} from "./firebase/config.js";
@@ -15,15 +15,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = store.getState();
-    [
-      "update",
-      "stopLoading",
-      "updateUserInfo",
-      "getUserAuthInfo",
-      "getUserAuthInfo"
-    ].forEach(name => {
-      this[name] = this[name].bind(this);
-    });
+    ["update", "stopLoading", "updateUserInfo", "getUserAuthInfo"].forEach(
+      name => {
+        this[name] = this[name].bind(this);
+      }
+    );
   }
   update() {
     this.setState(store.getState());
@@ -45,9 +41,9 @@ class App extends React.Component {
   getUserAuthInfo() {
     let _this = this;
     return new Promise((resolve, reject) => {
-      DB.auth.onAuthStateChanged(user => {
+      Database.auth.onAuthStateChanged(user => {
         if (user) {
-          DB.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+          Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
             let userInfo = snapshot.val();
             resolve(userInfo);
             _this.stopLoading();

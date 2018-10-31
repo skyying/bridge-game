@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {EMPTY_SEAT} from "./constant.js";
+import {EMPTY_SEAT} from "./constant";
 import {dispatchToDatabase} from "../reducer/reducer.js";
 import "../style/ready-list.scss";
-import {ThumbnailWithTag, WaitingThumbnail} from "./thumbnail.js";
+import {ThumbnailWithTag, WaitingThumbnail} from "./thumbnail";
 import Deck from "../logic/deck.js";
 
 export default class JoinState extends React.Component {

@@ -1,6 +1,6 @@
 import TeamScore from "../src/logic/teamscore.js";
 import {teamScoreData} from "./testData/teamscoreData.js";
-import {RESULT} from "../src/components/constant.js";
+import {RESULT} from "../src/components/constant";
 
 describe("teamScore logic testing suit one", () => {
   const currentUser = {};

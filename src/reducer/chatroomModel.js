@@ -1,4 +1,4 @@
-import {DB} from "../firebase/db.js";
+import Database from "../firebase";
 import {dispatch} from "../reducer/reducer.js";
 export default class ChatroomModel {
   constructor(linkId, id) {
@@ -7,7 +7,7 @@ export default class ChatroomModel {
     this.get();
   }
   get() {
-    DB.getChatRoomById(this.id).then(chatroom => {
+    Database.getChatRoomById(this.id).then(chatroom => {
       this.update(chatroom);
       this.listenChanged();
     });
@@ -18,7 +18,7 @@ export default class ChatroomModel {
     });
   }
   listenChanged() {
-    DB.getNodeByPath(`chatroom/${this.id}/`, snapshot =>
+    Database.getNodeByPath(`chatroom/${this.id}/`, snapshot =>
       this.update(snapshot.val())
     );
   }

@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Trick from "./trick.js";
-import PlayingInfo from "./playingInfo.js";
-import {Card} from "./card.js";
+import Trick from "./trick";
+import PlayingInfo from "./playingInfo";
+import {Card} from "./card";
 import TrickLogic from "../logic/trick.js";
-import {dispatchToDatabase} from "../reducer/reducer.js";
-import {GAME_STATE, DIRECTION} from "./constant.js";
-import {Player} from "./player.js";
+import {dispatchToDatabase} from "../reducer";
+import {GAME_STATE, DIRECTION} from "./constant";
+import Player from "./player";
 import Hands from "../logic/hands.js";
-import {getWinnerCard} from "./getWinnerCard.js";
+import {getWinnerCard} from "../logic/getWinnerCard.js";
 import Layout from "../logic/layout.js";
 
 export default class PlayingState extends React.Component {
@@ -110,7 +110,11 @@ export default class PlayingState extends React.Component {
           key={`player-hand-index-${index}`}>
           <div className="hand-inner">
             <div className="user-hand">{cardsInHand}</div>
-            <Player index={index} current={isCurrentPlayer} name={playerName} />
+            <Player
+              index={index}
+              current={isCurrentPlayer}
+              name={playerName}
+            />
           </div>
         </div>
       );

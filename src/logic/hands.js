@@ -1,5 +1,4 @@
-import {PLAYER_NUM, TOTAL_TRICKS, GAME_STATE} from "../components/constant.js";
-import {mapFlipDownCards} from "../components/examineCards.js";
+import {PLAYER_NUM, TOTAL_TRICKS, GAME_STATE} from "../components/constant";
 import TrickLogic from "./trick.js";
 
 export default class Hands {
@@ -50,7 +49,7 @@ export default class Hands {
                 playerHandIndex !== this.offsetDummyIndex &&
                 this.isCurrentUserAPlayer
       ) {
-        let mapResult = mapFlipDownCards(flipDownCards);
+        let mapResult = this.mapFlipDownCards(flipDownCards);
         if (mapResult) {
           flipDownCards = mapResult;
         }
@@ -140,12 +139,29 @@ export default class Hands {
       });
     });
   }
+
   getOffsetIndex() {
     return this.players.findIndex(user => user === this.currentUser.uid);
   }
   isCurrentUserAPlayer() {
     return this.players.includes(this.currentUser.uid);
   }
+  mapFlipDownCards(flipDownCards) {
+    if (!flipDownCards) return;
+    let flat = flipDownCards.flat();
+    let cardsNumberOnHand = 5;
+    let totalLen = flat.length;
+    // if cards number is under n, split flipdown card into two row;
+    if (totalLen <= cardsNumberOnHand) {
+      let mid = Math.floor(totalLen / 2);
+      return [flat.slice(0, mid), flat.slice(mid, totalLen)];
+    } else {
+      let threeRow = [[], [], []];
+      flat.map((card, index) => threeRow[index % 3].push(card));
+      return threeRow;
+    }
+  }
+
   hasSameSuitWithFirstCard(cards) {
     return (
       this.firstCard &&

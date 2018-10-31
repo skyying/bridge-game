@@ -1,4 +1,4 @@
-import {DB} from "../firebase/db.js";
+import Database from "../firebase";
 import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
 import ChatroomModel from "../reducer/chatroomModel.js";
 export default class TableModel {
@@ -7,7 +7,7 @@ export default class TableModel {
     this.get();
   }
   get() {
-    return DB.getTableByLinkId(this.linkId).then(table => {
+    return Database.getTableByLinkId(this.linkId).then(table => {
       this.chatroom = new ChatroomModel(this.linkId, table.id);
       this.update(table);
       this.listenTableChange(table);
@@ -20,7 +20,7 @@ export default class TableModel {
     });
   }
   listenTableChange(table) {
-    DB.getNodeByPath(`tables/${table.id}/`, snapshot =>
+    Database.getNodeByPath(`tables/${table.id}/`, snapshot =>
       this.update(snapshot.val())
     );
   }

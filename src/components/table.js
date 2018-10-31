@@ -1,15 +1,14 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
-import {dispatch, dispatchToDatabase} from "../reducer/reducer.js";
-import Sidebar from "./sidebar/sidebar.js";
-import {GAME_STATE} from "./constant.js";
-import {DB} from "../firebase/db.js";
+import {dispatch, dispatchToDatabase} from "../reducer";
+import Sidebar from "./sidebar";
+import {GAME_STATE, EMPTY_SEAT} from "./constant";
+import Database from "../firebase";
 import randomColor from "randomcolor";
-import {EMPTY_SEAT} from "./constant.js";
 import TableModel from "../reducer/tableModel.js";
-import Header from "./header.js";
-import {Loading} from "./loading.js";
-import {FloatBtn} from "./floatBtn.js";
+import Header from "./header";
+import Loading from "./common/loading.js";
+import {FloatBtn} from "./common/floatBtn.js";
 import GameState from "./gameState.js";
 import "../style/reset.scss";
 import "../style/table.scss";
@@ -68,7 +67,7 @@ export default class Table extends React.Component {
     this.model = new TableModel(this.linkId);
     let currentUser = this.props.currentUser;
     if (!this.props.currentUser) {
-      DB.getCurrentUser();
+      Database.getCurrentUser();
     }
     this.model
       .get()

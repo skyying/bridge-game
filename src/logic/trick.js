@@ -1,5 +1,3 @@
-import {TOTAL_TRICKS} from "../components/constant.js";
-
 export default class TrickLogic {
   constructor() {
     this.TOTAL_CARDS_OF_EACH_TRICK = 4;
