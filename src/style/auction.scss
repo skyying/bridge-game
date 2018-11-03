@@ -144,12 +144,6 @@
       border: 3px solid #fff;
     }
   }
-
-  .default-thumbnail-inner{
-    // border: 3px solid #fff;
-    // background-color: #FF5656;
-    // padding: 10px;
-  }
 }
 
 
@@ -220,12 +214,14 @@
   flex-direction: column;
   align-items: center;
   span{
+    max-width: 66px;
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 12px;
     display:block;
     text-align: center;
   }
 }
+
 .auction-inner{
   .current {
     .default-thumbnail-inner-outline-wrapper{
@@ -234,14 +230,15 @@
         border: 4px solid #FF5656;
         border-radius: 100%;
       }
+
     }
   }
-
-
-  .thumbnail-group .thumbnail:nth-child(1){
-    transform: translateY(0);
-  }
 }
+
+.thumbnail-group .thumbnail:nth-child(1){
+  transform: translateY(0);
+}
+
 
 
 
