@@ -1,6 +1,6 @@
 
 
-![logo](/Users/liuchienwen/Desktop/logo.png)
+![logo](./screenshot/logo.png)
 
 
 
@@ -42,7 +42,7 @@ Users can sign up and login by email and password.
 
 Users can either open a new table, or select a popular table to watch.
 
-### ![1](/Users/liuchienwen/Bridge/screenshot/tables.png)
+### ![1](./screenshot/tables.png)
 
 
 
@@ -50,7 +50,7 @@ Users can either open a new table, or select a popular table to watch.
 
 Users Can Join a table to play with your friends or play with computer agent.
 
-![join](/Users/liuchienwen/Bridge/screenshot/join.png)
+![join](./screenshot/join.png)
 
 
 
@@ -58,17 +58,17 @@ Users Can Join a table to play with your friends or play with computer agent.
 
 Users can select a bid in auction phase by turn.
 
-![3](/Users/liuchienwen/Bridge/screenshot/auction.png)
+![3](./screenshot/auction.png)
 
 
 
 ### Play with Computer or friends
 
-![4](/Users/liuchienwen/Bridge/screenshot/playing.png)
+![4](./screenshot/playing.png)
 
 
 
-![5](/Users/liuchienwen/Bridge/screenshot/playing_player2.png)
+![5](./screenshot/playing_player2.png)
 
 
 
@@ -76,7 +76,7 @@ Users can select a bid in auction phase by turn.
 
 Players will only see messages sent by players during playing phase. Viewers can view all messages without this constraint.
 
-![chat-room](/Users/liuchienwen/Bridge/screenshot/chatroom.png)
+![chat-room](./screenshot/chatroom.png)
 
 
 
@@ -86,7 +86,7 @@ Players will only see messages sent by players during playing phase. Viewers can
 
 If a user is not a current player of a playing table, they can watch people play, and using chat room to interact with other viewer.
 
-### ![viewer](/Users/liuchienwen/Bridge/screenshot/viewer-mode.png)
+### ![viewer](./screenshot/viewer-mode.png)
 
 
 
