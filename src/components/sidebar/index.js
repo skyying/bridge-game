@@ -25,7 +25,6 @@ const Sidebar = ({
   if (!table || !isSidebarPanelShown) {
     return null;
   }
-
   return (
     <div ref={setRef} className="sidebar">
       <div className="tabs">
@@ -33,7 +32,7 @@ const Sidebar = ({
           <span />
           <b>chatroom</b>
         </div>
-        <span onClick={toggleSidebar} className="close-btn" />
+        <span onClick={() => toggleSidebar()} className="close-btn" />
       </div>
       <div className="tab-wrapper" />
       <div>

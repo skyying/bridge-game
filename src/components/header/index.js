@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import logoImg from "../../images/logo.svg";
-import {dispatch} from "../../reducer/reducer.js";
+import {dispatch} from "../../reducer";
 import UserState from "./userState.js";
 
 export default class Header extends React.Component {
@@ -26,8 +26,8 @@ export default class Header extends React.Component {
     let rightTopCorner;
     let registerBtns = (
       <div className="register-btn-groups">
-        <Link to="/signup">註冊</Link>
-        <Link to="/login">登入</Link>
+        <Link to="/signup">Sign up</Link>
+        <Link to="/login">Login</Link>
       </div>
     );
     rightTopCorner =
@@ -39,7 +39,7 @@ export default class Header extends React.Component {
     if (roomNum) {
       roomNum = `${roomNum}`;
       roomInfo =
-                "桌號 " + roomNum.slice(roomNum.length - 3, roomNum.length);
+                "Table " + roomNum.slice(roomNum.length - 3, roomNum.length);
     }
     return (
       <header className={this.props.isTableColor ? "table-header" : ""}>

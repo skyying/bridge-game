@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {EMPTY_SEAT} from "./constant";
-import {dispatchToDatabase} from "../reducer/reducer.js";
+import {dispatchToDatabase} from "../reducer";
 import "../style/ready-list.scss";
 import {ThumbnailWithTag, WaitingThumbnail} from "./thumbnail";
 import Deck from "../logic/deck.js";
@@ -16,8 +16,12 @@ const deal = (table, currentUser) => {
   });
 };
 
-const checkReadyState = ready => {
-  return ready.every(state => state === false);
+const StartButton = ({table}) => {
+  return (
+    <button onClick={() => deal(table)} className="btn">
+            Start now
+    </button>
+  );
 };
 
 const setReadyState = (table, currentUser, playerIndex) => {
@@ -26,6 +30,37 @@ const setReadyState = (table, currentUser, playerIndex) => {
     playerIndex: playerIndex,
     table: table
   });
+};
+
+const getPlayerActionButton = ({currentUser, table}) => {
+  let currentUserCanPlay;
+  let {ready, players, playerInfo} = table;
+
+  if (table.players.includes(currentUser.uid)) {
+    currentUserCanPlay = players.some(
+      (player, i) => player === currentUser.uid && !ready[i]
+    );
+    return players.map((player, index) => {
+      if (player === currentUser.uid && !ready[index]) {
+        return (
+          <div key={`playBtn-${index}`}>
+            <br />
+            <button
+              style={{zIndex: 5}}
+              onClick={() =>
+                setReadyState(table, currentUser, index)
+              }
+              className="btn">
+              Join
+            </button>
+          </div>
+        );
+      } else {
+        return <div key={`playBtn-${index}`} />;
+      }
+    });
+  }
+  return null;
 };
 
 const JoinState = ({table, currentUser}) => {
@@ -51,7 +86,7 @@ const JoinState = ({table, currentUser}) => {
           key={`join-plyaer-${index}`}
           className="player-ready-wrapper">
           <WaitingThumbnail size={size} />
-          <span>等候中</span>
+          <span>Waiting</span>
         </div>
       );
     }
@@ -89,7 +124,7 @@ const JoinState = ({table, currentUser}) => {
                 setReadyState(table, currentUser, index)
               }
               className="btn">
-                            加入牌局
+                  Join
             </button>
           </div>
         );
@@ -99,17 +134,11 @@ const JoinState = ({table, currentUser}) => {
     });
   }
 
-  let startGame = (
-    <button onClick={() => deal(table)} className="btn">
-            開始牌局
-    </button>
-  );
-
   let roomId = `${table.linkId}`;
-  let roomNum = "桌號 " + roomId.slice(roomId.length - 3, roomId.length);
+  let roomNum = "Table " + roomId.slice(roomId.length - 3, roomId.length);
   let notesText = isTableOwner
-    ? "按下方按鈕立即開始牌局"
-    : "等候其他玩家中...";
+    ? "Start game immediately by clicing button below"
+    : "Waiting for others to join..";
 
   return (
     <div className="player-ready-list">
@@ -123,7 +152,7 @@ const JoinState = ({table, currentUser}) => {
         )}
         <div className="btn-wrapper">
           {currentUserCanPlay && playBtns}
-          {isTableOwner && startGame}
+          {isTableOwner && <StartButton table={table} />}
         </div>
       </div>
     </div>

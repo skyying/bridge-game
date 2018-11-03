@@ -5,7 +5,7 @@ import "../../style/signup.scss";
 import "../../style/btn.scss";
 import "../../style/checkbox.scss";
 import {Redirect} from "react-router-dom";
-import {dispatchToDatabase} from "../../reducer/reducer.js";
+import {dispatchToDatabase} from "../../reducer";
 import Header from "../header";
 
 export default class SignUp extends React.Component {
@@ -41,14 +41,17 @@ export default class SignUp extends React.Component {
               email: email
             };
             user.updateProfile(userInfo);
-            Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
-              if (!snapshot.val()) {
-                dispatchToDatabase("CREATE_USER", {
-                  uid: user.uid,
-                  userInfo: userInfo
-                });
+            Database.getDataByPathOnce(
+              `users/${user.uid}`,
+              snapshot => {
+                if (!snapshot.val()) {
+                  dispatchToDatabase("CREATE_USER", {
+                    uid: user.uid,
+                    userInfo: userInfo
+                  });
+                }
               }
-            });
+            );
           } else {
             console.log("no user uid");
           }
@@ -71,11 +74,11 @@ export default class SignUp extends React.Component {
         />
         <div className="singup-wrapper">
           <div className="signup">
-            <h2>註冊</h2>
+            <h2>Sign up</h2>
             <div>
-              <h3>玩家名稱</h3>
+              <h3>Name</h3>
               <input
-                placeholder="請輸入玩家名稱"
+                placeholder="Player name"
                 type="text"
                 onChange={e => {
                   this.setState({
@@ -87,9 +90,9 @@ export default class SignUp extends React.Component {
               />
             </div>
             <div>
-              <h3>密碼</h3>
+              <h3>Password</h3>
               <input
-                placeholder="請輸入至少 6 位數"
+                placeholder="Minimum 6 characters is required"
                 type="password"
                 onChange={e => {
                   this.setState({
@@ -101,9 +104,9 @@ export default class SignUp extends React.Component {
               />
             </div>
             <div>
-              <h3>確認密碼</h3>
+              <h3>Confirm</h3>
               <input
-                placeholder="請輸入至少 6 位數"
+                placeholder="Minimum 6 characters is required"
                 type="password"
                 onChange={e => {
                   this.setState({
@@ -115,7 +118,7 @@ export default class SignUp extends React.Component {
               />
             </div>
             <div>
-              <h3>電子信箱</h3>
+              <h3>Email</h3>
               <input
                 type="email"
                 placeholder="john@bridge.com"
@@ -136,7 +139,7 @@ export default class SignUp extends React.Component {
                 <button
                   onClick={this.handleSignUp}
                   className="btn-style-round">
-                                    註冊
+                                    Sign up
                 </button>
               </div>
             </div>
@@ -146,30 +149,3 @@ export default class SignUp extends React.Component {
     );
   }
 }
-
-// <label className="checkbox-lable">
-//   <input id="agreement" type="checkbox" />
-//   <div
-//     className={
-//       this.state.agreement ? "checked" : ""
-//     }
-//     onClick={() =>
-//       this.setState({
-//         agreement: !this.state.agreement
-//       })
-//     }
-//   />
-// </label>
-
-// <span
-//   onClick={() =>
-//     this.setState({
-//       agreement: !this.state.agreement
-//     })
-//   }>
-//                   I allow the use of collected data about my study
-//                   behavior for research purposes. The data
-//                   contains information from game playing and
-//                   chatting messages. No individuals can be
-//                   identified from publications.
-// </span>

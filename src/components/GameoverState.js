@@ -27,10 +27,10 @@ const saveAndStartNewGame = table => {
 const nextStep = (isAllowNextStep, table) => {
   return isAllowNextStep ? (
     <button onClick={() => saveAndStartNewGame(table)} className="btn">
-            再來一局
+      Play again
     </button>
   ) : (
-    "比賽結束"
+    "Game over"
   );
 };
 

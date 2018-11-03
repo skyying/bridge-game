@@ -8,7 +8,7 @@ import Lobby from "./components/lobby.js";
 import Loading from "./components/common/loading.js";
 import Database from "./firebase";
 import {Route, HashRouter} from "react-router-dom";
-import {dispatch, store} from "./reducer/reducer.js";
+import {dispatch, store} from "./reducer";
 import {initializeReactGA} from "./firebase/config.js";
 
 class App extends React.Component {

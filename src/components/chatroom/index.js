@@ -176,7 +176,7 @@ export default class Chatroom extends React.Component {
             onKeyPress={this.handleKeyPress}
           />
           <div className="emoji">{emojiList}</div>
-          <button onClick={this.sendMessage}>送出</button>
+          <button onClick={this.sendMessage}>Send</button>
         </div>
       </div>
     );

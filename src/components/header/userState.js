@@ -4,7 +4,7 @@ import {ThumbnailWithTag} from "../thumbnail";
 import Database from "../../firebase";
 import {Link} from "react-router-dom";
 import "../../style/user-state.scss";
-import {dispatch} from "../../reducer/reducer.js";
+import {dispatch} from "../../reducer";
 
 export default class UserState extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export default class UserState extends React.Component {
           />
           <div>
             <h6>{currentUser.displayName}</h6>
-            <span>線上</span>
+            <span>online</span>
           </div>
         </div>
         <div
@@ -53,7 +53,7 @@ export default class UserState extends React.Component {
               : "options open"
           }>
           <Link onClick={this.handleSignOut} to="/">
-                        登出
+            Log out
           </Link>
         </div>
       </div>

@@ -50,7 +50,7 @@ export default class PlayingTables extends React.Component {
                     ? `/table/${linkId}`
                     : "/login"
                 }>
-                                觀賞
+                  View
               </Link>
             </div>
           </div>
@@ -61,11 +61,11 @@ export default class PlayingTables extends React.Component {
       <div className="table-list">
         <h4>{this.props.title}</h4>
         <div className="table-list-header playing-table-header">
-          <div>房號</div>
-          <div>南</div>
-          <div>西</div>
-          <div>北</div>
-          <div>東</div>
+          <div>Table</div>
+          <div>S</div>
+          <div>W</div>
+          <div>N</div>
+          <div>E</div>
           <div />
         </div>
         <div className="table-list-item-group">{tableLinks}</div>

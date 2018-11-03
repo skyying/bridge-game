@@ -31,8 +31,8 @@ const Lobby = ({
       <div className="lobby">
         <div className="lobby-title">
           <h2>
-                        鍛鍊腦力的最佳活動<br />
-            <span>支援多人連線，單機版電腦對戰模式</span>
+                        Your best brain gym<br />
+                        <span>A multiplayer online bridge game</span>
           </h2>
         </div>
         <div className="table-lists">
@@ -41,7 +41,7 @@ const Lobby = ({
             <div className="table-list-inner">
               <img src={openImg} />
               <OpenTables
-                title={"揪咖打牌"}
+                title={"Join a table to play"}
                 openBtn={true}
                 tables={tables}
                 currentUser={currentUser}
@@ -56,7 +56,7 @@ const Lobby = ({
               <img src={playImg} />
               <PlayingTables
                 tables={tables}
-                title={"熱門牌桌"}
+                title={"Popular tables"}
                 open={false}
                 currentUser={currentUser}
                 tableList={tableList}
