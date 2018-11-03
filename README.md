@@ -5,8 +5,9 @@
 An online multiplayer bridge game with React, Redux and Node.js.
 </p>
 <br/>
-Play now: http://bridge.tw
-Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
+<br/>
+#### Play now: http://bridge.tw
+#### Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
 
 
 <br/>
