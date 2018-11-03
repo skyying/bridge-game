@@ -1,5 +1,5 @@
 import Database from "../firebase";
-import {dispatch} from "../reducer/reducer.js";
+import {dispatch} from "../reducer";
 export default class ChatroomModel {
   constructor(linkId, id) {
     this.linkId = linkId;
