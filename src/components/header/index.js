@@ -6,13 +6,16 @@ import {Link} from "react-router-dom";
 import logoImg from "../../images/logo.svg";
 import {dispatch} from "../../reducer";
 import UserState from "./userState.js";
+import Database from "../../firebase";
 
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
     if (!this.props.currentUser) {
-      this.props.getUserAuthInfo().then(user => {
-        console.log("user login");
+      Database.onAuthChanged(user => {
+        dispatch("UPDATE_USER_INFO", {
+          user: user
+        });
       });
     }
   }
@@ -52,7 +55,7 @@ export default class Header extends React.Component {
         <div>
           <h3>{roomInfo}</h3>
         </div>
-        <div> 
+        <div>
           <div>{rightTopCorner}</div>
         </div>
       </header>

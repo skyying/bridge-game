@@ -16,8 +16,7 @@ export const appReducer = (state, action) => {
     case "UPDATE_USER_INFO": {
       if (!action) return;
       return Object.assign({}, state, {
-        user: action.user,
-        userInfo: action.userInfo
+        user: action.user
       });
     }
     case "UPDATE_USER_LIST": {

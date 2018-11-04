@@ -2,7 +2,7 @@ import TeamScore from "../src/logic/teamscore.js";
 import {teamScoreData} from "./testData/teamscoreData.js";
 import {RESULT} from "../src/components/constant";
 
-describe("teamScore logic testing suit one", () => {
+describe("teamScore logic - When game is not over", () => {
   const currentUser = {};
   currentUser.uid = "bill";
   const table = teamScoreData.tables["table2"];
@@ -34,7 +34,7 @@ describe("teamScore logic testing suit one", () => {
   });
 });
 
-describe("teamScore logic isUserWin", () => {
+describe("teamScore logic when game is over", () => {
   const currentUser = {};
   currentUser.uid = "nz";
   const table = teamScoreData.tables["table1"];

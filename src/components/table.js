@@ -171,7 +171,6 @@ export default class Table extends React.Component {
           isHeaderPanelClosed={this.props.isHeaderPanelClosed}
           roomNum={this.linkId || null}
           isTableColor={true}
-          getUserAuthInfo={this.props.getUserAuthInfo}
           currentUser={currentUser}
         />
         <div className="table">

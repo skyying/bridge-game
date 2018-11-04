@@ -15,7 +15,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = store.getState();
-    ["update", "stopLoading", "updateUserInfo", "getUserAuthInfo"].forEach(
+    ["update", "stopLoading", "updateUserInfo"].forEach(
       name => {
         this[name] = this[name].bind(this);
       }
@@ -38,32 +38,32 @@ class App extends React.Component {
       userInfo: userInfo
     });
   }
-  getUserAuthInfo() {
-    let _this = this;
-    return new Promise((resolve, reject) => {
-      Database.auth.onAuthStateChanged(user => {
-        if (user) {
-          Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
-            let userInfo = snapshot.val();
-            resolve(userInfo);
-            _this.stopLoading();
-            dispatch("UPDATE_USER_INFO", {
-              user: user,
-              userInfo: snapshot.val()
-            });
-          });
-        } else {
-          reject(true);
-          _this.stopLoading();
-          return dispatch("UPDATE_USER_INFO", {
-            userInfo: null,
-            user: null
-          });
-        }
-        dispatch("UPDATE_LOADING_STATE", {isLoad: true});
-      });
-    });
-  }
+  // getUserAuthInfo() {
+    // let _this = this;
+    // return new Promise((resolve, reject) => {
+    //   Database.auth.onAuthStateChanged(user => {
+    //     if (user) {
+    //       Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
+    //         let userInfo = snapshot.val();
+    //         resolve(userInfo);
+    //         _this.stopLoading();
+    //         dispatch("UPDATE_USER_INFO", {
+    //           user: user,
+    //           userInfo: snapshot.val()
+    //         });
+    //       });
+    //     } else {
+    //       reject(true);
+    //       _this.stopLoading();
+    //       return dispatch("UPDATE_USER_INFO", {
+    //         userInfo: null,
+    //         user: null
+    //       });
+    //     }
+    //     dispatch("UPDATE_LOADING_STATE", {isLoad: true});
+    //   });
+    // });
+  // }
   closeHeaderPanel(e) {
     dispatch("TOGGLE_HEADER_PANEL", {isToggle: false});
   }
@@ -84,7 +84,6 @@ class App extends React.Component {
                 exact
                 render={props => (
                   <Login
-                    getUserAuthInfo={this.getUserAuthInfo}
                     isHeaderPanelClosed={
                       this.state.isHeaderPanelClosed
                     }
@@ -98,7 +97,6 @@ class App extends React.Component {
                 render={props => (
                   <SignUp
                     updateUserInfo={this.updateUserInfo}
-                    getUserAuthInfo={this.getUserAuthInfo}
                     isHeaderPanelClosed={
                       this.state.isHeaderPanelClosed
                     }
@@ -117,7 +115,6 @@ class App extends React.Component {
                     isSidebarPanelShown={
                       this.state.isSidebarPanelShown
                     }
-                    getUserAuthInfo={this.getUserAuthInfo}
                     chatroom={this.state.chatroom}
                     tables={this.state.tables}
                     tableList={this.state.tableList}
@@ -135,7 +132,6 @@ class App extends React.Component {
                 render={() => (
                   <Lobby
                     isLoad={this.state.isLoad}
-                    getUserAuthInfo={this.getUserAuthInfo}
                     tables={this.state.tables || null}
                     currentUser={this.state.user}
                     isHeaderPanelClosed={

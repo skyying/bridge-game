@@ -10,7 +10,6 @@ import Loading from "./common/loading.js";
 
 const Lobby = ({
   isHeaderPanelClosed,
-  getUserAuthInfo,
   currentUser,
   isLoad,
   tables,
@@ -25,7 +24,6 @@ const Lobby = ({
     <div>
       <Header
         isHeaderPanelClosed={isHeaderPanelClosed}
-        getUserAuthInfo={getUserAuthInfo}
         currentUser={currentUser}
       />
       <div className="lobby">

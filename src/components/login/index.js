@@ -55,7 +55,6 @@ export default class Login extends React.Component {
       <div>
         <Header
           isHeaderPanelClosed={this.props.isHeaderPanelClosed}
-          getUserAuthInfo={this.props.getUserAuthInfo}
           currentUser={this.props.currentUser}
         />
         <div className="singup-wrapper">

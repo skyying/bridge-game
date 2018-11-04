@@ -9,7 +9,6 @@ import {dispatch} from "../../reducer";
 export default class UserState extends React.Component {
   constructor(props) {
     super(props);
-
     ["handleSignOut", "togglePanel"].forEach(name => {
       this[name] = this[name].bind(this);
     });
@@ -17,6 +16,9 @@ export default class UserState extends React.Component {
   handleSignOut() {
     this.togglePanel();
     Database.auth.signOut();
+    dispatch("UPDATE_USER_INFO", {
+      user: null
+    });
   }
   togglePanel(e) {
     if (e) {
@@ -53,7 +55,7 @@ export default class UserState extends React.Component {
               : "options open"
           }>
           <Link onClick={this.handleSignOut} to="/">
-            Log out
+                        Log out
           </Link>
         </div>
       </div>

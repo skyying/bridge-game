@@ -1,18 +1,13 @@
 
 
 ![logo](./screenshot/logo.png)
-
-
-
 An online multiplayer bridge game with React, Redux and Node.js.
 
-http://bridge.tw
-
+Play now: http://bridge.tw
 Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
 
-
-
-
+<br/>
+<br/>
 
 ## Technologies
 
@@ -27,7 +22,8 @@ Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
 * Unit test: Jest
 
 
-
+<br/>
+<br/>
 
 
 ## Features
