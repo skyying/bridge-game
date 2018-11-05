@@ -1,13 +1,16 @@
 
+<p align=center>
+<img src="./screenshot/logo.png"/>
+  <br/>
+An online multiplayer bridge game with React, Redux and Node.js.<br/>  <br/>
+  <img src="https://img.shields.io/github/license/mashape/apistatus.svg">
+</p>
+<br/>
+<br/>
 
-![logo](./screenshot/logo.png)
-An online multiplayer bridge game with React, Redux and Node.js.
 
 Play now: http://bridge.tw
 Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
-
-<br/>
-<br/>
 
 ## Technologies
 
