@@ -15,55 +15,32 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = store.getState();
-    ["update", "stopLoading", "updateUserInfo"].forEach(
-      name => {
-        this[name] = this[name].bind(this);
-      }
-    );
+    ["update", "stopLoading", "updateUserInfo"].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
+  // udpate state
   update() {
     this.setState(store.getState());
   }
+
+  // stop loading, register google analytics events, subscribe redux event
   componentDidMount() {
     this.unSubscribe = store.subscribe(this.update.bind(this));
     this.stopLoading();
     initializeReactGA();
   }
+  // unSubscribe redux event
   componentDidUnMount() {
     this.unSubscribe();
   }
+  // a method to update current login user information to state
   updateUserInfo(user, userInfo) {
     dispatch("UPDATE_USER_INFO", {
       user: user,
       userInfo: userInfo
     });
   }
-  // getUserAuthInfo() {
-    // let _this = this;
-    // return new Promise((resolve, reject) => {
-    //   Database.auth.onAuthStateChanged(user => {
-    //     if (user) {
-    //       Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
-    //         let userInfo = snapshot.val();
-    //         resolve(userInfo);
-    //         _this.stopLoading();
-    //         dispatch("UPDATE_USER_INFO", {
-    //           user: user,
-    //           userInfo: snapshot.val()
-    //         });
-    //       });
-    //     } else {
-    //       reject(true);
-    //       _this.stopLoading();
-    //       return dispatch("UPDATE_USER_INFO", {
-    //         userInfo: null,
-    //         user: null
-    //       });
-    //     }
-    //     dispatch("UPDATE_LOADING_STATE", {isLoad: true});
-    //   });
-    // });
-  // }
   closeHeaderPanel(e) {
     dispatch("TOGGLE_HEADER_PANEL", {isToggle: false});
   }

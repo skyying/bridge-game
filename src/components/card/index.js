@@ -15,7 +15,7 @@ export const TrickCard = ({value}) => {
   );
 };
 
-TrickCard.propTypes = {
+TrickCard.PropTypes = {
   value: PropTypes.number
 };
 
@@ -42,7 +42,7 @@ export const Card = ({value, evt = null, flipUp, name = null}) => {
   );
 };
 
-Card.propTypes = {
+Card.PropTypes = {
   value: PropTypes.number,
   evt: PropTypes.func,
   flipUp: PropTypes.bool,
@@ -64,7 +64,7 @@ const CardContainer = ({name, flipUp, evt, value, children}) => {
   );
 };
 
-CardContainer.propTypes = {
+CardContainer.PropTypes = {
   children: PropTypes.array,
   value: PropTypes.number,
   evt: PropTypes.func,
@@ -79,6 +79,6 @@ const LargeShape = ({kind}) => {
   return <div className="large-shape">{SUIT_SHAPE[kind](0.5)}</div>;
 };
 
-LargeShape.propTypes = {
+LargeShape.PropTypes = {
   kind: PropTypes.number
 };

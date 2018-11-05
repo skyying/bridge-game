@@ -6,6 +6,21 @@ import AuctionState from "./auction";
 import PlayingState from "./playingState.js";
 import GameoverState from "./gameoverState.js";
 
+/*
+ * game state of current table, there are 5 state in a game
+ *
+ * Join: a table is created, owner of that table is joined and waiting for other players
+ * once all seats are full, game will enter to next state.
+ *
+ * Auction: four players are ready, and start the auction phase, each player will call
+ * their bid by turn. when a contract is made, will enter playing state
+ *
+ * Playing: players start to play.
+ *
+ * gameover: all 52 cards have been played and display play results to players
+ * close: a table has no any player continue to play, table with close state will be
+ * recycle
+ */
 export default class GameState extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +34,7 @@ export default class GameState extends React.Component {
       this.setState({gameState: this.props.table.gameState});
     }
   }
+  // return component base on current game state
   stateComponents(state) {
     switch (state) {
       case GAME_STATE.join: {
@@ -52,3 +68,14 @@ export default class GameState extends React.Component {
     );
   }
 }
+
+GameState.propTypes = {
+  table: PropTypes.object,
+  isSidebarPanelShown: PropTypes.bool,
+  windowWidth: PropTypes.number,
+  windowHeight: PropTypes.number,
+  sidebarWidth: PropTypes.number,
+  sidebarRef: PropTypes.object,
+  currentUser: PropTypes.object,
+  currentTableId: PropTypes.number
+};

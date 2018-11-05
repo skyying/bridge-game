@@ -8,6 +8,11 @@ import playImg from "../images/play.svg";
 import Header from "./header";
 import Loading from "./common/loading.js";
 
+/*
+ * A page component display two table list;
+ * @param isHeaderPanelClosed, bool, if header user panel closed or nto
+ * @param isLoad, bool, if loaing is over
+ */
 const Lobby = ({
   isHeaderPanelClosed,
   currentUser,
@@ -30,7 +35,7 @@ const Lobby = ({
         <div className="lobby-title">
           <h2>
                         Your best brain gym<br />
-                        <span>A multiplayer online bridge game</span>
+            <span>A multiplayer online bridge game</span>
           </h2>
         </div>
         <div className="table-lists">
@@ -65,6 +70,14 @@ const Lobby = ({
       </div>
     </div>
   );
+};
+
+Lobby.propTypes = {
+  isLoad: PropTypes.bool,
+  tables: PropTypes.object,
+  tableList: PropTypes.object,
+  currentUser: PropTypes.object,
+  isHeaderPanelClosed: PropTypes.bool
 };
 
 export default Lobby;

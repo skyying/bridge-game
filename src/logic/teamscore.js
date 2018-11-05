@@ -1,4 +1,11 @@
 import {RESULT, PLAYER_NUM} from "../components/constant/index.js";
+
+/*
+ * A class returns table score of two team base on current login user
+ * @param table, object, current table information
+ * @param currentUser, object, current login user
+ */
+
 export default class TeamScore {
   constructor(table, currentUser) {
     const BASE_TRICK = 6;

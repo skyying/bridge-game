@@ -77,7 +77,7 @@ const GameoverState = ({currentUser, table, gameStyleName}) => {
   );
 };
 
-GameoverState.propTypes = {
+GameoverState.PropTypes = {
   currentUser: PropTypes.object,
   windowWidth: PropTypes.number,
   windowHeight: PropTypes.number,

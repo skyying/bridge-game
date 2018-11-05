@@ -9,6 +9,7 @@ import {
   ROBOT_NAME
 } from "../components/constant";
 
+// handle state of whole application
 export const dispatch = (type, action) =>
   store.dispatch(Object.assign({}, {type: type}, action));
 export const appReducer = (state, action) => {
@@ -71,6 +72,7 @@ export const appReducer = (state, action) => {
   }
 };
 
+// communcate with database
 export const dispatchToDatabase = (type, action) => {
   switch (type) {
     case "CREATE_USER": {

@@ -6,6 +6,12 @@ import "../style/ready-list.scss";
 import {ThumbnailWithTag, WaitingThumbnail} from "./thumbnail";
 import Deck from "../logic/deck.js";
 
+/*
+ * deal new card to all players
+ * @param table, object, all data of this table
+ * @param currentUser, object, data of current login user
+ * return void, dispatch new data to database
+ */
 const deal = (table, currentUser) => {
   if (!table) return;
   let deck = new Deck();
@@ -16,6 +22,10 @@ const deal = (table, currentUser) => {
   });
 };
 
+/*
+ * @param table, object, all data of this table
+ * return a react element with deal card event
+ */
 const StartButton = ({table}) => {
   return (
     <button onClick={() => deal(table)} className="btn">
@@ -24,6 +34,10 @@ const StartButton = ({table}) => {
   );
 };
 
+/*
+ * @param playerIndex
+ * return void, dispatch currrent player ready state to database
+ */
 const setReadyState = (table, currentUser, playerIndex) => {
   if (!table) return;
   dispatchToDatabase("READY_A_PLAYER", {
@@ -32,37 +46,12 @@ const setReadyState = (table, currentUser, playerIndex) => {
   });
 };
 
-const getPlayerActionButton = ({currentUser, table}) => {
-  let currentUserCanPlay;
-  let {ready, players, playerInfo} = table;
-
-  if (table.players.includes(currentUser.uid)) {
-    currentUserCanPlay = players.some(
-      (player, i) => player === currentUser.uid && !ready[i]
-    );
-    return players.map((player, index) => {
-      if (player === currentUser.uid && !ready[index]) {
-        return (
-          <div key={`playBtn-${index}`}>
-            <br />
-            <button
-              style={{zIndex: 5}}
-              onClick={() =>
-                setReadyState(table, currentUser, index)
-              }
-              className="btn">
-              Join
-            </button>
-          </div>
-        );
-      } else {
-        return <div key={`playBtn-${index}`} />;
-      }
-    });
-  }
-  return null;
-};
-
+/*
+ * 
+ * @param table, object, data fetched from database of current table
+ * @param currentUser, object, data of current login user
+ * return react element of join component
+ */
 const JoinState = ({table, currentUser}) => {
   if (!table) {
     return null;
@@ -124,7 +113,7 @@ const JoinState = ({table, currentUser}) => {
                 setReadyState(table, currentUser, index)
               }
               className="btn">
-                  Join
+                            Join
             </button>
           </div>
         );
@@ -157,6 +146,11 @@ const JoinState = ({table, currentUser}) => {
       </div>
     </div>
   );
+};
+
+JoinState.propTypes = {
+  table: PropTypes.object,
+  currentUser: PropTypes.object
 };
 
 export default JoinState;

@@ -1,5 +1,11 @@
 import {EMPTY_SEAT, PLAYER_NUM} from "../components/constant";
 
+/*
+ * Get table list and table information base on their game state.
+ * if a table is in join state, they are belong to open table.
+ * if a table is not in join state, they are belong to playing table;
+ * @param tableList, object, all table list;
+ */
 export default class TableLogic {
   constructor(tableList) {
     this.list = tableList;

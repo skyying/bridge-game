@@ -1,6 +1,9 @@
 import {getRandomInt} from "../helper";
 import {CARD_NUM, TOTAL_TRICKS} from "../components/constant";
 
+/*
+ * A Deck class can generate random cards with all four hands has validate card face-value
+ */
 export default class Deck {
   constructor() {
     this.cards = this.shuffle();
@@ -12,6 +15,7 @@ export default class Deck {
     }
     return cards.map(facevalue => ({value: facevalue, trick: 0}));
   }
+  // get a random array with not-repeated 0-51 digit in it
   getRandomCards() {
     let cards = Array.from({length: CARD_NUM.TOTAL})
       .fill(0)
@@ -26,6 +30,7 @@ export default class Deck {
 
     return cards;
   }
+  // split random array to 4 sub arrays
   deal(cards) {
     return [0, 0, 0, 0]
       .map((userIndex, index) => {
@@ -33,6 +38,8 @@ export default class Deck {
       })
       .slice(0);
   }
+  // J=1, Q=2, K=3, A=4 points;
+  // check if those sub array has at least 7 points
   validateShuffle(cards) {
     const TOTAL_CARD_VALUE = 8;
     return this.deal(cards)

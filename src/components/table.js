@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Redirect} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../reducer";
 import Sidebar from "./sidebar";
@@ -19,29 +20,33 @@ import "../style/dot.scss";
 import "../style/rewind.scss";
 import "../style/sidebar.scss";
 
+/*
+ * Page component that display all elements needed in table page
+ */
 export default class Table extends React.Component {
   constructor(props) {
     super(props);
+    // get table link id from url
     this.linkId =
             this.props.match.params.id || window.location.hash.slice(8);
 
+    // create a tmp ref for sidebar component
     this.childRef = React.createRef();
 
     this.state = {
       isLoad: false,
       canRedirect: false,
-      isClosed: false,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       sidebarWidth: null
     };
-    this.timer;
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.color = randomColor("dark");
   }
+
   handleResize() {
     setTimeout(() => {
       let width = 0;
@@ -85,6 +90,7 @@ export default class Table extends React.Component {
       })
       .catch(error => console.log(error));
   }
+  // when a player enter to current table page, add them as a player or a viewer
   addPlayerToTable(table) {
     let {players, viewers} = table;
     let {currentUser} = this.props;
@@ -198,3 +204,15 @@ export default class Table extends React.Component {
     );
   }
 }
+
+Table.propTypes = {
+  table: PropTypes.object,
+  isSidebarPanelShown: PropTypes.bool,
+  windowWidth: PropTypes.number,
+  windowHeight: PropTypes.number,
+  sidebarWidth: PropTypes.number,
+  sidebarRef: PropTypes.object,
+  currentUser: PropTypes.object,
+  currentTableId: PropTypes.number,
+  match: PropTypes.object
+};

@@ -1,3 +1,5 @@
+// some helper functions to help speed up development procsss
+
 export const getKeywordFromURL = () => {
   let urlLocation = window.location.search,
     index = urlLocation.search(/=/g);

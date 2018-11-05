@@ -11,6 +11,10 @@ import Hands from "../logic/hands.js";
 import {getWinnerCard} from "../logic/getWinnerCard.js";
 import Layout from "../logic/layout.js";
 
+/*
+ * will return a react element wrap up all elements needed in playing state, includes 
+ * cards, tricks, scores, players of current game of that table
+ */
 export default class PlayingState extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +23,7 @@ export default class PlayingState extends React.Component {
       this[name] = this[name].bind(this);
     });
   }
+  // record and calcuate if this card is winning current trick
   play(value) {
     let {table} = this.props;
     let {game} = this.props.table;
@@ -135,3 +140,14 @@ export default class PlayingState extends React.Component {
     );
   }
 }
+
+PlayingState.propTypes = {
+  table: PropTypes.object,
+  isSidebarPanelShown: PropTypes.bool,
+  windowWidth: PropTypes.number,
+  windowHeight: PropTypes.number,
+  sidebarWidth: PropTypes.number,
+  sidebarRef: PropTypes.object,
+  currentUser: PropTypes.object,
+  currentTableId: PropTypes.number
+};

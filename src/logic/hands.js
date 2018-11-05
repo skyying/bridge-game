@@ -1,6 +1,11 @@
 import {PLAYER_NUM, TOTAL_TRICKS, GAME_STATE} from "../components/constant";
 import TrickLogic from "./trick.js";
 
+// this is a class that handle cards in every players hand;
+// Whose cards should flip up or down, if they are flip down,
+// they should display in unsorted way, otherwise, they should
+// display in sorted way.
+// for cards flip up, each card should be evaluated if they are allowed a click event
 export default class Hands {
   constructor(table, currentUser) {
     this.table = table;
@@ -28,7 +33,6 @@ export default class Hands {
     );
     this.all = this.getHands();
   }
-
   getIndexInOffsetPlayers(player) {
     let index = this.offsetPlayers.findIndex(seat => seat === player);
     return index < 0 ? 0 : index;
@@ -60,6 +64,7 @@ export default class Hands {
       return flipDownCards;
     });
   }
+  // filter all playered cards
   getUnplayedCards() {
     return this.offsetCards.map((hand, index) => {
       if (index === 1 && this.offsetDummyIndex !== 1) {
@@ -70,10 +75,12 @@ export default class Hands {
       return hand.filter(card => card.trick === 0);
     });
   }
+  // filter empty suits
   getFilteredHands() {
     const hands = this.getDisplayHands();
     return hands.map(hand => hand.filter(suit => suit.length > 0));
   }
+  // return all hands with flip up or down state and if they are allow a click event
   getHands() {
     const hands = this.getFilteredHands();
     return hands.map((hand, playerHandIndex) => {
@@ -144,13 +151,14 @@ export default class Hands {
       });
     });
   }
-
+  // current user's offset index from player list in database
   getOffsetIndex() {
     return this.players.findIndex(user => user === this.currentUser.uid);
   }
   isCurrentUserAPlayer() {
     return this.players.includes(this.currentUser.uid);
   }
+  // make sure all flip down card will be group into n row base on their card number
   mapFlipDownCards(flipDownCards) {
     if (!flipDownCards) return;
     let flat = flipDownCards.flat();

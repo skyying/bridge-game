@@ -1,6 +1,8 @@
 const MAX_TRICK_NUM = 7;
 const MAX_SUIT_NUM = 5;
 
+// depends on current game state, to calcuate all avalialbe auction options for
+// current turn user
 export const getAuctionOpt = game => {
   // default trump is -1;
   const DEFAULT_TRUMP = -1;
