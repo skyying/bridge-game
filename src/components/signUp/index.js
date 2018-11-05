@@ -1,67 +1,55 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Database from "../../firebase";
+import {Redirect} from "react-router-dom";
+import {dispatch, dispatchToDatabase} from "../../reducer";
+import Header from "../header";
 import "../../style/signup.scss";
 import "../../style/btn.scss";
 import "../../style/checkbox.scss";
-import {Redirect} from "react-router-dom";
-import {dispatchToDatabase} from "../../reducer";
-import Header from "../header";
 
+/*
+ * A Sign up page Component, take user sign up info and send to firebase sign up 
+ */
 export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
+    // user sign up form
     this.state = {
       name: "",
       email: "",
       password: "",
       confirm: "",
-      agreement: false,
+      // error message
       message: "",
-      redirect: false
+      // redirect to lobby if sign up successfully
+      canRedirect: false
     };
     this.handleSignUp = this.handleSignUp.bind(this);
   }
   handleSignUp() {
-    let auth = Database.auth;
+    let singUp = Database.signUp;
     let {email, password, name} = this.state;
-    if (!email || !password || !confirm) return;
-    let promise = auth.createUserWithEmailAndPassword(email, password);
-    promise
+    const pushToDB = user => {
+      let userInfo = {name: user.displayName, email: user.email};
+      dispatchToDatabase("CREATE_USER", {
+        uid: user.uid,
+        userInfo: userInfo
+      });
+    };
+
+    let _this = this;
+    singUp(email, password, name, pushToDB)
       .then(user => {
-        let randomIcon = Math.floor(Math.random() * 20);
-        this.props.updateUserInfo(user, {
-          name: name,
-          email: email
+        dispatch("UPDATE_USER_INFO", {
+          user: user
         });
-        return auth.onAuthStateChanged(user => {
-          if (user) {
-            let userInfo = {
-              displayName: name,
-              email: email
-            };
-            user.updateProfile(userInfo);
-            Database.getDataByPathOnce(
-              `users/${user.uid}`,
-              snapshot => {
-                if (!snapshot.val()) {
-                  dispatchToDatabase("CREATE_USER", {
-                    uid: user.uid,
-                    userInfo: userInfo
-                  });
-                }
-              }
-            );
-          } else {
-            console.log("no user uid");
-          }
-        });
+        _this.setState({canRedirect: true});
       })
-      .then(user => this.setState({redirect: true}))
-      .catch(error => this.setState({message: error.message}));
+      .catch(error => _this.setState({message: error.message}));
   }
   render() {
-    if (this.state.redirect) {
+    if (this.state.canRedirect) {
       return <Redirect to="/" />;
     }
 
@@ -148,3 +136,8 @@ export default class SignUp extends React.Component {
     );
   }
 }
+
+SignUp.propTypes = {
+  isHeaderPanelClosed: PropTypes.bool,
+  currentUser: PropTypes.object
+};

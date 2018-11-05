@@ -14,12 +14,6 @@ const Database = {
       }
     });
   },
-  getNodeByPathOnce: (path, action) => {
-    return firebaseApp
-      .database()
-      .ref(path)
-      .once("value", action);
-  },
   getNodeByPath: (path, action) => {
     return firebaseApp
       .database()
@@ -31,18 +25,6 @@ const Database = {
       .database()
       .ref(path)
       .push(data);
-  },
-  cancelListenDataChange: (path, action) => {
-    return firebaseApp
-      .database()
-      .ref(path)
-      .off("value", action);
-  },
-  listenPathChildren: (path, action) => {
-    return firebaseApp
-      .database()
-      .ref(path)
-      .off("value");
   },
   setNodeByPath: (path, data) => {
     return firebaseApp
@@ -106,13 +88,42 @@ const Database = {
     let {email, password} = info;
     return firebaseApp.auth().signInWithEmailAndPassword(email, password);
   },
+  signUp: (email, password, name, pushToDB) => {
+    return Database.auth
+      .createUserWithEmailAndPassword(email, password)
+      .then( result => {
+        return Database.auth.onAuthStateChanged(user => {
+          if (user) {
+            user.updateProfile({
+              displayName: name,
+              email: email
+            });
+
+            // if not in database, push to database
+            Database.getDataByPathOnce(
+              `users/${user.uid}`,
+              snapshot => {
+                if (!snapshot.val()) {
+                  pushToDB(user);
+                }
+              }
+            );
+
+            return user;
+          }
+        });
+      });
+  },
   getCurrentUser: () => {
     return new Promise((resolve, reject) => {
       Database.auth.onAuthStateChanged(user => {
         if (user) {
-          Database.getDataByPathOnce(`users/${user.uid}`, snapshot => {
-            resolve({user: user, userInfo: snapshot.val()});
-          });
+          Database.getDataByPathOnce(
+            `users/${user.uid}`,
+            snapshot => {
+              resolve({user: user, userInfo: snapshot.val()});
+            }
+          );
         } else {
           reject(null);
         }
