@@ -4,6 +4,7 @@ exports.CARD_NUM = {
     HAND: 13,
 };
 
+exports.TOTAL_TRICKS = 13;
 exports.PLAYER_NUM = 4;
 exports.EMPTY_SEAT = -1;
 exports.NO_TRUMP = 4;
