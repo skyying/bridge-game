@@ -64,7 +64,7 @@ export const Thumbnail = ({
   robotOffset = -5
 }) => {
   let shiftAvatar = avatarNum;
-  if (name.length) {
+  if (name && name.length) {
     shiftAvatar =
             name
               .split("")
@@ -72,7 +72,7 @@ export const Thumbnail = ({
               .reduce((sum, num) => sum + num, 0) % avatarNum;
   }
   let source = Avatar[shiftAvatar];
-  if (name.includes(ROBOT_NAME)) {
+  if (name && name.includes(ROBOT_NAME)) {
     source = robot;
   }
   return (
@@ -170,11 +170,7 @@ export const ThumbailGroupWithTag = ({
       );
     }
   });
-  return (
-    <div className="thumbnail-group">
-      {members}
-    </div>
-  );
+  return <div className="thumbnail-group">{members}</div>;
 };
 
 export class WaitingThumbnail extends React.Component {

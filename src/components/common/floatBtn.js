@@ -8,6 +8,6 @@ export const FloatBtn = ({clickEvt}) => {
   return <div onClick={clickEvt} className="chat-icon" />;
 };
 
-FloatBtn.PropTypes = {
+FloatBtn.propTypes = {
   clickEvt: PropTypes.func
 };

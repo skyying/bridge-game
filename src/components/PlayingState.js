@@ -149,5 +149,5 @@ PlayingState.propTypes = {
   sidebarWidth: PropTypes.number,
   sidebarRef: PropTypes.object,
   currentUser: PropTypes.object,
-  currentTableId: PropTypes.number
+  currentTableId: PropTypes.string
 };

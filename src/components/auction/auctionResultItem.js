@@ -23,7 +23,7 @@ export const AcutionResultItem = ({item, scale}) => {
 };
 
 
-AcutionResultItem.PropTypes = {
+AcutionResultItem.propTypes = {
   item: PropTypes.object,
   scale: PropTypes.number
 };

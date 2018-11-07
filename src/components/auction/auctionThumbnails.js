@@ -18,11 +18,18 @@ export const AuctionThumbnails = ({players, playerInfo, currentTurn}) => {
             <Thumbnail
               size={SIZE}
               current={index === currentTurn}
-              name={playerInfo[player].displayName}
+              name={
+                (playerInfo[player] &&
+                                    playerInfo[player].displayName) ||
+                                "Anonymous"
+              }
             />
           </div>
         </div>
-        <span>{playerInfo[player].displayName}</span>
+        <span>
+          {(playerInfo[player] && playerInfo[player].displayName) ||
+                        "Anonymous"}
+        </span>
       </div>
     </div>
   ));
