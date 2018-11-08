@@ -106,7 +106,7 @@ class App extends React.Component {
               <Route
                 exact
                 path="/"
-                render={() => (
+                render={(props) => (
                   <Lobby
                     isLoad={this.state.isLoad}
                     tables={this.state.tables || null}
@@ -115,6 +115,7 @@ class App extends React.Component {
                       this.state.isHeaderPanelClosed
                     }
                     tableList={this.state.tableList}
+                    {...props}
                   />
                 )}
               />

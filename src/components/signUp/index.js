@@ -38,21 +38,26 @@ export default class SignUp extends React.Component {
       });
     };
 
-    let _this = this;
     singUp(email, password, name, pushToDB)
       .then(user => {
         dispatch("UPDATE_USER_INFO", {
           user: user
         });
-        _this.setState({canRedirect: true});
       })
-      .catch(error => _this.setState({message: error.message}));
+      .then(user => this.setState({canRedirect: true}))
+      .catch(error => this.setState({message: error.message}));
   }
   render() {
     if (this.state.canRedirect) {
-      return <Redirect to="/" />;
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: this.state
+          }}
+        />
+      );
     }
-
     return (
       <div>
         <Header
@@ -139,5 +144,5 @@ export default class SignUp extends React.Component {
 
 SignUp.propTypes = {
   isHeaderPanelClosed: PropTypes.bool,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.any
 };

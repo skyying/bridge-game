@@ -28,6 +28,16 @@ export default class UserState extends React.Component {
   }
   render() {
     let {currentUser} = this.props;
+    let name = "";
+    if (this.props.name) {
+      name = this.props.name;
+    } else if (
+      this.props.currentUser &&
+            this.props.currentUser.displayName
+    ) {
+      name = currentUser.displayName;
+    }
+
     return (
       <div className="user-state-panel">
         <div
@@ -41,10 +51,10 @@ export default class UserState extends React.Component {
             isCurrentUser={true}
             size={40}
             offset={5}
-            name={(currentUser && currentUser.displayName) || ""}
+            name={name}
           />
           <div>
-            <h6>{currentUser.displayName}</h6>
+            <h6>{name}</h6>
             <span>online</span>
           </div>
         </div>

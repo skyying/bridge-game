@@ -22,6 +22,7 @@ export default class Header extends React.Component {
   render() {
     let userProfile = (
       <UserState
+        name={this.props.signUpName}
         isHeaderPanelClosed={this.props.isHeaderPanelClosed}
         currentUser={this.props.currentUser}
       />
