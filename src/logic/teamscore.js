@@ -12,9 +12,9 @@ export default class TeamScore {
     this.bid = table.game.bid;
     this.declarer = this.bid.declarer;
     this.players = table.players;
-    this.playerIndex = this.getPlayerIndex(currentUser.uid);
+    this.playerIndex = this.getPlayerIndex(currentUser.uid) >= 0 || 0;
     this.targetTrick = this.bid.trick + 1 + BASE_TRICK;
-    this.isCurrentUserAPlayer = this.playerIndex >= 0;
+    this.isCurrentUserAPlayer = this.getPlayerIndex(currentUser.uid) >= 0;
     this.scoreboard = this.getScore(table.game);
     this.result = this.getResult(table.game);
   }
@@ -41,8 +41,8 @@ export default class TeamScore {
     };
   }
   getPlayerIndex(user) {
-    let index = this.players.indexOf(user);
-    return index >= 0 ? index : 0;
+    return this.players.indexOf(user);
+    // return index >= 0 ? index : -1;
   }
   getScoreByCondition(game, condition) {
     let teamOne = 0,

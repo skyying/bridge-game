@@ -1,4 +1,4 @@
-export const teamScoreData = {
+export const testData = {
   tables: {
     table1: {
       createTime: 1540904085999,
