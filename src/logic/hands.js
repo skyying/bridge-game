@@ -10,9 +10,7 @@ export default class Hands {
   constructor(table, currentUser) {
     this.table = table;
     this.trickModel = new TrickLogic();
-    this.firstCard = this.trickModel.getFirstCardOfCurrentTrick(
-      this.table.game
-    );
+    this.firstCard = this.trickModel.getFirstCardOfCurrentTrick(table.game);
     this.declarerIndex = table.game.bid.declarer;
     this.players = table.players;
     this.cards = table.game.cards;
@@ -80,12 +78,22 @@ export default class Hands {
     const hands = this.getDisplayHands();
     return hands.map(hand => hand.filter(suit => suit.length > 0));
   }
+  getFlatten(arr) {
+    let flatArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].length; j++) {
+        flatArr.push(arr[i][j]);
+      }
+    }
+    return flatArr;
+  }
   // return all hands with flip up or down state and if they are allow a click event
   getHands() {
     const hands = this.getFilteredHands();
     return hands.map((hand, playerHandIndex) => {
       const hasFollowSameSuit = this.hasSameSuitWithFirstCard(
-        hand.flat()
+        this.getFlatten(hand)
+        // hand.flat()
       );
       const playerHand = this.offsetPlayers[playerHandIndex];
 
@@ -159,18 +167,19 @@ export default class Hands {
     return this.players.includes(this.currentUser.uid);
   }
   // make sure all flip down card will be group into n row base on their card number
-  mapFlipDownCards(flipDownCards) {
-    if (!flipDownCards) return;
-    let flat = flipDownCards.flat();
+  mapFlipDownCards(cards) {
+    if (!cards) return;
+    let flatArr = this.getFlatten(cards);
+    // let flatArr = cards.flat();
     let cardsNumberOnHand = 5;
-    let totalLen = flat.length;
+    let totalLen = flatArr.length;
     // if cards number is under n, split flipdown card into two row;
     if (totalLen <= cardsNumberOnHand) {
       let mid = Math.floor(totalLen / 2);
-      return [flat.slice(0, mid), flat.slice(mid, totalLen)];
+      return [flatArr.slice(0, mid), flatArr.slice(mid, totalLen)];
     } else {
       let threeRow = [[], [], []];
-      flat.map((card, index) => threeRow[index % 3].push(card));
+      flatArr.map((card, index) => threeRow[index % 3].push(card));
       return threeRow;
     }
   }
