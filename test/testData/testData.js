@@ -1,6 +1,6 @@
 export const testData = {
   tables: {
-    table1: {
+    gameover: {
       createTime: 1540904085999,
       game: {
         bid: {
@@ -1117,11 +1117,11 @@ export const testData = {
       ],
       timeStamp: 1540904296173,
       viewers: {
-        "bill": "#67c42d",
-        "nz": "#50d864"
+        bill: "#67c42d",
+        nz: "#50d864"
       }
     },
-    table2: {
+    ongoing: {
       createTime: 1540900072239,
       game: {
         bid: {
@@ -1439,10 +1439,341 @@ export const testData = {
         "C3-robot": {
           displayName: "C3-robot"
         },
-        "bill": {
+        bill: {
           displayName: "比利時"
         },
-        "nz": {
+        nz: {
+          displayName: "紐西蘭"
+        }
+      },
+      players: ["nz", "bill", "C1-robot", "C2-robot"],
+      ready: [true, true, true, true],
+      timeStamp: 1540900243880,
+      viewers: {
+        bill: "#4df2b5",
+        nz: "#d85d61"
+      }
+    },
+    ongoing_trick_5_end: {
+      createTime: 1540900072239,
+      game: {
+        bid: {
+          declarer: 0,
+          isDb: false,
+          isRdb: false,
+          result: [
+            {
+              trick: 0,
+              trump: 0
+            },
+            {
+              trick: 0,
+              trump: 2
+            },
+            {
+              opt: "Pass"
+            },
+            {
+              opt: "Pass"
+            },
+            {
+              trick: 0,
+              trump: 4
+            },
+            {
+              opt: "Pass"
+            },
+            {
+              opt: "Pass"
+            },
+            {
+              opt: "Pass"
+            },
+            {
+              opt: "Pass"
+            }
+          ],
+          trick: 0,
+          trump: 4
+        },
+        cards: [
+          {
+            trick: 0,
+            value: 43
+          },
+          {
+            trick: 0,
+            value: 17
+          },
+          {
+            order: 9,
+            player: 2,
+            trick: 3,
+            value: 36
+          },
+          {
+            order: 2,
+            player: 3,
+            trick: 1,
+            value: 19
+          },
+          {
+            trick: 0,
+            value: 40
+          },
+          {
+            trick: 0,
+            value: 32
+          },
+          {
+            trick: 0,
+            value: 50
+          },
+          {
+            trick: 0,
+            value: 6
+          },
+          {
+            trick: 0,
+            value: 4
+          },
+          {
+            trick: 0,
+            value: 20
+          },
+          {
+            order: 1,
+            player: 2,
+            trick: 1,
+            value: 13
+          },
+          {
+            trick: 0,
+            value: 8
+          },
+          {
+            trick: 0,
+            value: 49
+          },
+          {
+            trick: 0,
+            value: 15
+          },
+          {
+            trick: 0,
+            value: 9
+          },
+          {
+            isWin: true,
+            order: 14,
+            player: 3,
+            trick: 4,
+            value: 29
+          },
+          {
+            order: 3,
+            player: 0,
+            trick: 1,
+            value: 23
+          },
+          {
+            order: 12,
+            player: 1,
+            trick: 4,
+            value: 27
+          },
+          {
+            trick: 0,
+            value: 48
+          },
+          {
+            trick: 0,
+            value: 35
+          },
+          {
+            order: 11,
+            player: 0,
+            trick: 3,
+            value: 2
+          },
+          {
+            trick: 0,
+            value: 34
+          },
+          {
+            trick: 0,
+            value: 11
+          },
+          {
+            trick: 0,
+            value: 41
+          },
+          {
+            order: 7,
+            player: 0,
+            trick: 2,
+            value: 1
+          },
+          {
+            isWin: true,
+            order: 8,
+            player: 1,
+            trick: 3,
+            value: 22
+          },
+          {
+            trick: 0,
+            value: 12
+          },
+          {
+            isWin: true,
+            order: 16,
+            player: 3,
+            trick: 5,
+            value: 38
+          },
+          {
+            order: 15,
+            player: 0,
+            trick: 4,
+            value: 26
+          },
+          {
+            isWin: true,
+            order: 4,
+            player: 1,
+            trick: 2,
+            value: 24
+          },
+          {
+            trick: 0,
+            value: 45
+          },
+          {
+            trick: 0,
+            value: 3
+          },
+          {
+            order: 17,
+            player: 0,
+            trick: 5,
+            value: 28
+          },
+          {
+            order: 18,
+            player: 1,
+            trick: 5,
+            value: 31
+          },
+          {
+            trick: 0,
+            value: 7
+          },
+          {
+            trick: 0,
+            value: 47
+          },
+          {
+            trick: 0,
+            value: 33
+          },
+          {
+            trick: 0,
+            value: 16
+          },
+          {
+            trick: 0,
+            value: 10
+          },
+          {
+            trick: 0,
+            value: 46
+          },
+          {
+            trick: 0,
+            value: 51
+          },
+          {
+            trick: 0,
+            value: 30
+          },
+          {
+            order: 5,
+            player: 2,
+            trick: 2,
+            value: 14
+          },
+          {
+            order: 10,
+            player: 3,
+            trick: 3,
+            value: 0
+          },
+          {
+            trick: 0,
+            value: 39
+          },
+          {
+            isWin: true,
+            order: 0,
+            player: 1,
+            trick: 1,
+            value: 25
+          },
+          {
+            order: 19,
+            player: 2,
+            trick: 5,
+            value: 5
+          },
+          {
+            order: 6,
+            player: 3,
+            trick: 2,
+            value: 21
+          },
+          {
+            trick: 0,
+            value: 44
+          },
+          {
+            trick: 0,
+            value: 18
+          },
+          {
+            order: 13,
+            player: 2,
+            trick: 4,
+            value: 42
+          },
+          {
+            trick: 0,
+            value: 37
+          }
+        ],
+        deal: 0,
+        order: 20
+      },
+      gameState: "playing",
+      id: "table2",
+      linkId: 1540900072239,
+      playerInfo: {
+        "-1": {
+          displayName: ""
+        },
+        "C1-robot": {
+          displayName: "C1-robot"
+        },
+        "C2-robot": {
+          displayName: "C2-robot"
+        },
+        "C3-robot": {
+          displayName: "C3-robot"
+        },
+        bill: {
+          displayName: "比利時"
+        },
+        nz: {
           displayName: "紐西蘭"
         }
       },

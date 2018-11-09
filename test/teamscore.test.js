@@ -5,7 +5,7 @@ import {RESULT} from "../src/components/constant";
 describe("teamscore, current user is a player, when game is ongoing", () => {
   const currentUser = {};
   currentUser.uid = "bill";
-  const table = testData.tables["table2"];
+  const table = testData.tables["ongoing"];
   const score = new TeamScore(table, currentUser);
   it("should outupt correct player index base on current user uid", () => {
     expect(score.getPlayerIndex(currentUser.uid)).toBe(1);
@@ -37,7 +37,7 @@ describe("teamscore, current user is a player, when game is ongoing", () => {
 describe("teamscore, currnet user is a player, and game is over ", () => {
   const currentUser = {};
   currentUser.uid = "nz";
-  const table = testData.tables["table1"];
+  const table = testData.tables["gameover"];
   const score = new TeamScore(table, currentUser);
 
   it("should outupt correct player index base on current user uid", () => {
@@ -81,7 +81,7 @@ describe("teamscore, currnet user is a player, and game is over ", () => {
 describe("teamscore, if current user is not a player", () => {
   const currentUser = {};
   currentUser.uid = "1";
-  const table = testData.tables["table1"];
+  const table = testData.tables["gameover"];
   const score = new TeamScore(table, currentUser);
 
   it("should outupt correct player index base on current user uid", () => {
