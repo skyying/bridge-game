@@ -5,8 +5,7 @@
 An online multiplayer bridge game with React, Redux and Node.js.<br/>  <br/>
   <img src="https://img.shields.io/github/license/mashape/apistatus.svg">
 </p>
-<br/>
-<br/>
+
 
 
 Play now: http://bridge.tw
@@ -25,9 +24,6 @@ Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
 * Unit test: Jest
 
 
-<br/>
-<br/>
-
 
 ## Features
 
@@ -41,7 +37,7 @@ Users can sign up and login by email and password.
 
 Users can either open a new table, or select a popular table to watch.
 
-### ![1](./screenshot/tables.png)
+### ![1](https://skyying.github.io/bridge-game/screenshot/tables.png)
 
 
 
@@ -49,7 +45,7 @@ Users can either open a new table, or select a popular table to watch.
 
 Users Can Join a table to play with your friends or play with computer agent.
 
-![join](./screenshot/join.png)
+![join](https://skyying.github.io/bridge-game/screenshot/join.png)
 
 
 
@@ -57,17 +53,17 @@ Users Can Join a table to play with your friends or play with computer agent.
 
 Users can select a bid in auction phase by turn.
 
-![3](./screenshot/auction.png)
+![3](https://skyying.github.io/bridge-game/screenshot/auction.png)
 
 
 
 ### Play with Computer or friends
 
-![4](./screenshot/playing.png)
+![4](https://skyying.github.io/bridge-game/screenshot/playing.png)
 
 
 
-![5](./screenshot/playing_player2.png)
+![5](https://skyying.github.io/bridge-game/screenshot/playing_player2.png)
 
 
 
@@ -75,7 +71,7 @@ Users can select a bid in auction phase by turn.
 
 Players will only see messages sent by players during playing phase. Viewers can view all messages without this constraint.
 
-![chat-room](./screenshot/chatroom.png)
+![chat-room](https://skyying.github.io/bridge-game/screenshot/chatroom.png)
 
 
 
@@ -85,7 +81,7 @@ Players will only see messages sent by players during playing phase. Viewers can
 
 If a user is not a current player of a playing table, they can watch people play, and using chat room to interact with other viewer.
 
-### ![viewer](./screenshot/viewer-mode.png)
+### ![viewer](https://skyying.github.io/bridge-game/screenshot/viewer-mode.png)
 
 
 
