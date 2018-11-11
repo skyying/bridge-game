@@ -191,6 +191,7 @@ export class WaitingThumbnail extends React.Component {
   }
   componentWillUnmount() {
     this.mount = false;
+    clearInterval(this.timer);
   }
   changeImg() {
     if (!this.mount) return;
@@ -206,15 +207,7 @@ export class WaitingThumbnail extends React.Component {
     } else if (this.state.isGoingUp === false) {
       dy = Math.floor(Math.random() * -3);
     }
-
     this.setState({posY: posY + dy});
-  }
-  componentDidUpdate(prevProps) {
-    if (!this.mount) return;
-    if (this.props.stop !== prevProps.stop && this.props.stop === true) {
-      this.setState({stop: true, posY: 40});
-      clearInterval(this.timer);
-    }
   }
   render() {
     let size = this.props.size || 30;
