@@ -2,15 +2,17 @@ import "../../style/reset.scss";
 import "../../style/header.scss";
 import React from "react";
 import PropTypes from "prop-types";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import logoImg from "../../images/logo.svg";
-import {dispatch} from "../../reducer";
+import { dispatch } from "../../reducer";
 import UserState from "./userState.js";
 import Database from "../../firebase";
 
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
+  }
+  componentDidMount() {
     if (!this.props.currentUser) {
       Database.onAuthChanged(user => {
         dispatch("UPDATE_USER_INFO", {
@@ -35,15 +37,14 @@ export default class Header extends React.Component {
       </div>
     );
     rightTopCorner =
-            this.props.currentUser && this.props.currentUser.uid
-              ? userProfile
-              : registerBtns;
-    let {roomNum} = this.props;
+      this.props.currentUser && this.props.currentUser.uid
+        ? userProfile
+        : registerBtns;
+    let { roomNum } = this.props;
     let roomInfo = null;
     if (roomNum) {
       roomNum = `${roomNum}`;
-      roomInfo =
-                "Table " + roomNum.slice(roomNum.length - 3, roomNum.length);
+      roomInfo = "Table " + roomNum.slice(roomNum.length - 3, roomNum.length);
     }
     return (
       <header className={this.props.isTableColor ? "table-header" : ""}>

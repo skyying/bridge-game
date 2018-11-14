@@ -14,6 +14,15 @@ describe("hands, current user as player", () => {
   it("should outupt correct result of is current user a player", () => {
     expect(hands.isCurrentUserAPlayer).toBe(true);
   });
+  it("should outupt correct current turn player", () => {
+    expect(hands.currentTurnPlayer).toBe(table.players[table.game.deal]);
+  });
+  it("should outupt correct dummy index", () => {
+    expect(hands.dummyIndex).toBe(2);
+  });
+  it("should outupt correct dummy index", () => {
+    expect(hands.dummyIndex).toBe(2);
+  });
 });
 
 describe("test of hands, second player", () => {

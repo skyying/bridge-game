@@ -24,16 +24,16 @@ import GameoverState from "./gameoverState.js";
 export default class GameState extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      gameState: this.props.table.gameState
-    };
+    // this.state = {
+    //   gameState: this.props.table.gameState
+    // };
     this.stateComponents = this.stateComponents.bind(this);
   }
-  componentDidUpdate(prevProps) {
-    if (prevProps.table.gameState !== this.props.table.gameState) {
-      this.setState({gameState: this.props.table.gameState});
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.table.gameState !== this.props.table.gameState) {
+  //     this.setState({gameState: this.props.table.gameState});
+  //   }
+  // }
   // return component base on current game state
   stateComponents(state) {
     switch (state) {
@@ -59,7 +59,7 @@ export default class GameState extends React.Component {
     }
   }
   render() {
-    let {gameState} = this.state;
+    let {gameState} = this.props.table;
     let {isSidebarPanelShown} = this.props;
     return (
       <div className={isSidebarPanelShown ? "game" : "game full"}>
