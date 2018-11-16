@@ -104,10 +104,11 @@ export default class PlayingState extends React.Component {
       });
 
       let playHand = this.hands.offsetPlayers[index];
-      let playerName = playerInfo[playHand].displayName;
+      let playerName = playerInfo[playHand] && playerInfo[playHand].displayName || "anonymous";
       let isCurrentPlayer =
                 this.hands.currentTurnPlayer === playHand &&
                 table.gameState === GAME_STATE.playing;
+
       return (
         <div
           style={layout.style[index]}

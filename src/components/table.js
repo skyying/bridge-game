@@ -38,7 +38,8 @@ export default class Table extends React.Component {
       canRedirect: false,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
-      sidebarWidth: null
+      sidebarWidth: null,
+      isClosed: false
     };
 
     this.addPlayerToTable = this.addPlayerToTable.bind(this);
@@ -88,7 +89,11 @@ export default class Table extends React.Component {
           this.addPlayerToTable(table);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error === null) {
+          this.setState({isClosed: true})
+        }
+      });
   }
   // when a player enter to current table page, add them as a player or a viewer
   addPlayerToTable(table) {
@@ -128,7 +133,10 @@ export default class Table extends React.Component {
 
     if (currentTableId !== prevProps.currentTableId) {
       this.setState({isLoad: false});
-      this.model.get().then(data => this.setState({isLoad: true}));
+      this.model
+        .get()
+        .then(data => this.setState({isLoad: true}))
+        .catch(error => this.setState({isClosed: true}));
     }
 
     let {id, linkId} = this;
@@ -142,6 +150,10 @@ export default class Table extends React.Component {
   render() {
     let {canRedirect, isLoad} = this.state;
 
+    if (this.state.isClosed) {
+      alert("table is closed");
+      return <Redirect to="/" />;
+    }
     if (canRedirect) {
       return <Redirect to="/login" />;
     }
@@ -151,6 +163,7 @@ export default class Table extends React.Component {
     }
 
     let {tables, currentUser, chatroom} = this.props;
+
     let {id} = this;
 
     if (!tables || !id) {
