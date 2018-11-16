@@ -34,7 +34,7 @@ export default class TableLogic {
       };
     });
   }
-  getOpenList(list = this.list) {
+  getOpenList(list) {
     if (!list) {
       return null;
     }
@@ -76,10 +76,7 @@ export default class TableLogic {
     let linkIdList = Object.keys(list);
     let filteredList = linkIdList.filter(id => {
       let createTime = Number(id);
-      if (
-        list[id].players &&
-                new Date().getTime() - createTime <= OVERDUE
-      ) {
+      if (list[id].players) {
         return list[id].players.some(seat => seat === EMPTY_SEAT);
       }
       return false;

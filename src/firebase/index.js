@@ -79,10 +79,10 @@ const Database = {
             snapshot => resolve(snapshot.val())
           );
         } else {
-          throw new Error("NO TABLE DATA IN Database");
+          reject(null);
         }
       });
-    }).catch(error => console.log(error.message));
+    })
   },
   signInWithEmailAndPassword: info => {
     let {email, password} = info;

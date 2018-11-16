@@ -12,7 +12,10 @@ export default class TeamScore {
     this.bid = table.game.bid;
     this.declarer = this.bid.declarer;
     this.players = table.players;
-    this.playerIndex = this.getPlayerIndex(currentUser.uid) >= 0 || 0;
+    this.playerIndex =
+            this.getPlayerIndex(currentUser.uid) >= 0
+              ? this.getPlayerIndex(currentUser.uid)
+              : 0;
     this.targetTrick = this.bid.trick + 1 + BASE_TRICK;
     this.isCurrentUserAPlayer = this.getPlayerIndex(currentUser.uid) >= 0;
     this.scoreboard = this.getScore(table.game);

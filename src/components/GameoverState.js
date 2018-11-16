@@ -27,7 +27,7 @@ const saveAndStartNewGame = table => {
 const nextStep = (isAllowNextStep, table) => {
   return isAllowNextStep ? (
     <button onClick={() => saveAndStartNewGame(table)} className="btn">
-      Play again
+            Play again
     </button>
   ) : (
     "Game over"
@@ -44,6 +44,7 @@ const nextStep = (isAllowNextStep, table) => {
  * @param gameStyleName, string, class name for dom element
  * return react element
  */
+
 const GameoverState = ({currentUser, table, gameStyleName}) => {
   if (!table || !table.game.cards) {
     return null;
@@ -56,7 +57,7 @@ const GameoverState = ({currentUser, table, gameStyleName}) => {
     <div className={gameStyleName}>
       <div
         className={
-          score.result.isUserWin
+          score.result.isUserWin && score.isCurrentUserAPlayer 
             ? "game-over-board win"
             : "game-over-board lose"
         }>
@@ -64,7 +65,8 @@ const GameoverState = ({currentUser, table, gameStyleName}) => {
           <div className="game-over-board-inner">
             <div className="result">
               <div className="words">
-                {score.result.resultWords}
+                {score.isCurrentUserAPlayer &&
+                                    score.result.resultWords}
               </div>
             </div>
             <div className="btn-wrapper">
