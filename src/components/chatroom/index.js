@@ -69,6 +69,7 @@ export default class Chatroom extends React.Component {
       message: ""
     });
   }
+
   handleChange(e) {
     this.setState({message: e.currentTarget.value});
   }
@@ -82,6 +83,7 @@ export default class Chatroom extends React.Component {
   }
   render() {
     let {currentUser, table, chatroom} = this.props;
+
     if (!table || !currentUser) {
       return null;
     }
@@ -96,28 +98,31 @@ export default class Chatroom extends React.Component {
       </a>
     ));
 
-    if (chatroom && chatroom.message && table && table.viewers) {
-      let isCurrentUserAPlayer = players.some(
-        player => player === currentUser.uid
-      );
+    let isCurrentUserAPlayer = table.players.some(
+      player => player === currentUser.uid
+    );
+    let targetChatroom = (chatroom && chatroom[table.id]) || null;
+    if (targetChatroom && table.viewers) {
       let msgMapList;
-      if (isCurrentUserAPlayer) {
-        msgMapList = Object.keys(chatroom.message)
+      if (targetChatroom.message && isCurrentUserAPlayer) {
+        msgMapList = Object.keys(targetChatroom.message)
           .sort((a, b) => +a - +b)
-          .filter(key => chatroom.message[key].isPlayer);
+          .filter(
+            key =>
+              targetChatroom.message[key] &&
+                            targetChatroom.message[key].isPlayer
+          );
       } else {
-        msgMapList = Object.keys(chatroom.message).sort(
+        msgMapList = Object.keys(targetChatroom.message).sort(
           (a, b) => +a - +b
         );
       }
-
       messageList = msgMapList.map((id, index) => {
-        let color = table.viewers[chatroom.message[id].uid];
+        let color = table.viewers[targetChatroom.message[id].uid];
         let symbol = null;
         let playerIndex = players.findIndex(
-          player => player === chatroom.message[id].uid
+          player => player === targetChatroom.message[id].uid
         );
-
         if (playerIndex > -1) {
           symbol = (
             <div
@@ -127,14 +132,14 @@ export default class Chatroom extends React.Component {
             </div>
           );
         }
-        let msg = chatroom.message[id].content;
+        let msg = targetChatroom.message[id].content;
 
         return (
           <div className="msg" key={`message-${index}`}>
             <a>
               {symbol}
               <b style={{color: color}}>
-                {chatroom.message[id].displayName}{" "}
+                {targetChatroom.message[id].displayName}
                 <b className="comma">:</b>
               </b>
               {msg}
@@ -162,6 +167,7 @@ export default class Chatroom extends React.Component {
             <i />
           </div>
         </div>
+
         <div
           ref={el => {
             this.typingArea = el;

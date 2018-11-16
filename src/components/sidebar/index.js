@@ -13,40 +13,51 @@ import Chatroom from "../chatroom";
  * @param chatroom, object, includes chat message and chatroom info
  */
 
-const Sidebar = ({
-  currentUser,
-  table,
-  isSidebarPanelShown,
-  setRef,
-  toggleSidebar,
-  screenWidth,
-  chatroom
-}) => {
-  if (!table || !isSidebarPanelShown) {
-    return null;
+export default class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
   }
-  return (
-    <div ref={setRef} className="sidebar">
-      <div className="tabs">
-        <div className={"current chatroom"}>
-          <span />
-          <b>chatroom</b>
+  render() {
+    const {
+      currentUser,
+      table,
+      isSidebarPanelShown,
+      setRef,
+      toggleSidebar,
+      screenWidth,
+      chatroom
+    } = this.props;
+
+    if (!table || !isSidebarPanelShown) {
+      return null;
+    }
+
+    return (
+      <div ref={setRef} className="sidebar">
+        <div className="tabs">
+          <div className={"current chatroom"}>
+            <span />
+            <b>chatroom</b>
+          </div>
+          <span
+            onClick={() => toggleSidebar()}
+            className="close-btn"
+          />
         </div>
-        <span onClick={() => toggleSidebar()} className="close-btn" />
+        <div className="tab-wrapper" />
+        <div>
+          <Chatroom
+            screenHeight={screenWidth}
+            screenWidth={screenWidth}
+            currentUser={currentUser}
+            chatroom={chatroom}
+            table={table}
+          />
+        </div>
       </div>
-      <div className="tab-wrapper" />
-      <div>
-        <Chatroom
-          screenHeight={screenWidth}
-          screenWidth={screenWidth}
-          currentUser={currentUser}
-          chatroom={chatroom}
-          table={table}
-        />
-      </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 Sidebar.propTypes = {
   currentUser: PropTypes.object,
@@ -57,5 +68,3 @@ Sidebar.propTypes = {
   screenWidth: PropTypes.number,
   chatroom: PropTypes.object
 };
-
-export default Sidebar;

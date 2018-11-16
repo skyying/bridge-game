@@ -15,20 +15,23 @@ export default class ChatroomModel {
   // get data
   get() {
     Database.getChatRoomById(this.id).then(chatroom => {
-      this.update(chatroom);
+      this.update(chatroom, this.id);
       this.listenChanged();
     });
   }
+
   // update data
-  update(chatroom) {
+  update(chatroom, id) {
     dispatch("UPDATE_CHAT_ROOM", {
-      chatroom: chatroom
+      chatroom: chatroom,
+      id: id
     });
   }
+
   // register data change event
   listenChanged() {
     Database.getNodeByPath(`chatroom/${this.id}/`, snapshot =>
-      this.update(snapshot.val())
+      this.update(snapshot.val(), this.id)
     );
   }
 }

@@ -52,7 +52,7 @@ export default class OpenTables extends React.Component {
                     ? `/table/${linkId}`
                     : "/login"
                 }>
-                  Join
+                                Join
               </Link>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default class OpenTables extends React.Component {
         to={
           this.props.currentUser ? `/table/${tableRef}` : "/login"
         }>
-          New table
+                    New table
       </Link>
     );
 

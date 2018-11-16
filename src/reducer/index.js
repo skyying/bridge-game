@@ -50,7 +50,9 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {tables: action.tables});
     }
     case "UPDATE_CHAT_ROOM": {
-      return Object.assign({}, state, {chatroom: action.chatroom});
+      let chatroom = state.chatroom || {};
+      chatroom[action.id] = action.chatroom || null;
+      return Object.assign({}, state, {chatroom: chatroom});
     }
     case "UPDATE_TABLE_DATA": {
       let {table} = action;
