@@ -46,6 +46,7 @@ export default class Chatroom extends React.Component {
   handleKeyPress(e) {
     if (e.key === "Enter") {
       this.sendMessage();
+      e.preventDefault();
     }
   }
   componentDidUpdate() {
@@ -69,7 +70,6 @@ export default class Chatroom extends React.Component {
       message: ""
     });
   }
-
   handleChange(e) {
     this.setState({message: e.currentTarget.value});
   }
