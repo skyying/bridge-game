@@ -8,7 +8,7 @@ An online multiplayer bridge game with React, Redux and Node.js.<br/>  <br/>
 
 
 
-Play now: https://wowbridge88.firebaseapp.com/
+Play now: https://wowbridgegame.com
 Contract bridge rules: [Wiki](https://en.wikipedia.org/wiki/Contract_bridge)
 
 ## Technologies
