@@ -19,7 +19,7 @@
         "byName": {},
         "bySource": {},
         "usedIds": [
-          0
+          1
         ]
       }
     }
@@ -425,7 +425,53 @@
       "node_modules/babel-loader/lib/index.js!src/index.js f29ddceab8e6c871443682fbb11a3ec4": 135,
       "node_modules/react-ga/dist/react-ga.js": 135,
       "node_modules/babel-loader/lib/index.js!src/index.js 69781a0a69843f7e9481f5c6f2054f60": 136,
-      "node_modules/babel-loader/lib/index.js!src/index.js fd3c03122c1fb29998ed112f1b657d6c": 134
+      "node_modules/babel-loader/lib/index.js!src/index.js fd3c03122c1fb29998ed112f1b657d6c": 134,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/reset.scss": 10,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/btn.scss": 16,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/signup.scss": 18,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/checkbox.scss": 23,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/thumbnail.scss": 25,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/auction.scss": 26,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/game.scss": 31,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table-list.scss": 32,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/main.scss": 50,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/main.scss 0": 51,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/signup.scss 0": 52,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/btn.scss 0": 54,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/checkbox.scss 0": 55,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/reset.scss 0": 56,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/header.scss": 57,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/header.scss 0": 58,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/thumbnail.scss 0": 60,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/user-state.scss": 61,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/user-state.scss 0": 62,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/loading.scss": 64,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/loading.scss 0": 74,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/ready-list.scss": 82,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/ready-list.scss 0": 85,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/auction.scss 0": 87,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/card.scss": 88,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/card.scss 0": 89,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/game.scss 0": 90,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/trick-score.scss": 91,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/trick-score.scss 0": 92,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/player.scss": 93,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/player.scss 0": 94,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table.scss": 95,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table.scss 0": 96,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record-item.scss": 97,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record-item.scss 0": 98,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record.scss": 99,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record.scss 0": 100,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/dot.scss": 101,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/dot.scss 0": 102,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/rewind.scss": 103,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/rewind.scss 0": 107,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/sidebar.scss": 108,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/sidebar.scss 0": 109,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/lobby.scss": 110,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/lobby.scss 0": 136,
+      "css node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table-list.scss 0": 137
     },
     "usedIds": {
       "0": 0,
@@ -953,6 +999,557 @@
         "byIdentifier": {
           "node_modules/css-loader/index.js!node_modules/fast-sass-loader/lib/index.js!src/style/loading.scss": 0,
           "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/main.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/main.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/lobby.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/lobby.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/reset.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/reset.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1,
+          "node_modules/css-loader/dist/runtime/url-escape.js": 2,
+          "node_modules/file-loader/dist/cjs.js!src/images/chat.svg": 3
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/game.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/game.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record-item.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record-item.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/record.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/dot.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/dot.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/rewind.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/rewind.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/sidebar.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/sidebar.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1,
+          "node_modules/css-loader/dist/runtime/url-escape.js": 2,
+          "node_modules/file-loader/dist/cjs.js!src/images/tab-icon.svg": 3,
+          "node_modules/file-loader/dist/cjs.js!src/images/close.svg": 4
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/loading.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/loading.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table-list.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/table-list.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/btn.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/btn.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1,
+          "node_modules/css-loader/dist/runtime/url-escape.js": 2,
+          "node_modules/file-loader/dist/cjs.js!src/images/facebook.svg": 3
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/ready-list.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/ready-list.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/signup.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/signup.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/checkbox.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/checkbox.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1,
+          "node_modules/css-loader/dist/runtime/url-escape.js": 2,
+          "node_modules/file-loader/dist/cjs.js!src/images/checked.svg": 3
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/header.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/header.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/user-state.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/user-state.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/thumbnail.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/thumbnail.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/trick-score.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/trick-score.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1,
+          "node_modules/css-loader/dist/runtime/url-escape.js": 2,
+          "node_modules/file-loader/dist/cjs.js!src/images/win.svg": 3
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/card.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/card.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/player.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/player.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/auction.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/dist/cjs.js!node_modules/fast-sass-loader/lib/index.js!src/style/auction.scss": 0,
+          "node_modules/css-loader/dist/runtime/api.js": 1
         },
         "usedIds": {
           "0": 0,
