@@ -21,6 +21,7 @@ export default class OpenTables extends React.Component {
     // allow anonymous user to play
     if (!currentUser) {
       currentUser = new AnonymousPlayer();
+      window.sessionStorage.setItem("anonymousUser", JSON.stringify(currentUser));
       dispatch("UPDATE_USER_INFO", {
         user: currentUser,
         displayName: currentUser.displayName

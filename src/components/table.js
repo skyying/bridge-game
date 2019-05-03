@@ -71,8 +71,16 @@ export default class Table extends React.Component {
   componentDidMount() {
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
+    let anonymousUser = JSON.parse(
+      window.sessionStorage.getItem("anonymousUser")
+    );
     let currentUser = this.props.currentUser;
-    if (!this.props.currentUser) {
+    if (anonymousUser) {
+      dispatch("UPDATE_USER_INFO", {
+        user: anonymousUser,
+        displayName: anonymousUser.displayName
+      });
+    } else if (!this.props.currentUser) {
       Database.getCurrentUser();
     }
     this.model
@@ -91,7 +99,7 @@ export default class Table extends React.Component {
       })
       .catch(error => {
         if (error === null) {
-          this.setState({isClosed: true})
+          this.setState({isClosed: true});
         }
       });
   }
