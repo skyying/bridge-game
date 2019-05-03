@@ -6,7 +6,6 @@ import SignUp from "./components/signUp";
 import Table from "./components/table.js";
 import Lobby from "./components/lobby.js";
 import Loading from "./components/common/loading.js";
-import Database from "./firebase";
 import {Route, HashRouter} from "react-router-dom";
 import {dispatch, store} from "./reducer";
 import {initializeReactGA} from "./firebase/config.js";

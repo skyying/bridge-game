@@ -3,22 +3,38 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../../reducer";
 import TableLogic from "../../logic/tableLogic.js";
+import AnonymousPlayer from "../../logic/anonymousPlayer.js";
 import "../../style/table-list.scss";
 
 export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
-    this.createTable = this.createTable.bind(this);
-    this.setCurrentTable = this.setCurrentTable.bind(this);
+
+    ["createTable", "setCurrentTable", "validateCurrentUser"].forEach(
+      name => {
+        this[name] = this[name].bind(this);
+      }
+    );
+  }
+  validateCurrentUser() {
+    let {currentUser} = this.props;
+    // allow anonymous user to play
+    if (!currentUser) {
+      currentUser = new AnonymousPlayer();
+      dispatch("UPDATE_USER_INFO", {
+        user: currentUser,
+        displayName: currentUser.displayName
+      });
+    }
+    return currentUser;
   }
   createTable(linkId) {
-    if (!this.props.currentUser) {
-      return;
-    }
+    let currentUser = this.validateCurrentUser();
     dispatchToDatabase("CREATE_TABLE", {
       linkId: linkId,
-      currentUser: this.props.currentUser
+      currentUser: currentUser
     });
+
     this.setCurrentTable(linkId);
   }
   setCurrentTable(id) {
@@ -60,15 +76,12 @@ export default class OpenTables extends React.Component {
       });
     }
     let tableRef = new Date().getTime();
-    let openBtn = this.props.currentUser &&
-            this.props.openBtn && (
+    let openBtn = this.props.openBtn && (
       <Link
         className="btn-style-border"
         onClick={() => this.createTable(tableRef)}
-        to={
-          this.props.currentUser ? `/table/${tableRef}` : "/login"
-        }>
-                    New table
+        to={`/table/${tableRef}`}>
+                New table
       </Link>
     );
 
