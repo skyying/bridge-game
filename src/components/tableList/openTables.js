@@ -10,18 +10,30 @@ export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
 
-    ["createTable", "setCurrentTable", "validateCurrentUser"].forEach(
-      name => {
-        this[name] = this[name].bind(this);
-      }
-    );
+    [
+      "createTable",
+      "setCurrentTable",
+      "validateCurrentUser",
+      "joinTable"
+    ].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
   }
   validateCurrentUser() {
     let {currentUser} = this.props;
+
     // allow anonymous user to play
+    let anonymousUser = JSON.parse(
+      window.sessionStorage.getItem("anonymousUser")
+    );
+
     if (!currentUser) {
-      currentUser = new AnonymousPlayer();
-      window.sessionStorage.setItem("anonymousUser", JSON.stringify(currentUser));
+      if (!anonymousUser) {
+        currentUser = new AnonymousPlayer();
+        currentUser.saveToSession();
+      } else {
+        currentUser = anonymousUser;
+      }
       dispatch("UPDATE_USER_INFO", {
         user: currentUser,
         displayName: currentUser.displayName
@@ -39,9 +51,12 @@ export default class OpenTables extends React.Component {
     this.setCurrentTable(linkId);
   }
   setCurrentTable(id) {
-    if (this.props.currentUser) {
-      dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
-    }
+    // make sure have current user
+    dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
+  }
+  joinTable(id) {
+    this.validateCurrentUser();
+    setTimeout(0, this.setCurrentTable(id));
   }
   render() {
     let tableList = this.props.tableList;
@@ -62,13 +77,9 @@ export default class OpenTables extends React.Component {
             <div>
               <Link
                 className="btn-style-border"
-                onClick={() => this.setCurrentTable(linkId)}
+                onClick={() => this.joinTable(linkId)}
                 key={linkId}
-                to={
-                  this.props.currentUser
-                    ? `/table/${linkId}`
-                    : "/login"
-                }>
+                to={`/table/${linkId}`}>
                                 Join
               </Link>
             </div>

@@ -7,6 +7,9 @@ export default class AnonymousPlayer {
     this.isAnonymousUser = true;
     this.uid = this.genUID();
   }
+  saveToSession() {
+    window.sessionStorage.setItem("anonymousUser", JSON.stringify(this));
+  }
   genUID() {
     let UID_LENGTH = 50;
     let uid = "";
