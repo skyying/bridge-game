@@ -1,10 +1,10 @@
-export default class AnonymousPlayer {
+export default class AnonymousUser {
   constructor() {
     this.userInfo = {
       displayName: this.getDisplayName()
     };
     this.displayName = this.userInfo.displayName;
-    this.isAnonymousUser = true;
+    this.isAnonymous = true;
     this.uid = this.genUID();
   }
   saveToSession() {

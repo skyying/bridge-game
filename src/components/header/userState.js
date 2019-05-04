@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {ThumbnailWithTag} from "../thumbnail";
-import Database from "../../firebase";
 import {Link} from "react-router-dom";
 import "../../style/user-state.scss";
 import {dispatch} from "../../reducer";
+import CurrentUserFetcher from "../../logic/currentUserFetcher.js";
 
 export default class UserState extends React.Component {
   constructor(props) {
@@ -15,10 +15,8 @@ export default class UserState extends React.Component {
   }
   handleSignOut() {
     this.togglePanel();
-    Database.auth.signOut();
-    dispatch("UPDATE_USER_INFO", {
-      user: null
-    });
+    let currentUser = new CurrentUserFetcher(this.props.currentUser);
+    currentUser.clear();
   }
   togglePanel(e) {
     if (e) {

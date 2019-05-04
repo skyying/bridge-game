@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../../reducer";
 import TableLogic from "../../logic/tableLogic.js";
-import AnonymousPlayer from "../../logic/anonymousPlayer.js";
+import CurrentUserFetcher from "../../logic/currentUserFetcher.js";
 import "../../style/table-list.scss";
 
 export default class OpenTables extends React.Component {
@@ -20,26 +20,12 @@ export default class OpenTables extends React.Component {
     });
   }
   validateCurrentUser() {
-    let {currentUser} = this.props;
-
-    // allow anonymous user to play
-    let anonymousUser = JSON.parse(
-      window.sessionStorage.getItem("anonymousUser")
-    );
-
-    if (!currentUser) {
-      if (!anonymousUser) {
-        currentUser = new AnonymousPlayer();
-        currentUser.saveToSession();
-      } else {
-        currentUser = anonymousUser;
-      }
-      dispatch("UPDATE_USER_INFO", {
-        user: currentUser,
-        displayName: currentUser.displayName
-      });
+    if (this.props.currnetUser) {
+      return this.props.currnetUser;
     }
-    return currentUser;
+    let userObj = new CurrentUserFetcher(this.props.currentUser);
+    userObj.loginAsAnonymousIfNeed();
+    return userObj.user;
   }
   createTable(linkId) {
     let currentUser = this.validateCurrentUser();
