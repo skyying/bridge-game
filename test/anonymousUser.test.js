@@ -18,6 +18,6 @@ describe("AnonymousPlayer, should create correct anonymous player", () => {
   });
 
   it("should have correct user type", () => {
-    expect(anonymousUser.isAnonymousUser).toBeTruthy();
+    expect(anonymousUser.isAnonymous).toBeTruthy();
   });
 });
