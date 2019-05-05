@@ -6,8 +6,6 @@ export default class CurrentUserFetcher {
   constructor(user) {
     this.user = user;
     this.isExist = !!this.user;
-    this.isAnonymous = this.user && this.user.isAnonymous;
-    this.isSignUp = this.user && !this.user.isAnonymous;
   }
   fetchAnonymousUserIfExist() {
     return JSON.parse(window.sessionStorage.getItem("anonymousUser"));
@@ -23,21 +21,34 @@ export default class CurrentUserFetcher {
       displayName: (user && user.displayName) || null
     });
   }
+  setCurrentUser(user) {
+    this.user = user;
+    this.isExist = !!this.user;
+  }
   loadUser() {
-    if (!this.isExist) {
-      Database.onAuthChanged(user => {
+    if (this.user) return;
+    return Database.getAuth()
+      .then(user => {
         if (user) {
           this.dispatch(user);
+          this.setCurrentUser(user);
+          return user;
         }
+      })
+      .catch(nonUser => {
+        let anonymousUser = this.fetchAnonymousUserIfExist();
+        this.setCurrentUser(anonymousUser);
+        this.dispatch(anonymousUser);
+        return anonymousUser;
       });
-      let anonymousUser = this.fetchAnonymousUserIfExist();
-      this.dispatch(anonymousUser);
-    }
   }
   loginAsAnonymousIfNeed() {
-    if (this.isExist || this.isAnonymous) return;
-    this.user = new AnonymousUser();
+    if (this.isExist || (this.user && this.user.isAnonymous))
+      return this.user;
+    let anonymousUser = new AnonymousUser();
+    this.setCurrentUser(anonymousUser);
     this.user.saveToSession();
     this.dispatch();
+    return anonymousUser;
   }
 }

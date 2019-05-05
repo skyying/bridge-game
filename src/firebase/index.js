@@ -14,6 +14,17 @@ const Database = {
       }
     });
   },
+  getAuth: () => {
+    return new Promise((resolve, reject) => {
+      firebaseApp.auth().onAuthStateChanged(user => {
+        if (user) {
+          resolve(user);
+        } else {
+          reject(null);
+        }
+      });
+    });
+  },
   getNodeByPath: (path, action) => {
     return firebaseApp
       .database()
@@ -82,7 +93,7 @@ const Database = {
           reject(null);
         }
       });
-    })
+    });
   },
   signInWithEmailAndPassword: info => {
     let {email, password} = info;

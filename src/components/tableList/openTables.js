@@ -9,7 +9,6 @@ import "../../style/table-list.scss";
 export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
-
     [
       "createTable",
       "setCurrentTable",
@@ -18,17 +17,24 @@ export default class OpenTables extends React.Component {
     ].forEach(name => {
       this[name] = this[name].bind(this);
     });
+
+    this.userObj;
+  }
+  componentDidMount() {
+    this.userObj = new CurrentUserFetcher(this.props.currentUser);
+    this.userObj.loadUser();
   }
   validateCurrentUser() {
-    if (this.props.currnetUser) {
-      return this.props.currnetUser;
+    if (this.props.currentUser) {
+      return this.props.currentUser;
     }
-    let userObj = new CurrentUserFetcher(this.props.currentUser);
-    userObj.loginAsAnonymousIfNeed();
-    return userObj.user;
+    return this.userObj.loginAsAnonymousIfNeed();
   }
   createTable(linkId) {
     let currentUser = this.validateCurrentUser();
+    if (!currentUser) {
+      return alert("no one login");
+    }
     dispatchToDatabase("CREATE_TABLE", {
       linkId: linkId,
       currentUser: currentUser
