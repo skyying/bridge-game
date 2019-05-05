@@ -1,7 +1,6 @@
 import CurrentUserFetcher from "../src/logic/currentUserFetcher.js";
 import AnonymousUser from "../src/logic/anonymousUser.js";
 
-jest.mock("../firebase", () => jest.fn());
 
 describe("currentUserFetcher, should get correct current user", () => {
   let user = {
