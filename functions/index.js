@@ -1,6 +1,5 @@
 "use strict";
 
-const functions = require("firebase-functions");
 const request = require("request");
 const app = require("express")();
 const admin = require("firebase-admin");
@@ -20,7 +19,7 @@ let tableIdList = {};
 Db.init();
 
 const timeout = {
-    join: 60000,
+    join: 180000,
     auction: {
         human: 60000,
         robot: 3000
@@ -103,7 +102,6 @@ listenTableChanged("tables", snapshot => {
     }
 
     if (gameState === state.phase.join) {
-        console.log("join");
         let isAllReady = ready.every(state => state === true);
         if (isAllReady) {
             let newTable = Object.assign(
@@ -123,7 +121,6 @@ listenTableChanged("tables", snapshot => {
             );
         }
     } else if (gameState === state.phase.auction) {
-        console.log("in auction");
         let isFinishAuction = Auction.isFinish(tableData);
 
         if (!isFinishAuction) {
@@ -143,7 +140,6 @@ listenTableChanged("tables", snapshot => {
             Db.setTableData("gameState", tableData.id, state.phase.playing);
         }
     } else if (gameState === state.phase.playing) {
-        console.log("playing");
         let timerSec = timeout.playing.robot;
         if (tableData.game.order <= 51) {
             let players = tableData.players;
