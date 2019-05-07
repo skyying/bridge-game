@@ -9,9 +9,18 @@ const Database = {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         callback(user);
-      } else {
-        console.log("no one login");
       }
+    });
+  },
+  getAuth: () => {
+    return new Promise((resolve, reject) => {
+      firebaseApp.auth().onAuthStateChanged(user => {
+        if (user) {
+          resolve(user);
+        } else {
+          reject(null);
+        }
+      });
     });
   },
   getNodeByPath: (path, action) => {
@@ -82,7 +91,7 @@ const Database = {
           reject(null);
         }
       });
-    })
+    });
   },
   signInWithEmailAndPassword: info => {
     let {email, password} = info;

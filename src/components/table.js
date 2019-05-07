@@ -5,6 +5,7 @@ import {dispatch, dispatchToDatabase} from "../reducer";
 import Sidebar from "./sidebar";
 import {GAME_STATE, EMPTY_SEAT} from "./constant";
 import Database from "../firebase";
+import CurrentUserFetcher from "../logic/currentUserFetcher.js";
 import randomColor from "randomcolor";
 import TableModel from "../reducer/tableModel.js";
 import Header from "./header";
@@ -72,9 +73,8 @@ export default class Table extends React.Component {
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
     let currentUser = this.props.currentUser;
-    if (!this.props.currentUser) {
-      Database.getCurrentUser();
-    }
+    this.userObj = new CurrentUserFetcher(this.props.currentUser);
+    this.userObj.loadUser();
     this.model
       .get()
       .then(table => {
@@ -91,7 +91,7 @@ export default class Table extends React.Component {
       })
       .catch(error => {
         if (error === null) {
-          this.setState({isClosed: true})
+          this.setState({isClosed: true});
         }
       });
   }
