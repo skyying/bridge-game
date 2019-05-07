@@ -57,7 +57,7 @@ export default class PlayingTables extends React.Component {
             </Link>
           );
         } else {
-          viewLink = <span className="info-warning">Not open</span>;
+          viewLink = <span className="info-warning">Private</span>;
         }
 
         return (
