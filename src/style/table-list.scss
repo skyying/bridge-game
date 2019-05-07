@@ -115,6 +115,10 @@
   font-size: 14px;
   display: grid;
   grid-template: 1fr / 2fr 2fr 2fr 2fr 2fr 70px;
+
+  .info-warning{
+    color: orange;
+  }
   .table-list-item {
     padding: 15px 0 15px;
     transition: all 0.5s;

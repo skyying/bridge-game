@@ -48,7 +48,7 @@ export default class CurrentUserFetcher {
     let anonymousUser = new AnonymousUser();
     this.setCurrentUser(anonymousUser);
     this.user.saveToSession();
-    this.dispatch();
+    this.dispatch(anonymousUser);
     return anonymousUser;
   }
 }

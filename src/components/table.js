@@ -5,6 +5,7 @@ import {dispatch, dispatchToDatabase} from "../reducer";
 import Sidebar from "./sidebar";
 import {GAME_STATE, EMPTY_SEAT} from "./constant";
 import Database from "../firebase";
+import CurrentUserFetcher from "../logic/currentUserFetcher.js";
 import randomColor from "randomcolor";
 import TableModel from "../reducer/tableModel.js";
 import Header from "./header";
@@ -71,18 +72,9 @@ export default class Table extends React.Component {
   componentDidMount() {
     // register database event and fetch table data
     this.model = new TableModel(this.linkId);
-    let anonymousUser = JSON.parse(
-      window.sessionStorage.getItem("anonymousUser")
-    );
     let currentUser = this.props.currentUser;
-    if (anonymousUser) {
-      dispatch("UPDATE_USER_INFO", {
-        user: anonymousUser,
-        displayName: anonymousUser.displayName
-      });
-    } else if (!this.props.currentUser) {
-      Database.getCurrentUser();
-    }
+    this.userObj = new CurrentUserFetcher(this.props.currentUser);
+    this.userObj.loadUser();
     this.model
       .get()
       .then(table => {

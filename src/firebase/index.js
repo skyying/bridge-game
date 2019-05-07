@@ -9,8 +9,6 @@ const Database = {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         callback(user);
-      } else {
-        console.log("no one login");
       }
     });
   },

@@ -22,7 +22,6 @@ export default class OpenTables extends React.Component {
   }
   componentDidMount() {
     this.userObj = new CurrentUserFetcher(this.props.currentUser);
-    this.userObj.loadUser();
   }
   validateCurrentUser() {
     if (this.props.currentUser) {
@@ -33,7 +32,7 @@ export default class OpenTables extends React.Component {
   createTable(linkId) {
     let currentUser = this.validateCurrentUser();
     if (!currentUser) {
-      return alert("no one login");
+      return;
     }
     dispatchToDatabase("CREATE_TABLE", {
       linkId: linkId,

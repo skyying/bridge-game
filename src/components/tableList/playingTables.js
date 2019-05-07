@@ -27,12 +27,39 @@ export default class PlayingTables extends React.Component {
     let tableList = this.props.tableList;
     let tableLinks;
     let allTables = new TableLogic(this.props.tableList);
+
     if (tableList && allTables.playing) {
       tableLinks = allTables.playing.map((table, index) => {
         let {roomId, linkId, players} = table;
         let playerList = players.map((name, index) => (
           <div key={`playerSeat-${index}`}>{name}</div>
         ));
+
+        let isCurrentSignInUser =
+                    this.props.currentUser &&
+                    !this.props.currentUser.isAnonymous;
+        let displayName;
+        if (this.props.currentUser) {
+          displayName = this.props.currentUser.displayName;
+        }
+        let currentTableAnonymousUser = players.some(
+          name => name === displayName
+        );
+
+        let viewLink;
+        if (isCurrentSignInUser || currentTableAnonymousUser) {
+          viewLink = (
+            <Link
+              onClick={() => this.setCurrentTable(linkId)}
+              className="btn-style-border"
+              to={`/table/${linkId}`}>
+                            View
+            </Link>
+          );
+        } else {
+          viewLink = <span className="info-warning">Not open</span>;
+        }
+
         return (
           <div
             className="playing-table"
@@ -41,18 +68,7 @@ export default class PlayingTables extends React.Component {
               <span>{roomId}</span>
             </div>
             {playerList}
-            <div>
-              <Link
-                onClick={() => this.setCurrentTable(linkId)}
-                className="btn-style-border"
-                to={
-                  this.props.currentUser
-                    ? `/table/${linkId}`
-                    : "/login"
-                }>
-                  View
-              </Link>
-            </div>
+            <div>{viewLink}</div>
           </div>
         );
       });
