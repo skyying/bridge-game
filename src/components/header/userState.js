@@ -26,13 +26,9 @@ export default class UserState extends React.Component {
   }
   render() {
     let {currentUser} = this.props;
+
     let name = "";
-    if (this.props.name) {
-      name = this.props.name;
-    } else if (
-      this.props.currentUser &&
-            this.props.currentUser.displayName
-    ) {
+    if (currentUser) {
       name = currentUser.displayName;
     }
 
@@ -53,7 +49,11 @@ export default class UserState extends React.Component {
           />
           <div>
             <h6>{name}</h6>
-            <span>online</span>
+            <span>
+              { currentUser && currentUser.isAnonymous
+                ? "anonymous user"
+                : "online"}
+            </span>
           </div>
         </div>
         <div
