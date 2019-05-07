@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import Database from "../firebase";
+import Deck from "../logic/deck.js";
 import randomColor from "randomcolor";
 import {
   GAME_STATE,
@@ -210,6 +211,7 @@ export const dispatchToDatabase = (type, action) => {
       // batch update table, for client side usage
       if (updateTable.ready.every(state => state === true)) {
         updateTable.gameState = GAME_STATE.auction;
+        updateTable.game = Object.assign({}, updateTable.game, new Deck());
       }
 
       Database.setNodeByPath(`tables/${table.id}`, updateTable);
