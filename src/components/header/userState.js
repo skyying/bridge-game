@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {ThumbnailWithTag} from "../thumbnail";
-import Database from "../../firebase";
 import {Link} from "react-router-dom";
 import "../../style/user-state.scss";
 import {dispatch} from "../../reducer";
+import CurrentUserFetcher from "../../logic/currentUserFetcher.js";
 
 export default class UserState extends React.Component {
   constructor(props) {
@@ -15,10 +15,8 @@ export default class UserState extends React.Component {
   }
   handleSignOut() {
     this.togglePanel();
-    Database.auth.signOut();
-    dispatch("UPDATE_USER_INFO", {
-      user: null
-    });
+    let currentUser = new CurrentUserFetcher(this.props.currentUser);
+    currentUser.clear();
   }
   togglePanel(e) {
     if (e) {
@@ -28,13 +26,9 @@ export default class UserState extends React.Component {
   }
   render() {
     let {currentUser} = this.props;
+
     let name = "";
-    if (this.props.name) {
-      name = this.props.name;
-    } else if (
-      this.props.currentUser &&
-            this.props.currentUser.displayName
-    ) {
+    if (currentUser) {
       name = currentUser.displayName;
     }
 
@@ -55,7 +49,11 @@ export default class UserState extends React.Component {
           />
           <div>
             <h6>{name}</h6>
-            <span>online</span>
+            <span>
+              { currentUser && currentUser.isAnonymous
+                ? "anonymous user"
+                : "online"}
+            </span>
           </div>
         </div>
         <div

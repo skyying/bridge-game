@@ -21,7 +21,7 @@ export const AuctionResult = ({
       return (
         <ThumbnailWithTag
           key={`resultThumbnail-${index}`}
-          name={playerInfo[player].displayName}
+          name={playerInfo[player] && playerInfo[player].displayName}
           size={30}
           isCurrentUser={true}
           offset={5}
@@ -31,7 +31,7 @@ export const AuctionResult = ({
       return (
         <Thumbnail
           key={`resultThumbnail-${index}`}
-          name={playerInfo[player].displayName}
+          name={playerInfo[player] && playerInfo[player].displayName}
           size={30}
           offset={5}
         />

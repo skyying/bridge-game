@@ -22,7 +22,7 @@ export const getWinnerCard = (game, cardValue) => {
 
   let {trump} = game.bid;
   let cardsMatchCurrentTrick = cards
-    .map((card, index) => Object.assign({}, card, {index: index}))
+    // .map((card, index) => Object.assign({}, card, {index: index}))
     .filter(
       card =>
         (card.trick === maxTrick && card.trick > 0) ||

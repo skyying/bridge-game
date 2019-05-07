@@ -2,24 +2,18 @@ import "../../style/reset.scss";
 import "../../style/header.scss";
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import logoImg from "../../images/logo.svg";
-import { dispatch } from "../../reducer";
 import UserState from "./userState.js";
-import Database from "../../firebase";
+import CurrentUserFetcher from "../../logic/currentUserFetcher.js";
 
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
   }
   componentDidMount() {
-    if (!this.props.currentUser) {
-      Database.onAuthChanged(user => {
-        dispatch("UPDATE_USER_INFO", {
-          user: user
-        });
-      });
-    }
+    let userObj = new CurrentUserFetcher(this.props.currentUser);
+    userObj.loadUser();
   }
   render() {
     let userProfile = (
@@ -36,11 +30,8 @@ export default class Header extends React.Component {
         <Link to="/login">Login</Link>
       </div>
     );
-    rightTopCorner =
-      this.props.currentUser && this.props.currentUser.uid
-        ? userProfile
-        : registerBtns;
-    let { roomNum } = this.props;
+    rightTopCorner = this.props.currentUser ? userProfile : registerBtns;
+    let {roomNum} = this.props;
     let roomInfo = null;
     if (roomNum) {
       roomNum = `${roomNum}`;

@@ -3,28 +3,51 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {dispatch, dispatchToDatabase} from "../../reducer";
 import TableLogic from "../../logic/tableLogic.js";
+import CurrentUserFetcher from "../../logic/currentUserFetcher.js";
 import "../../style/table-list.scss";
 
 export default class OpenTables extends React.Component {
   constructor(props) {
     super(props);
-    this.createTable = this.createTable.bind(this);
-    this.setCurrentTable = this.setCurrentTable.bind(this);
+    [
+      "createTable",
+      "setCurrentTable",
+      "validateCurrentUser",
+      "joinTable"
+    ].forEach(name => {
+      this[name] = this[name].bind(this);
+    });
+
+    this.userObj;
+  }
+  componentDidMount() {
+    this.userObj = new CurrentUserFetcher(this.props.currentUser);
+  }
+  validateCurrentUser() {
+    if (this.props.currentUser) {
+      return this.props.currentUser;
+    }
+    return this.userObj.loginAsAnonymousIfNeed();
   }
   createTable(linkId) {
-    if (!this.props.currentUser) {
+    let currentUser = this.validateCurrentUser();
+    if (!currentUser) {
       return;
     }
     dispatchToDatabase("CREATE_TABLE", {
       linkId: linkId,
-      currentUser: this.props.currentUser
+      currentUser: currentUser
     });
+
     this.setCurrentTable(linkId);
   }
   setCurrentTable(id) {
-    if (this.props.currentUser) {
-      dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
-    }
+    // make sure have current user
+    dispatch("UPDATE_CURRENT_TABLE_ID", {currentTableId: id});
+  }
+  joinTable(id) {
+    this.validateCurrentUser();
+    setTimeout(0, this.setCurrentTable(id));
   }
   render() {
     let tableList = this.props.tableList;
@@ -45,13 +68,9 @@ export default class OpenTables extends React.Component {
             <div>
               <Link
                 className="btn-style-border"
-                onClick={() => this.setCurrentTable(linkId)}
+                onClick={() => this.joinTable(linkId)}
                 key={linkId}
-                to={
-                  this.props.currentUser
-                    ? `/table/${linkId}`
-                    : "/login"
-                }>
+                to={`/table/${linkId}`}>
                                 Join
               </Link>
             </div>
@@ -60,15 +79,12 @@ export default class OpenTables extends React.Component {
       });
     }
     let tableRef = new Date().getTime();
-    let openBtn = this.props.currentUser &&
-            this.props.openBtn && (
+    let openBtn = this.props.openBtn && (
       <Link
         className="btn-style-border"
         onClick={() => this.createTable(tableRef)}
-        to={
-          this.props.currentUser ? `/table/${tableRef}` : "/login"
-        }>
-                    New table
+        to={`/table/${tableRef}`}>
+                New table
       </Link>
     );
 
