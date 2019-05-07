@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import Database from "../firebase";
+import randomColor from "randomcolor";
 import {
   GAME_STATE,
   DEFAULT_GAME,
@@ -88,12 +89,16 @@ export const dispatchToDatabase = (type, action) => {
         console.log("user is not login");
         return;
       }
+
+      let color = randomColor("dark");
       let timeStamp = new Date().getTime();
       let players = PLAYERS.slice(0);
       let newPlayerInfo = {};
       let uidKey = `${currentUser.uid}`;
       newPlayerInfo[uidKey] = {displayName: currentUser.displayName};
       players[0] = action.currentUser.uid;
+      let viewers = {};
+      viewers[players[0]] = color;
       let tableKey = Database.getNewChildKey("tables");
       let newLinkId = linkId || timeStamp;
       let newTable = {
@@ -103,6 +108,7 @@ export const dispatchToDatabase = (type, action) => {
         id: tableKey,
         linkId: newLinkId,
         game: DEFAULT_GAME,
+        viewers: viewers,
         playerInfo: Object.assign(
           {},
           {
