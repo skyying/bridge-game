@@ -34,7 +34,7 @@ export default class GameState extends React.Component {
       case GAME_STATE.auction: {
         return (
           <div>
-            <AuctionState {...this.props} />;
+            <AuctionState {...this.props} />
             <PlayingState isFinishAuction={false} {...this.props} />
           </div>
         );
