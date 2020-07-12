@@ -7,7 +7,8 @@
         "start": "webpack-dev-server --env development",
         "build:stats": "webpack --env production --json > stats.json",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "preinstall": "npx npm-force-resolutions"
     },
     "keywords": [],
     "author": "",
@@ -22,7 +23,7 @@
         "css-loader": "^3.6.0",
         "cssnano": "^4.1.10",
         "eslint": "^7.4.0",
-        "eslint-plugin-react": "^7.20.0",
+        "eslint-plugin-react": "^7.20.3",
         "fast-sass-loader": "^1.5.0",
         "file-loader": "^6.0.0",
         "glob": "^7.1.6",
@@ -33,8 +34,8 @@
         "optimize-css-assets-webpack-plugin": "^5.0.3",
         "purgecss-webpack-plugin": "^2.3.0",
         "purify-css": "^1.2.5",
-        "purifycss-webpack": "^0.7.0",
         "randomcolor": "^0.5.4",
+        "serialize-javascript": "^4.0.0",
         "style-loader": "^1.2.1",
         "svg-url-loader": "^6.0.0",
         "uglifyjs-webpack-plugin": "^2.2.0",
@@ -46,11 +47,16 @@
     },
     "dependencies": {
         "firebase": "^7.16.0",
+        "npm-force-resolutions": "0.0.3",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-ga": "^3.1.2",
         "react-router-dom": "^5.2.0",
         "redux": "^4.0.5",
-        "redux-thunk": "^2.3.0"
+        "redux-thunk": "^2.3.0",
+        "yargs-parser": "^18.1.3"
+    },
+    "resolutions": {
+        "serialize-javascript": "^4.0.0"
     }
 }
