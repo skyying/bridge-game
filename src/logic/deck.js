@@ -1,5 +1,6 @@
 import {getRandomInt} from "../helper";
-import {CARD_NUM, TOTAL_TRICKS} from "../components/constant";
+import {CARD_NUM} from "../components/constant";
+import {TOTAL_TRICKS} from '../components/constant/constant.ts'
 
 /*
  * A Deck class can generate random cards with all four hands has validate card face-value

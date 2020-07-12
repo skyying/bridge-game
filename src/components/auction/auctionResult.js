@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {SUIT_SHAPE} from "../constant/index.js";
+import SUIT_SHAPE from "../constant/SuitShape";
 import {Thumbnail, ThumbnailWithTag} from "./../thumbnail";
 import {AuctionList} from "./auctionList.js";
 import "../../style/auction.scss";
