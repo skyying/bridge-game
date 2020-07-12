@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {SUIT_SHAPE} from "../constant/index.js";
+import SUIT_SHAPE from "../constant/SuitShape";
 import {getRandomKey} from "../../helper";
 import {dispatchToDatabase} from "../../reducer";
 import {AuctionList} from "./auctionList.js";

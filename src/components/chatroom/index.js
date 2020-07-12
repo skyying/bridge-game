@@ -1,7 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {dispatchToDatabase} from "../../reducer";
-import {SUIT_SHAPE, Emoji} from "../constant";
+import SUIT_SHAPE from "../constant/SuitShape";
+import {Emoji} from "../constant";
 
 export default class Chatroom extends React.Component {
   constructor(props) {

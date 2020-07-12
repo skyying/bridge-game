@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {CARD_RANK, SUIT_SHAPE, TOTAL_TRICKS} from "./../constant";
+import SUIT_SHAPE from "../constant/SuitShape";
+import {TOTAL_TRICKS} from "../constant/constant.ts";
+import {CARD_RANK} from "../constant";
 import "../../style/reset.scss";
 import "../../style/card.scss";
 
