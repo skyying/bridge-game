@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {SUIT_SHAPE} from "../constant/index.js";
+import SUIT_SHAPE from "../constant/SuitShape";
 
 /*
  * item: an player bid result on auction state

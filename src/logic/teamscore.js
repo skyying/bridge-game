@@ -1,4 +1,4 @@
-import {RESULT, PLAYER_NUM} from "../components/constant/index.js";
+import {RESULT, PLAYER_NUM} from "../components/constant";
 
 /*
  * A class returns table score of two team base on current login user
