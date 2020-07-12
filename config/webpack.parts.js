@@ -96,11 +96,6 @@ exports.loadSVG = ({include, exclude, options} = {}) => ({
     }
 });
 
-const PurifyCSSPlugin = require("purifycss-webpack");
-exports.purifyCSS = ({paths}) => ({
-    plugins: [new PurifyCSSPlugin({paths})]
-});
-
 exports.loadFonts = () => ({
     module: {
         rules: [
