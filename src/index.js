@@ -18,7 +18,7 @@ class App extends React.Component {
       this[name] = this[name].bind(this);
     });
   }
-  // udpate state
+  // update state
   update() {
     this.setState(store.getState());
   }
