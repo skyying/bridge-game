@@ -2,23 +2,18 @@ import React from "react";
 import {AuctionResult} from "../auction/auctionResult.js";
 import {GAME_STATE} from "../constant";
 import GameResult from "../gameResult";
+import {calcShouldSwitchOrNot} from "./helper/helper.ts";
 
 
 export default function PlayingInfo({
-                         isSidebarPanelShown,
-                         currentUser,
-                         windowWidth,
-                         windowHeight,
-                         table,
-                         hands,
-                         cardsByPlayer,
-                         isTrickFinish
-                     }) {
+                                        isSidebarPanelShown,
+                                        currentUser,
+                                        windowWidth,
+                                        windowHeight,
+                                        table,
+                                    }) {
 
-    let canSwitchToSmallerPanel =
-        (isSidebarPanelShown &&
-            windowWidth <= 1300) ||
-        windowWidth <= 1000;
+    const canSwitchToSmallerPanel = calcShouldSwitchOrNot(isSidebarPanelShown, windowWidth);
 
     if (table.gameState === GAME_STATE.auction) {
         return null;
