@@ -13,8 +13,10 @@ export default function PlayingInfo({
                                         table,
                                     }) {
 
+    // TODO should extract this out
     const canSwitchToSmallerPanel = calcShouldSwitchOrNot(isSidebarPanelShown, windowWidth);
 
+    // auction state dont have need to display playing information
     if (table.gameState === GAME_STATE.auction) {
         return null;
     }
