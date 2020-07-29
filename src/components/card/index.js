@@ -5,21 +5,17 @@ import {TOTAL_TRICKS} from "../constant/constant.ts";
 import {CARD_RANK} from "../constant";
 import "../../style/reset.scss";
 import "../../style/card.scss";
+import CardContainer from "../cardContainer";
 
 /*
- * value: 0 - 51, poker card facevalue
+ * value: 0 - 51, poker card face value
  */
-export const TrickCard = ({value}) => {
-  return (
-    <div>
-      <Card flipUp={true} value={value} />
-    </div>
-  );
-};
+// export function TrickCard<{value: number}>({value}): JSXElement{
+//   return <div>
+//     <Card flipUp={true} value={value} />
+//   </div>
+// }
 
-TrickCard.propTypes = {
-  value: PropTypes.number
-};
 
 /*
  * value: 0 - 51, poker card facevalue
