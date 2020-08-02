@@ -112,19 +112,6 @@ exports.loadFonts = () => ({
     }
 });
 
-
-exports.loadTypescript = () => ({
-    module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'awesome-typescript-loader',
-                exclude: /node_modules/,
-            },
-        ],
-    }
-});
-
 exports.loadJavaScript = ({include, exclude} = {}) => ({
     module: {
         rules: [

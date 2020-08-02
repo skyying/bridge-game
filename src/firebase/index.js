@@ -5,6 +5,13 @@ export const firebaseApp = firebase.initializeApp(config);
 
 const Database = {
   auth: firebaseApp.auth(),
+  onAuthChanged: callback => {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user) {
+        callback(user);
+      }
+    });
+  },
   getAuth: () => {
     return new Promise((resolve, reject) => {
       firebaseApp.auth().onAuthStateChanged(user => {
