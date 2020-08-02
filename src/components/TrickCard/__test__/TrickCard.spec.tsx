@@ -8,7 +8,7 @@ import TrickCard from '../TrickCard';
 describe('<TrickCard />', () => {
     it('render value correctly', () => {
        const {getByText} = render(<TrickCard value={5} />);
-       expect(getByText('5')).toBeTruthy();
+       expect(getByText('7')).toBeTruthy();
     });
 });
 
