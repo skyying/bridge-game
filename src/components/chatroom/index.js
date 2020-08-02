@@ -1,7 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {dispatchToDatabase} from "../../reducer";
-import {SUIT_SHAPE, Emoji} from "../constant";
+// ts-ignore
+import SUIT_SHAPE from "../constant/SuitShape/index.tsx";
+import {Emoji} from "../constant";
 
 export default class Chatroom extends React.Component {
   constructor(props) {
@@ -124,11 +125,13 @@ export default class Chatroom extends React.Component {
           player => player === targetChatroom.message[id].uid
         );
         if (playerIndex > -1) {
+          const ShapeComponent = SUIT_SHAPE[playerIndex];
           symbol = (
             <div
               style={{backgroundColor: color}}
               className="symbol">
-              {SUIT_SHAPE[playerIndex](0.1, "#ffffff")}
+              {/*TODO: should become white color*/}
+             <ShapeComponent scale={0.1} />
             </div>
           );
         }

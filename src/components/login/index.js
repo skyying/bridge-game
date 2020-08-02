@@ -5,41 +5,18 @@ import "../../style/signup.scss";
 import "../../style/btn.scss";
 import "../../style/checkbox.scss";
 import Header from "../header";
+import useCurrentUser from "../../useCurrentUser/index.ts";
 
-
-function redirectToLobbyIfLogin(setRedirect) {
-    Database.getCurrentUser()
-        .then(user => {
-            if (user) {
-                setRedirect(true);
-                return user;
-            } else {
-                throw new Error("NO CURRENT USER");
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-
-function trySignIn(email, password, setRedirect, setError) {
+function trySignIn(email, password) {
     if (!email || !password) return;
     Database.signInWithEmailAndPassword({email, password})
-        .then(user => {
-            setRedirect(true);
-        })
-        .catch(error => {
-            const {message = ''} = error;
-            setError(message);
-        });
 }
 
 function onChange(setField) {
     return useCallback((evt) => {
         const {currentTarget} = evt;
         setField(currentTarget.value);
-    }, setField)
+    }, [setField])
 }
 
 
@@ -49,9 +26,18 @@ export default function Login({isHeaderPanelClosed, currentUser}) {
     const [redirect, setRedirect] = useState(false);
     const [error, setError] = useState(null)
 
+    // TODO, it seems the result have been back, then the component have been demount,
+    // may consider using context to fix this
+    // should dispatch the useCurrentUser Info to context
+    // or should set a isFetching state when response have not come back
+    // should not redirect component, when response is not back
+    const {userInfo} = useCurrentUser()
+
     useEffect(() => {
-        redirectToLobbyIfLogin(setRedirect)
-    }, [])
+        if (userInfo) {
+            setRedirect(true)
+        }
+    }, [userInfo])
 
     // reset Error
     useEffect(() => {

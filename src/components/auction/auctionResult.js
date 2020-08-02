@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {SUIT_SHAPE} from "../constant/index.js";
+import SUIT_SHAPE from "../constant/SuitShape/index.tsx";
 import {Thumbnail, ThumbnailWithTag} from "./../thumbnail";
 import {AuctionList} from "./auctionList.js";
 import "../../style/auction.scss";
@@ -42,6 +42,7 @@ export const AuctionResult = ({
   let declarer = playerInfo[players[game.bid.declarer]];
 
   if (canSwitchToSmallerPanel) {
+      const ShapeComponent = SUIT_SHAPE[game.bid.trump]
     return (
       <div
         className="auction-result"
@@ -59,7 +60,7 @@ export const AuctionResult = ({
               />
             </span>
             <span> {game.bid.trick + 1} </span>{" "}
-            {SUIT_SHAPE[game.bid.trump](0.14)}
+            <ShapeComponent scale={0.14}/>
           </div>
         </div>
       </div>
