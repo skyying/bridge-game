@@ -20,8 +20,7 @@ const commonConfig = merge([
       })
     ]
   },
-  parts.loadJavaScript({include: PATHS.app}),
-  parts.loadTypescript(),
+  parts.loadJavaScript({include: PATHS.app})
 ]);
 
 const productionConfig = merge([
@@ -30,10 +29,7 @@ const productionConfig = merge([
       chunkFilename: "[name].[chunkhash:4].js",
       filename: "[name].[chunkhash:4].js"
     },
-    recordsPath: path.resolve(__dirname, "records.json"),
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
-    }
+    recordsPath: path.resolve(__dirname, "records.json")
   },
   parts.clean("dist"),
   parts.minifyJavaScript(),
