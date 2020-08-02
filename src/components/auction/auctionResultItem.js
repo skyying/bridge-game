@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import SUIT_SHAPE from "../constant/SuitShape";
+import SUIT_SHAPE from "../constant/SuitShape/index.tsx";
 
 /*
  * item: an player bid result on auction state
@@ -12,10 +12,11 @@ export const AcutionResultItem = ({item, scale}) => {
     return <div className="bid-result">{item.opt}</div>;
   }
   if (item && item.trick >= 0) {
+    const ShapeComponent = SUIT_SHAPE[item.trump];
     return (
       <div className="bid-result">
         <div>{item.trick + 1}</div>
-        {SUIT_SHAPE[item.trump](scale)}
+        <ShapeComponent scale={scale}/>
       </div>
     );
   }

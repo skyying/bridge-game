@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Trick from "./trick";
 import PlayingInfo from "./playingInfo";
-import {Card} from "./card";
+// @ts-ignore
+import Card from './card/card.tsx'
 import TrickLogic from "../logic/trick.js";
 import {dispatchToDatabase} from "../reducer";
 import {GAME_STATE, DIRECTION} from "./constant";
@@ -23,7 +24,7 @@ export default class PlayingState extends React.Component {
       this[name] = this[name].bind(this);
     });
   }
-  // record and calcuate if this card is winning current trick
+  // record and calculate if this card is winning current trick
   play(value) {
     let {table} = this.props;
     let {game} = this.props.table;

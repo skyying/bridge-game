@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
-import SUIT_SHAPE from "../constant/SuitShape";
+// @ts-ignore
+import SUIT_SHAPE from "../constant/SuitShape/index.tsx";
 import {getRandomKey} from "../../helper";
 import {dispatchToDatabase} from "../../reducer";
 import {AuctionList} from "./auctionList.js";
@@ -129,11 +129,11 @@ export default class Auction extends React.Component {
       selectedTrump = [];
     }
 
-    selectedTrump = selectedTrump.map(opt => (
-      <div onClick={() => this.updateBid(opt, null)} key={getRandomKey()}>
-        {SUIT_SHAPE[opt](0.25)}
-      </div>
-    ));
+    selectedTrump = selectedTrump.map(opt => {
+        const ShapeComponent = SUIT_SHAPE[opt]
+      return (<div onClick={() => this.updateBid(opt, null)} key={getRandomKey()}>
+        <ShapeComponent scale={0.25}/>
+      </div>) });
 
     let result = game.bid.result;
 
