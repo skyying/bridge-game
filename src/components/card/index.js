@@ -5,7 +5,7 @@ import {TOTAL_TRICKS} from "../constant/constant.ts";
 import {CARD_RANK} from "../constant";
 import "../../style/reset.scss";
 import "../../style/card.scss";
-import CardContainer from "../cardContainer";
+import CardContainer from "../cardContainer/index.tsx";
 
 /*
  * value: 0 - 51, poker card face value
@@ -47,28 +47,6 @@ Card.propTypes = {
   name: PropTypes.string
 };
 
-const CardContainer = ({name, flipUp, evt, value, children}) => {
-  const clickEvt = () => {
-    if (evt) {
-      evt(value);
-    }
-  };
-  return (
-    <div onClick={clickEvt} className={name}>
-      <div className={flipUp ? "card flip-up" : "card flip-down"}>
-        <div className="card-inner">{flipUp ? children : null}</div>
-      </div>
-    </div>
-  );
-};
-
-CardContainer.propTypes = {
-  children: PropTypes.array,
-  value: PropTypes.number,
-  evt: PropTypes.func,
-  flipUp: PropTypes.bool,
-  name: PropTypes.string
-};
 
 /*
  * kind: 0-3, which suit, 0: club, 1: diamond, 2: heart, 3: spade
