@@ -3,7 +3,9 @@
     "jsx": "react",
     "lib": ["dom", "esnext"],
     "module": "esnext",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowJs": true,
+    "moduleResolution": "node"
   },
   "exclude": ["node_modules"]
 }
