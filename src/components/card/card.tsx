@@ -1,11 +1,10 @@
 import React from "react";
-// import PropTypes from "prop-types";
-// import SUIT_SHAPE from "../constant/SuitShape/index";
-// import {TOTAL_TRICKS} from "../constant/constant.js";
-// import {CARD_RANK} from "../constant/index";
+// @ts-ignore
+import SUIT_SHAPE, {IShape} from "../constant/SuitShape/index.tsx";
 import "../../style/reset.scss";
 import "../../style/card.scss";
-import CardContainer from "../cardContainer/index";
+// @ts-ignore
+import CardContainer from "../cardContainer/index.tsx";
 
 const TOTAL_TRICKS: number = 13;
 const CARD_RANK: (number | string)[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
@@ -19,10 +18,16 @@ export interface ICard {
     children?: JSX.Element[]
 }
 
+const Heart: number = 1;
+const Diamond: number = 2;
+
+function getShapeOrder(value: number): number {
+    return Math.floor(value / TOTAL_TRICKS);
+}
 
 function styleAsRedOrBlack(value: number) {
-    const kind: number = Math.floor(value / TOTAL_TRICKS);
-    return kind === 1 || kind === 2 ? "red value" : "black value"
+    const order = getShapeOrder(value);
+    return order === Heart || order === Diamond ? "red value" : "black value"
 }
 
 /*
@@ -34,15 +39,17 @@ function styleAsRedOrBlack(value: number) {
 export default function Card (props: ICard):JSX.Element {
 
     const {value, flipUp, evt, name} = props
+    const order: number = getShapeOrder(value)
+    const ShapeComponent: React.FunctionComponent<IShape> = SUIT_SHAPE[order]
 
     return (
         <CardContainer value={value} evt={evt} flipUp={flipUp} name={name}>
             <div
                 className={styleAsRedOrBlack(value)}>
                 {CARD_RANK[value % TOTAL_TRICKS]}
-                {/*{SUIT_SHAPE[kind](0.235)}*/}
+                <ShapeComponent scale={0.235} />
             </div>
-            {/*<LargeShape kind={kind} />*/}
+            <LargeShape order={order} />
         </CardContainer>
     );
 };
@@ -50,10 +57,10 @@ export default function Card (props: ICard):JSX.Element {
 /*
  * kind: 0-3, which suit, 0: club, 1: diamond, 2: heart, 3: spade
  */
-// const LargeShape = ({kind}) => {
-//     return <div className="large-shape">{SUIT_SHAPE[kind](0.5)}</div>;
-// };
-//
-// LargeShape.propTypes = {
-//     kind: PropTypes.number
-// };
+function LargeShape ({order}: {order: number}): JSX.Element {
+    const ShapeComponent: React.FunctionComponent<IShape> = SUIT_SHAPE[order]
+    return <div className="large-shape">
+        <ShapeComponent scale={0.5}/>
+    </div>;
+};
+

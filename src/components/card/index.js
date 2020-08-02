@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import SUIT_SHAPE from "../constant/SuitShape";
+import SUIT_SHAPE from "../constant/SuitShape/index.tsx";
 import {TOTAL_TRICKS} from "../constant/constant.ts";
 import {CARD_RANK} from "../constant";
 import "../../style/reset.scss";
 import "../../style/card.scss";
 import CardContainer from "../cardContainer/index.tsx";
+import Card from './card.tsx';
 
 /*
  * value: 0 - 51, poker card face value
@@ -23,7 +24,10 @@ import CardContainer from "../cardContainer/index.tsx";
  * flipUp: should flip a card up or down
  * name: class name for style
  */
-export const Card = ({value, evt = null, flipUp, name = null}) => {
+
+export default {Card: Card};
+
+export const CardI = ({value, evt = null, flipUp, name = null}) => {
   let kind = Math.floor(value / TOTAL_TRICKS);
   let wrapName = name ? `card-wrapper ${name}` : "card-wrapper";
   return (
